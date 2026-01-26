@@ -177,7 +177,7 @@ export default function HandSplitHero() {
 
       <section
         ref={containerRef}
-        className={`relative w-full h-[200vh] overflow-hidden bg-inherit flex justify-center transition-opacity duration-700 ${isLoading ? "opacity-0" : "opacity-100"}`}
+        className={`relative w-full h-[200svh] overflow-hidden bg-inherit flex justify-center transition-opacity duration-700 ${isLoading ? "opacity-0" : "opacity-100"}`}
       >
         <div className="relative z-10 flex flex-col items-center justify-center w-full h-screen">
           {/* Headline Text - Now uses SplitText */}
@@ -190,7 +190,7 @@ export default function HandSplitHero() {
                 src="/hands/Right-Hand.png"
                 alt="Left Hand"
                 onLoad={handleImageLoad}
-                className="w-[150%] md:w-[140%] max-w-[800px] lg:w-[280%] lg:max-w-[1000px] h-auto object-contain filter brightness-150 contrast-125"
+                className="w-[180%] md:w-[140%] max-w-[800px] lg:w-[280%] lg:max-w-[1000px] h-auto object-contain filter brightness-150 contrast-125"
               />
             </div>
 
@@ -200,7 +200,7 @@ export default function HandSplitHero() {
                 src="/hands/Left-Hand.png"
                 alt="Right Hand"
                 onLoad={handleImageLoad}
-                className="w-[150%] md:w-[140%] max-w-[800px] lg:w-[280%] lg:max-w-[1000px] h-auto object-contain filter brightness-150 contrast-125"
+                className="w-[180%] md:w-[140%] max-w-[800px] lg:w-[280%] lg:max-w-[1000px] h-auto object-contain filter brightness-150 contrast-125"
               />
             </div>
           </div>

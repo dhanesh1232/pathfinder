@@ -137,7 +137,7 @@ export default function ParallaxTeam() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-screen overflow-hidden bg-inherit flex flex-col items-center justify-end"
+      className="relative w-full h-[100svh] overflow-hidden bg-inherit flex flex-col items-center justify-end"
     >
       <div className="relative z-10 w-full h-[90%] md:h-full max-w-[1600px] flex items-end justify-center perspective-[1000px] pb-0 md:pb-[5vh]">
         {PEOPLE.map((person) => (

@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased text-foreground min-h-screen overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased text-foreground overflow-x-hidden`}
       >
         {/* Global Background & Noise */}
         <div className="fixed inset-0 z-[-1]">
@@ -40,11 +40,10 @@ export default function RootLayout({
           <div className="absolute inset-0 bg-noise opacity-[0.09] mix-blend-overlay" />
         </div>
 
-        <SmoothScroll />
         <GlobalNav />
-        <main className="z-10 flex flex-col overflow-y-auto relative">
-          {children}
-        </main>
+        <main className="z-10 flex flex-col relative">{children}</main>
+
+        <SmoothScroll />
       </body>
     </html>
   );
