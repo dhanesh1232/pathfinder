@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 // Helper to split text into characters for typing effect
-const SplitText = ({
+export const SplitText = ({
   children,
   className = "",
 }: {
@@ -54,6 +54,8 @@ export default function HandSplitHero() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [loadedCount, setLoadedCount] = useState(0);
+  const [videoFinished, setVideoFinished] = useState(false);
+  const [introFinished, setIntroFinished] = useState(false);
 
   const handleImageLoad = () => {
     setLoadedCount((prev) => prev + 1);
@@ -69,17 +71,61 @@ export default function HandSplitHero() {
     }
   }, [loadedCount]);
 
+  // Phase 1: Entry Animation (Auto-play after video)
   useEffect(() => {
-    if (isLoading || !containerRef.current) return;
+    if (isLoading || !videoFinished || introFinished || !containerRef.current)
+      return;
+
+    // Lock scroll during intro
+    document.body.style.overflow = "hidden";
 
     const ctx = gsap.context(() => {
-      // 1. Setup Initial States
-      gsap.set([leftHandRef.current, rightHandRef.current], {
-        force3D: true,
-        willChange: "transform",
+      // 1. Initial State: Hands Wide Apart & Text Hidden
+      gsap.set(leftHandRef.current, {
+        xPercent: -150,
+        rotate: -30,
+        opacity: 0,
+      });
+      gsap.set(rightHandRef.current, { xPercent: 150, rotate: 30, opacity: 0 });
+      gsap.set(textRef.current, { opacity: 0, y: 20 });
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          document.body.style.overflow = ""; // Unlock scroll
+          setIntroFinished(true);
+        },
       });
 
-      // Ensure text container is visible and in position
+      // 2. Animate Hands Together
+      tl.to([leftHandRef.current, rightHandRef.current], {
+        xPercent: (i) => (i === 0 ? 20 : -20), // Left: 20, Right: -20
+        rotate: 0,
+        opacity: 1,
+        duration: 1.8,
+        ease: "power4.out",
+      }).to(
+        textRef.current,
+        {
+          opacity: 1,
+          y: 10,
+          duration: 1,
+          ease: "power2.out",
+        },
+        "-=1.0",
+      ); // Overlap slightly with hands arrival
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [isLoading, videoFinished, introFinished]);
+
+  // Phase 2: Scroll Interaction (Enabled after intro)
+  useEffect(() => {
+    if (!introFinished || !containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // Re-assert "start" positions to ensure ScrollTrigger matches Intro end state
+      gsap.set(leftHandRef.current, { xPercent: 20, rotate: 0 });
+      gsap.set(rightHandRef.current, { xPercent: -20, rotate: 0 });
       gsap.set(textRef.current, {
         y: 10,
         opacity: 1,
@@ -87,25 +133,22 @@ export default function HandSplitHero() {
         filter: "none",
       });
 
-      // Ensure individual characters are hidden
+      // Init chars for typing effect logic (ready for scroll)
       const chars = textRef.current?.querySelectorAll(".char");
       gsap.set(chars!, { opacity: 0 });
-
-      gsap.set(leftHandRef.current, { xPercent: 20, rotate: 0 });
-      gsap.set(rightHandRef.current, { xPercent: -20, rotate: 0 });
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=150%", // Increased scroll distance slightly to accommodate typing time
+          end: "+=150%",
           pin: true,
           scrub: 1,
           anticipatePin: 1,
         },
       });
 
-      // 2. Hands Split Animation
+      // Split Animation
       tl.addLabel("start")
         .to(
           leftHandRef.current,
@@ -127,7 +170,6 @@ export default function HandSplitHero() {
           },
           "start",
         )
-        // Background depth (happens with split)
         .to(
           bgRef.current,
           {
@@ -139,23 +181,20 @@ export default function HandSplitHero() {
           "start",
         );
 
-      // 3. Typing Effect (Starts AFTER split finishes)
-      // We use ">" position parameter to strictly sequence it after the previous actions
+      // Typing Effect
       tl.to(
         chars!,
         {
           opacity: 1,
-          duration: 0.1, // very fast fade per character
-          stagger: 0.05, // delay between each character
+          duration: 0.1,
+          stagger: 0.05,
           ease: "none",
         },
         ">",
       );
 
-      // 4. HOLD Phase
+      // Hold & Exit
       tl.to({}, { duration: 0.5 });
-
-      // 5. EXIT Phase
       tl.to(
         [textRef.current, leftHandRef.current, rightHandRef.current],
         {
@@ -169,15 +208,32 @@ export default function HandSplitHero() {
     }, containerRef);
 
     return () => ctx.revert();
-  }, [isLoading]);
+  }, [introFinished]);
 
   return (
     <>
-      {isLoading && <SkeletonHero />}
+      {/* Video Intro Overlay */}
+      {!videoFinished && (
+        <div className="fixed inset-0 z-[60] bg-black flex items-center justify-center">
+          <video
+            autoPlay
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+            src="/video/PathFinder%20Logo%20animation%20Video.mp4"
+            onEnded={() => setVideoFinished(true)}
+          />
+        </div>
+      )}
+
+      {/* Existing Skeleton - Only show if video finished AND still loading */}
+      {videoFinished && isLoading && <SkeletonHero />}
 
       <section
         ref={containerRef}
-        className={`relative w-full h-[200svh] overflow-hidden bg-inherit flex justify-center transition-opacity duration-700 ${isLoading ? "opacity-0" : "opacity-100"}`}
+        className={`relative w-full h-[200svh] overflow-hidden bg-inherit flex justify-center transition-opacity duration-700 ${
+          isLoading || !videoFinished ? "opacity-0" : "opacity-100"
+        }`}
       >
         <div className="relative z-10 flex flex-col items-center justify-center w-full h-screen">
           {/* Headline Text - Now uses SplitText */}
@@ -218,14 +274,13 @@ function AnimationText({
   return (
     <div
       ref={textRef as React.RefObject<HTMLDivElement>}
-      // Removed opacity-0/blur/scale from here as we handle visibility in GSAP now
       className="absolute z-10 text-center"
     >
       <h1 className="text-white font-playfair text-5xl md:text-7xl lg:text-8xl leading-tight font-medium tracking-wide drop-shadow-2xl">
-        <SplitText>Branding is about</SplitText>
+        <SplitText>The Best Path For</SplitText>
         <br />
         <span className="text-pathfinder-green italic font-semibold">
-          <SplitText>connections</SplitText>
+          <SplitText>Your Brand</SplitText>
         </span>
       </h1>
     </div>

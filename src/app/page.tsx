@@ -16,7 +16,7 @@ export default function Home() {
       {/* 2. Identity: People Section (Natural Scroll, IntersectionObserver) */}
       <ParallaxTeam />
 
-      <div className="h-[250vh]" />
+      <div className="h-[300vh]" />
 
       {/* 3. Trusted By / Logos */}
       <TrustedBy />

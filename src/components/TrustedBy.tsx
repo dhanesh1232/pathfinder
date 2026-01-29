@@ -42,7 +42,8 @@ export default function TrustedBy() {
         className={`transition-opacity duration-1000 ${isVisible ? "opacity-100" : "opacity-0"}`}
       >
         <p className="text-white/40 text-sm uppercase tracking-widest mb-10 text-center">
-          Trusted By
+          <span className="text-pathfinder-green">We're trusted</span> by
+          companies like
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-12 md:gap-20 max-w-6xl px-6">

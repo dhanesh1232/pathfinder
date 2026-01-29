@@ -16,7 +16,7 @@ export default function GlobalNav() {
         {/* Logo */}
         <div className="text-inherit font-playfair text-2xl font-bold tracking-wider z-50 cursor-pointer">
           <Link href="/">
-            <img src="/logo.png" alt="Logo" width={100} height={10} />
+            <img src="/logo.png" alt="Logo" width={200} height={80} />
           </Link>
         </div>
 

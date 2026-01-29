@@ -31,7 +31,7 @@ const PEOPLE = [
     name: "Leader",
     layer: 3,
     position:
-      "left-1/2 -translate-x-1/2 lg:right-[60%] md:right-[50%] -z-30 w-[45%] md:w-[30%] lg:w-[24%]",
+      "left-1/2 -translate-x-1/2 md:right-[50%] -z-30 w-[45%] md:w-[30%] lg:w-[24%]",
   },
   {
     id: "right-1",
@@ -71,18 +71,35 @@ export default function ParallaxTeam() {
         opacity: 0,
       });
 
+      // Initial Text State: Solid White, Hidden/Offscreen for slide effect
+      // Line 1 (Odd chars? Or just whole line from left) -> User said "type text left and right"
+      // We'll slide Line 1 from Left, Line 2 from Right
+      gsap.set(".text-line-1", { xPercent: -100, opacity: 0 });
+      gsap.set(".text-line-2", { xPercent: 100, opacity: 0 });
+
+      // Ensure text starts solid (no stroke) and sets correct colors per line
+      gsap.set(".text-line-1 .char", {
+        color: "white",
+        webkitTextStroke: "0px transparent",
+      });
+      gsap.set(".text-line-2 .char", {
+        color: "#2ecc71", // pathfinder-green
+        webkitTextStroke: "0px transparent",
+      });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=250%", // Extended for multi-phase animation
+          end: "+=300%", // Extended for text animation phase
           pin: true,
           scrub: 1,
           anticipatePin: 1,
         },
       });
 
-      // Phase 1: Rise Up (Appear into view as gray)
+      // Phase 1: Everything Enters
+      // Team rises
       tl.to(
         ".team-member-container",
         {
@@ -97,6 +114,18 @@ export default function ParallaxTeam() {
         "start",
       );
 
+      // Text Slides In (Solid) - Left and Right
+      tl.to(
+        ".text-line-1",
+        { xPercent: 0, opacity: 1, duration: 2, ease: "power2.out" },
+        "start+=0.5",
+      );
+      tl.to(
+        ".text-line-2",
+        { xPercent: 0, opacity: 1, duration: 2, ease: "power2.out" },
+        "start+=0.5",
+      );
+
       // Phase 2: Center turns Green (others stay gray)
       // Wait for rise to complete partially
       tl.to(
@@ -106,13 +135,9 @@ export default function ParallaxTeam() {
           duration: 1.5,
           ease: "power2.inOut",
         },
-        ">-=1",
+        ">-=0.5", // Slight overlap
       );
 
-      // Optional: Gently color the center's base image if needed (removes gray underneath)
-      // But keeping others gray.
-      // We only target the center's normal image to remove grayscale so it blends with the green overlay if transparent.
-      // If the overlay is full opacity, this might not be needed, but good for safety.
       tl.to(
         "#center .team-normal",
         {
@@ -123,12 +148,41 @@ export default function ParallaxTeam() {
         "<",
       );
 
-      // Phase 3: Hold / Exit
-      // The section stays pinned. When scroll ends, it naturally unpins.
-      tl.to({}, { duration: 1 });
+      // Phase 3: Text Transforms from Solid to Outline (Letter by Letter)
+      // Line 1: White -> Transparent with White Stroke
+      tl.to(
+        ".text-line-1 .char",
+        {
+          color: "transparent",
+          webkitTextStroke: "1px white",
+          duration: 0.5,
+          stagger: {
+            amount: 1.5,
+            from: "start",
+          },
+          ease: "power1.inOut",
+        },
+        "<+=0.5",
+      );
 
-      // 4. Exit/Fade out (optional, if you want them to leave after)
-      // tl.to(containerRef.current, { opacity: 0, duration: 1 });
+      // Line 2: Green -> Transparent with Green Stroke
+      tl.to(
+        ".text-line-2 .char",
+        {
+          color: "transparent",
+          webkitTextStroke: "1px #2ecc71", // Matching pathfinder-green
+          duration: 0.5,
+          stagger: {
+            amount: 1.5,
+            from: "start",
+          },
+          ease: "power1.inOut",
+        },
+        "<",
+      );
+
+      // Phase 4: Hold / Exit
+      tl.to({}, { duration: 1 });
     }, containerRef);
 
     return () => ctx.revert();
@@ -137,8 +191,40 @@ export default function ParallaxTeam() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[100svh] overflow-hidden bg-inherit flex flex-col items-center justify-end"
+      className="relative w-full h-svh overflow-hidden bg-inherit flex flex-col items-center justify-end"
     >
+      <div className="absolute top-[15%] lg:top-[12%] -z-20 w-[90%] h-[85%] max-w-full mx-auto flex flex-col md:flex-row items-center md:items-start md:justify-between pointer-events-none gap-4 md:gap-0">
+        {/* Left Side Text */}
+        <h2 className="text-line-1 text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter text-center md:text-left text-wrap leading-[0.9] max-w-2xl">
+          {"We know what it takes to make".split(" ").map((word, wI) => (
+            <span
+              key={wI}
+              className="inline-block whitespace-nowrap mr-[0.25em]"
+            >
+              {word.split("").map((char, cI) => (
+                <span key={cI} className="char inline-block">
+                  {char}
+                </span>
+              ))}
+            </span>
+          ))}
+        </h2>
+
+        <h2 className="text-line-2 text-pathfinder-green text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter text-center md:text-right text-wrap leading-[0.9] max-w-2xl md:mt-24 lg:mt-32">
+          {"your brand stand out".split(" ").map((word, wI) => (
+            <span
+              key={`l2-${wI}`}
+              className="inline-block whitespace-nowrap mr-[0.25em]"
+            >
+              {word.split("").map((char, cI) => (
+                <span key={cI} className="char inline-block">
+                  {char}
+                </span>
+              ))}
+            </span>
+          ))}
+        </h2>
+      </div>
       <div className="relative z-10 w-full h-[90%] md:h-full max-w-[1600px] flex items-end justify-center perspective-[1000px] pb-0 md:pb-[5vh]">
         {PEOPLE.map((person) => (
           <div
