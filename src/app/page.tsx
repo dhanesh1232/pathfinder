@@ -6,6 +6,7 @@ import Services from "@/components/Services";
 import Portfolio from "@/components/Portfolio";
 import Testimonial from "@/components/Testimonial";
 import Footer from "@/components/Footer";
+import TransformativeSection from "@/components/HowWeWorks";
 
 export default function Home() {
   return (
@@ -16,7 +17,8 @@ export default function Home() {
       {/* 2. Identity: People Section (Natural Scroll, IntersectionObserver) */}
       <ParallaxTeam />
 
-      <div className="h-[300vh]" />
+      {/* Spacer between Hero and People */}
+      <div className="h-[300svh]" />
 
       {/* 3. Trusted By / Logos */}
       <TrustedBy />
@@ -24,16 +26,22 @@ export default function Home() {
       {/* 4. Metrics / Projects */}
       <Metrics />
 
-      {/* 5. Services */}
+      {/* 5. How We Works */}
+      <TransformativeSection />
+
+      {/* Spacer between How We Works and Services */}
+      <div className="h-[1100svh]" />
+
+      {/* 6. Services */}
       <Services />
 
-      {/* 6. Portfolio */}
+      {/* 7. Portfolio */}
       <Portfolio />
 
-      {/* 7. Team / Testimonial */}
+      {/* 8. Team / Testimonial */}
       <Testimonial />
 
-      {/* 8. Contact / Footer */}
+      {/* 9. Contact / Footer */}
       <Footer />
     </>
   );

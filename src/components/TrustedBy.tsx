@@ -1,62 +1,160 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
-const LOGOS = [
-  "Company A",
-  "Partner B",
-  "Client C",
-  "Studio D",
-  "Brand E",
-  "Agency F",
+// Actual logo filenames from /public/Website logo
+const RAW_LOGOS = [
+  "Aaharam logo.png",
+  "Book my studio.png",
+  "Final Whole Ragi Design-1.png",
+  "Layer 5 log.png",
+  "NAJAH.png",
+  "adari logo.png",
+  "alankara beauty.png",
+  "babe.png",
+  "celodent.png",
+  "chimney.png",
+  "design fusion logo white.png",
+  "diya hilal.png",
+  "eshira.png",
+  "gg.png",
+  "glamigo.png",
+  "ithi jewel.png",
+  "jewel pik.png",
+  "khau gully.png",
+  "licoo.png",
+  "lo.png",
+  "logo 1.png",
+  "meat.png",
+  "paint.png",
+  "prepeat.png",
+  "prime ally.png",
+  "pv overseas.png",
+  "rajugari ruchulu.png",
+  "sai service.png",
+  "silver blossom.png",
+  "smoxy.png",
+  "sp.png",
+  "summit'.png",
+  "sweta silvers.png",
+  "taste pod png 1.png",
+  "tivi digital.png",
+  "unity.png",
+  "v jewellery.png",
+  "vysya logo.png",
 ];
 
+// Duplicate logos to create a seamless infinite loop with enough items
+const LOGOS = [...RAW_LOGOS, ...RAW_LOGOS, ...RAW_LOGOS];
+
 export default function TrustedBy() {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // One-time fade in
-        }
-      },
-      { threshold: 0.3 },
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
+  // Split logos into two rows
+  const midPoint = Math.ceil(LOGOS.length / 2);
+  const topRowLogos = LOGOS.slice(0, midPoint);
+  const bottomRowLogos = LOGOS.slice(midPoint);
 
   return (
-    <section
-      ref={sectionRef}
-      className="w-full py-24 bg-transparent flex flex-col items-center justify-center gap-12"
-    >
-      <div
-        className={`transition-opacity duration-1000 ${isVisible ? "opacity-100" : "opacity-0"}`}
-      >
-        <p className="text-white/40 text-sm uppercase tracking-widest mb-10 text-center">
-          <span className="text-pathfinder-green">We're trusted</span> by
-          companies like
+    <section className="w-full pt-14 pb-6 bg-transparent overflow-hidden">
+      {/* Header */}
+      <div className="text-center mb-12 px-6">
+        <p className="text-white/40 text-sm uppercase tracking-widest">
+          <span className="text-pathfinder-green">Trusted by</span> leading
+          companies worldwide
         </p>
+      </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-12 md:gap-20 max-w-6xl px-6">
-          {LOGOS.map((logo, index) => (
-            <div
-              key={index}
-              className="text-white/60 font-playfair text-2xl font-bold hover:text-white transition-colors duration-300"
-            >
-              {logo}
-            </div>
-          ))}
+      {/* Marquee Container */}
+      <div className="relative">
+        {/* Gradient Overlays */}
+        <div className="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-black to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-black to-transparent z-10 pointer-events-none" />
+
+        {/* First Marquee Row (Left to Right) */}
+        <div className="flex mb-8 overflow-hidden">
+          <div className="flex animate-marquee-left">
+            {topRowLogos.map((logo, index) => (
+              <LogoCard key={`row1-${index}`} logo={logo} />
+            ))}
+          </div>
+          <div className="flex animate-marquee-left" aria-hidden="true">
+            {topRowLogos.map((logo, index) => (
+              <LogoCard key={`row1-duplicate-${index}`} logo={logo} />
+            ))}
+          </div>
+        </div>
+
+        {/* Second Marquee Row (Right to Left) */}
+        <div className="flex overflow-hidden">
+          <div className="flex animate-marquee-right">
+            {bottomRowLogos.map((logo, index) => (
+              <LogoCard key={`row2-${index}`} logo={logo} />
+            ))}
+          </div>
+          <div className="flex animate-marquee-right" aria-hidden="true">
+            {bottomRowLogos.map((logo, index) => (
+              <LogoCard key={`row2-duplicate-${index}`} logo={logo} />
+            ))}
+          </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes marquee-left {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-100%);
+          }
+        }
+
+        @keyframes marquee-right {
+          0% {
+            transform: translateX(-100%);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+
+        .animate-marquee-left {
+          animation: marquee-left 60s linear infinite;
+        }
+
+        .animate-marquee-right {
+          animation: marquee-right 60s linear infinite;
+        }
+
+        .animate-marquee-left:hover,
+        .animate-marquee-right:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
+  );
+}
+
+function LogoCard({ logo }: { logo: string }) {
+  // Extract name for alt text: remove extension and possibly " logo" suffix
+  const name = logo
+    .replace(/\.(png|jpg|jpeg|svg)$/i, "")
+    .replace(/ logo$/i, "");
+
+  return (
+    <div className="shrink-0 mx-6 md:mx-8 group">
+      <div className="relative w-32 h-20 md:w-40 md:h-24 flex items-center justify-center bg-white/5 rounded-lg border border-white/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-white/10 group-hover:border-pathfinder-green/50 group-hover:scale-105">
+        {/* Logo Image */}
+        <div className="relative w-full h-full flex items-center justify-center p-4">
+          <Image
+            src={`/Website logo/${logo}`}
+            alt={`${name} logo`}
+            width={160}
+            height={96}
+            className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity duration-300 filter grayscale-0"
+            unoptimized
+          />
+        </div>
+      </div>
+    </div>
   );
 }

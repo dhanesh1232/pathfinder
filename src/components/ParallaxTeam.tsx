@@ -59,31 +59,24 @@ export default function ParallaxTeam() {
 
     const ctx = gsap.context(() => {
       // 1. Initial State Setup
-      // Start everyone hidden below (yPercent: 100) and Grayscale
+      // Images: Hidden below, Grayscale
       gsap.set(".team-member-container", { yPercent: 100 });
-
       gsap.set(".team-normal", {
         filter: "grayscale(100%) contrast(125%) brightness(110%)",
       });
+      gsap.set(".team-active", { opacity: 0 });
 
-      // Start the "Active/Green" overlay as hidden
-      gsap.set(".team-active", {
+      // Text: Hidden below (y=100%), Opacity 0, Solid Color (no stroke yet)
+      // Note: We need a wrapper to hide the overflow if we want a "mask" effect,
+      // but "opacity: 0" + "yPercent: 100" gives a nice "rising fade" effect which is often cleaner.
+      // User said "hide into y... reveal all chars"
+      gsap.set(".char", {
+        yPercent: 100,
         opacity: 0,
-      });
-
-      // Initial Text State: Solid White, Hidden/Offscreen for slide effect
-      // Line 1 (Odd chars? Or just whole line from left) -> User said "type text left and right"
-      // We'll slide Line 1 from Left, Line 2 from Right
-      gsap.set(".text-line-1", { xPercent: -100, opacity: 0 });
-      gsap.set(".text-line-2", { xPercent: 100, opacity: 0 });
-
-      // Ensure text starts solid (no stroke) and sets correct colors per line
-      gsap.set(".text-line-1 .char", {
-        color: "white",
-        webkitTextStroke: "0px transparent",
-      });
-      gsap.set(".text-line-2 .char", {
-        color: "#2ecc71", // pathfinder-green
+        color: (i, target) => {
+          // Keep original colors: Line 1 white, Line 2 green
+          return target.closest(".text-line-2") ? "#2ecc71" : "white";
+        },
         webkitTextStroke: "0px transparent",
       });
 
@@ -91,65 +84,64 @@ export default function ParallaxTeam() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=300%", // Extended for text animation phase
+          end: "+=300%", // Increased from 300% to make everything feel slower/more spread out
           pin: true,
-          scrub: 1,
+          scrub: 1, // Smooth scrub
           anticipatePin: 1,
         },
       });
 
-      // Phase 1: Everything Enters
-      // Team rises
+      // --- PHASE 1: ENTRANCE (Team Rise + Text Y-Reveal) ---
+      // Team rises up
       tl.to(
         ".team-member-container",
         {
           yPercent: 0,
-          duration: 2.5,
+          duration: 3, // Slower rise
           ease: "power2.out",
-          stagger: {
-            amount: 0.8,
-            from: "edges",
-          },
+          stagger: { amount: 0.8, from: "edges" },
         },
         "start",
       );
 
-      // Text Slides In (Solid) - Left and Right
+      // Text rises/fades in (Staggered Y-axis reveal)
+      // "slowly come text hide to visible"
       tl.to(
-        ".text-line-1",
-        { xPercent: 0, opacity: 1, duration: 2, ease: "power2.out" },
-        "start+=0.5",
-      );
-      tl.to(
-        ".text-line-2",
-        { xPercent: 0, opacity: 1, duration: 2, ease: "power2.out" },
-        "start+=0.5",
+        ".char",
+        {
+          yPercent: 0,
+          opacity: 1,
+          duration: 2, // Much slower relative duration
+          ease: "power2.out",
+          stagger: { amount: 1.2, from: "start" },
+        },
+        "start",
       );
 
-      // Phase 2: Center turns Green (others stay gray)
-      // Wait for rise to complete partially
+      // --- PHASE 2: FOCUS (Center Green) ---
+      // Occurs after text is fully revealed
       tl.to(
         ".team-active",
         {
           opacity: 1,
-          duration: 1.5,
+          duration: 3,
           ease: "power2.inOut",
         },
-        ">-=0.5", // Slight overlap
+        ">-=0.5",
       );
 
       tl.to(
         "#center .team-normal",
         {
           filter: "grayscale(0%) contrast(100%) brightness(100%)",
-          duration: 1.5,
+          duration: 3,
           ease: "power2.inOut",
         },
         "<",
       );
 
-      // Phase 3: Text Transforms from Solid to Outline (Letter by Letter)
-      // Line 1: White -> Transparent with White Stroke
+      // --- PHASE 3: EXIT / TRANSFORMATION (Solid -> Stroke) ---
+      // "solid to stroke slowly action not pastly"
       tl.to(
         ".text-line-1 .char",
         {
@@ -178,10 +170,47 @@ export default function ParallaxTeam() {
           },
           ease: "power1.inOut",
         },
-        "<",
+        ">-=0.5",
       );
 
-      // Phase 4: Hold / Exit
+      tl.to(
+        ".text-line-1 .char",
+        {
+          color: "white",
+          webkitTextStroke: "1px white", // Matching pathfinder-green
+          duration: 0.5,
+          stagger: {
+            amount: 1.5,
+            from: "start",
+          },
+          ease: "power1.out",
+        },
+        ">-=0.5",
+      );
+
+      tl.to(".text-line-1 .char", {
+        opacity: 0,
+        duration: 0.5,
+        yPercent: -100,
+        stagger: {
+          amount: 1.5,
+          from: "start",
+        },
+        ease: "power1.out",
+      });
+
+      tl.to(".text-line-2 .char", {
+        opacity: 0,
+        duration: 0.5,
+        yPercent: -100,
+        stagger: {
+          amount: 1.5,
+          from: "start",
+        },
+        ease: "power1.out",
+      });
+
+      // Buffer at end
       tl.to({}, { duration: 1 });
     }, containerRef);
 
@@ -193,37 +222,39 @@ export default function ParallaxTeam() {
       ref={containerRef}
       className="relative w-full h-svh overflow-hidden bg-inherit flex flex-col items-center justify-end"
     >
-      <div className="absolute top-[15%] lg:top-[12%] -z-20 w-[90%] h-[85%] max-w-full mx-auto flex flex-col md:flex-row items-center md:items-start md:justify-between pointer-events-none gap-4 md:gap-0">
-        {/* Left Side Text */}
-        <h2 className="text-line-1 text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter text-center md:text-left text-wrap leading-[0.9] max-w-2xl">
-          {"We know what it takes to make".split(" ").map((word, wI) => (
-            <span
-              key={wI}
-              className="inline-block whitespace-nowrap mr-[0.25em]"
-            >
-              {word.split("").map((char, cI) => (
-                <span key={cI} className="char inline-block">
-                  {char}
-                </span>
-              ))}
-            </span>
-          ))}
-        </h2>
+      <div className="absolute top-[15%] lg:top-[12%] -z-20 w-[90%] h-1/2 max-w-full mx-auto">
+        <div className="w-full h-full flex flex-col gap-10 md:gap-0 justify-center sm:justify-start md:justify-around lg:justify-start">
+          {/* Left Side Text */}
+          <h2 className="text-line-1 self-start text-5xl md:text-6xl font-bold uppercase tracking-tighter text-left text-wrap leading-[0.9] max-w-xl">
+            {"We know what it takes to make".split(" ").map((word, wI) => (
+              <span
+                key={wI}
+                className="inline-block whitespace-nowrap mr-[0.25em]"
+              >
+                {word.split("").map((char, cI) => (
+                  <span key={cI} className="char inline-block">
+                    {char}
+                  </span>
+                ))}
+              </span>
+            ))}
+          </h2>
 
-        <h2 className="text-line-2 text-pathfinder-green text-4xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter text-center md:text-right text-wrap leading-[0.9] max-w-2xl md:mt-24 lg:mt-32">
-          {"your brand stand out".split(" ").map((word, wI) => (
-            <span
-              key={`l2-${wI}`}
-              className="inline-block whitespace-nowrap mr-[0.25em]"
-            >
-              {word.split("").map((char, cI) => (
-                <span key={cI} className="char inline-block">
-                  {char}
-                </span>
-              ))}
-            </span>
-          ))}
-        </h2>
+          <h2 className="text-line-2 self-end text-pathfinder-green text-5xl md:text-6xl font-bold uppercase tracking-tighter text-right text-wrap leading-[0.9] max-w-xl">
+            {"your brand stand out".split(" ").map((word, wI) => (
+              <span
+                key={`l2-${wI}`}
+                className="inline-block whitespace-nowrap mr-[0.25em]"
+              >
+                {word.split("").map((char, cI) => (
+                  <span key={cI} className="char inline-block">
+                    {char}
+                  </span>
+                ))}
+              </span>
+            ))}
+          </h2>
+        </div>
       </div>
       <div className="relative z-10 w-full h-[90%] md:h-full max-w-[1600px] flex items-end justify-center perspective-[1000px] pb-0 md:pb-[5vh]">
         {PEOPLE.map((person) => (
