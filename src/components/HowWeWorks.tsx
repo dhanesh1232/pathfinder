@@ -218,11 +218,7 @@ export default function HowWeWorks() {
             {cards.map((card, index) => (
               <div
                 key={index}
-                className={`relative shrink-0 w-[80vw] sm:w-[70vw] md:w-[60vw] lg:w-[50vw] h-[70vh] sm:h-[75vh] md:h-[80vh] lg:h-[85vh] bg-black border border-white/10 rounded overflow-hidden flex flex-col justify-between group transition-all duration-500 origin-center ${
-                  index === activeIndex
-                    ? "border-pathfinder-green/50 scale-100 opacity-100"
-                    : "opacity-40 scale-95"
-                }`}
+                className={`relative shrink-0 w-[80vw] sm:w-[70vw] md:w-[60vw] lg:w-[50vw] h-[70vh] sm:h-[75vh] md:h-[80vh] lg:h-[85vh] bg-black border border-white/10 rounded overflow-hidden flex flex-col justify-between group transition-all duration-500 origin-center`}
                 style={{
                   transform: "rotateX(25deg)",
                 }}
@@ -255,7 +251,7 @@ export default function HowWeWorks() {
         </div>
       </section>
       {/* Spacer between How We Works and Services */}
-      <div className="h-[1500svh]" />
+      <div className="h-[1650svh] sm:h-[1500svh]" />
     </>
   );
 }

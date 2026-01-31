@@ -97,7 +97,7 @@ export default function BannerCarousel() {
           {/* Navigation Arrows (Visible on Hover/Always on Mobile) */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
+            className="absolute left-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-50 lg:opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
             aria-label="Previous Slide"
           >
             <svg
@@ -118,7 +118,7 @@ export default function BannerCarousel() {
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0"
+            className="absolute right-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-50 lg:opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0"
             aria-label="Next Slide"
           >
             <svg

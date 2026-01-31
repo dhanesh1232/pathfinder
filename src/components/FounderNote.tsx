@@ -90,18 +90,18 @@ export default function FounderNote() {
       ref={containerRef}
       className="relative w-full py-24 md:py-40 px-6 bg-transparent z-10"
     >
-      <div className="max-w-[1400px] mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Top Header */}
-        <div className="text-center mb-16 md:mb-24 founder-reveal">
+        <div className="text-center mb-4 md:mb-8 founder-reveal">
           <h2 className="text-4xl md:text-5xl lg:text-7xl font-poppins font-bold text-white leading-[1.1]">
             Our Team
           </h2>
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-32 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-14 mb-32 items-center">
           {/* Left: Personal Story */}
-          <div className="order-2 lg:order-1">
+          <div className="order-2 md:order-1">
             <h3 className="text-2xl md:text-3xl lg:text-4xl font-poppins font-bold text-white leading-[1.1]">
               One team. One vision. One Pathfinder Built with belief.{" "}
               <span className="text-pathfinder-green">Driven by purpose.</span>
