@@ -66,8 +66,8 @@ export default function TrustedBy() {
       {/* Marquee Container */}
       <div className="relative">
         {/* Gradient Overlays */}
-        <div className="absolute left-0 top-0 bottom-0 w-32 bg-linear-to-r from-black to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 bg-linear-to-l from-black to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-12 bg-linear-to-r from-black to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-12 bg-linear-to-l from-black to-transparent z-10 pointer-events-none" />
 
         {/* First Marquee Row (Left to Right) */}
         <div className="flex mb-8 overflow-hidden">
@@ -142,7 +142,7 @@ function LogoCard({ logo }: { logo: string }) {
 
   return (
     <div className="shrink-0 mx-6 md:mx-8 group">
-      <div className="relative w-32 h-20 md:w-40 md:h-24 flex items-center justify-center bg-white/5 rounded-lg border border-white/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-white/10 group-hover:border-pathfinder-green/50 group-hover:scale-105">
+      <div className="relative w-24 h-16 md:w-30 md:h-20 flex items-center justify-center bg-white/5 rounded-lg border border-white/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-white/10 group-hover:border-pathfinder-green/50 group-hover:scale-105">
         {/* Logo Image */}
         <div className="relative w-full h-full flex items-center justify-center p-4">
           <Image

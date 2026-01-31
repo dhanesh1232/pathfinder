@@ -11,10 +11,9 @@ const PEOPLE = [
     id: "left-2",
     normal: "/person/left side image two.png",
     name: "Member 1",
-    // Added 'layer' for parallax depth sorting
     layer: 1,
     position:
-      "left-[-5%] md:left-[5%] lg:left-[12%] z-10 w-[30%] md:w-[22%] lg:w-[18%]",
+      "left-[2%] md:left-[5%] lg:left-[12%] z-0 w-[35%] sm:w-[30%] md:w-[22%] lg:w-[18%] xl:w-[16%] 2xl:w-[15%]",
   },
   {
     id: "left-1",
@@ -22,16 +21,16 @@ const PEOPLE = [
     name: "Member 2",
     layer: 2,
     position:
-      "left-[10%] md:left-[22%] lg:left-[26%] -z-20 w-[35%] md:w-[26%] lg:w-[21%]",
+      "left-[15%] md:left-[22%] lg:left-[26%] -z-10 w-[40%] sm:w-[35%] md:w-[26%] lg:w-[21%] xl:w-[19%] 2xl:w-[18%]",
   },
   {
     id: "center",
     normal: "/person/center normal.png",
-    active: "/person/center green.png", // This one has a special active state
+    active: "/person/center green.png",
     name: "Leader",
     layer: 3,
     position:
-      "left-1/2 -translate-x-1/2 md:right-[50%] -z-30 w-[45%] md:w-[30%] lg:w-[24%]",
+      "left-1/2 -translate-x-1/2 -z-30 w-[50%] sm:w-[40%] md:w-[30%] lg:w-[24%] xl:w-[22%] 2xl:w-[20%]",
   },
   {
     id: "right-1",
@@ -39,7 +38,7 @@ const PEOPLE = [
     name: "Member 4",
     layer: 2,
     position:
-      "right-[10%] md:right-[22%] lg:right-[26%] -z-20 w-[35%] md:w-[26%] lg:w-[21%]",
+      "right-[15%] md:right-[22%] lg:right-[26%] -z-10 w-[40%] sm:w-[35%] md:w-[26%] lg:w-[21%] xl:w-[19%] 2xl:w-[18%]",
   },
   {
     id: "right-2",
@@ -47,7 +46,7 @@ const PEOPLE = [
     name: "Member 5",
     layer: 1,
     position:
-      "right-[-5%] md:right-[5%] lg:right-[12%] z-10 w-[30%] md:w-[22%] lg:w-[18%]",
+      "right-[2%] md:right-[5%] lg:right-[12%] z-0 w-[35%] sm:w-[30%] md:w-[22%] lg:w-[18%] xl:w-[16%] 2xl:w-[15%]",
   },
 ];
 
@@ -223,9 +222,9 @@ export default function ParallaxTeam() {
       className="relative w-full h-svh overflow-hidden bg-inherit flex flex-col items-center justify-end"
     >
       <div className="absolute top-[15%] lg:top-[12%] -z-20 w-[90%] h-1/2 max-w-full mx-auto">
-        <div className="w-full h-full flex flex-col gap-10 md:gap-0 justify-center sm:justify-start md:justify-around lg:justify-start">
+        <div className="w-full h-full flex flex-col gap-6 md:gap-0 justify-center sm:justify-start md:justify-around lg:justify-start">
           {/* Left Side Text */}
-          <h2 className="text-line-1 self-start text-5xl md:text-6xl font-bold uppercase tracking-tighter text-left text-wrap leading-[0.9] max-w-xl">
+          <h2 className="text-line-1 self-start text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tighter text-left text-wrap leading-[0.9] max-w-xl">
             {"We know what it takes to make".split(" ").map((word, wI) => (
               <span
                 key={wI}
@@ -240,7 +239,7 @@ export default function ParallaxTeam() {
             ))}
           </h2>
 
-          <h2 className="text-line-2 self-end text-pathfinder-green text-5xl md:text-6xl font-bold uppercase tracking-tighter text-right text-wrap leading-[0.9] max-w-xl">
+          <h2 className="text-line-2 self-end text-pathfinder-green text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tighter text-right text-wrap leading-[0.9] max-w-xl">
             {"your brand stand out".split(" ").map((word, wI) => (
               <span
                 key={`l2-${wI}`}

@@ -102,18 +102,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased text-foreground overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased text-foreground`}
       >
         {/* Global Background & Noise */}
         <div className="fixed inset-0 z-[-1]">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,#1a1a1a_0%,#0a0a0a_100%)]" />
           <div className="absolute inset-0 bg-noise opacity-[0.09] mix-blend-overlay" />
         </div>
-
-        <GlobalNav />
-        <main className="z-10 flex flex-col relative">{children}</main>
-
-        <SmoothScroll />
+        <main>
+          <GlobalNav />
+          <div className="z-10 flex flex-col relative">{children}</div>
+          <SmoothScroll />
+        </main>
       </body>
     </html>
   );

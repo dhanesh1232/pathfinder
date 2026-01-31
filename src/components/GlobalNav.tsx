@@ -28,7 +28,7 @@ export default function GlobalNav() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-0 ring-0 outline-none ${
+        className={`fixed top-0 left-0 w-full z-50 flex items-center justify-between pl-0 pr-4 py-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-0 ring-0 outline-none ${
           isScrolled ? "backdrop-blur-sm bg-black/30" : ""
         }`}
       >
