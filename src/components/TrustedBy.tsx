@@ -54,7 +54,7 @@ export default function TrustedBy() {
   const bottomRowLogos = LOGOS.slice(midPoint);
 
   return (
-    <section className="w-full pt-14 pb-6 bg-transparent overflow-hidden">
+    <section className="w-full py-24 bg-transparent overflow-hidden">
       {/* Header */}
       <div className="text-center mb-12 px-6">
         <p className="text-white/40 text-sm uppercase tracking-widest">

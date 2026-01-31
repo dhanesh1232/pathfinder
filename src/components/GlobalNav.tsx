@@ -49,7 +49,7 @@ export default function GlobalNav() {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-14">
           {["Home", "Service", "About Us", "Contact"].map((item) => (
             <Link
               key={item}
