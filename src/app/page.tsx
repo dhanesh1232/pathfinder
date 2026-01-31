@@ -26,14 +26,14 @@ export default function Home() {
       {/* 4. Metrics / Projects */}
       <Metrics />
 
-      {/* 5. How We Works */}
+      {/* 5. Services */}
+      <Services />
+
+      {/* 6. How We Works */}
       <TransformativeSection />
 
       {/* Spacer between How We Works and Services */}
       <div className="h-[1100svh]" />
-
-      {/* 6. Services */}
-      <Services />
 
       {/* 7. Portfolio */}
       <Portfolio />

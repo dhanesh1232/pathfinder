@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -25,19 +25,64 @@ const cards = [
   },
 ];
 
+function TypingText({
+  text,
+  className,
+  as: Component = "p",
+}: {
+  text: string;
+  className?: string;
+  as?: any;
+}) {
+  const el = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!el.current) return;
+
+    // Split text into words to wrap correctly, then chars for animation
+    const words = text.split(" ");
+    el.current.innerHTML = "";
+
+    words.forEach((word, wordIndex) => {
+      const wordSpan = document.createElement("span");
+      wordSpan.style.display = "inline-block";
+      wordSpan.style.whiteSpace = "nowrap";
+      wordSpan.style.marginRight = "0.25em"; // space between words
+
+      const chars = word.split("");
+      chars.forEach((char) => {
+        const charSpan = document.createElement("span");
+        charSpan.textContent = char;
+        charSpan.style.opacity = "0";
+        charSpan.className = "typing-char";
+        wordSpan.appendChild(charSpan);
+      });
+
+      el.current!.appendChild(wordSpan);
+    });
+
+    gsap.to(el.current.querySelectorAll(".typing-char"), {
+      opacity: 1,
+      stagger: 0.02,
+      duration: 0.1,
+      ease: "power1.out",
+    });
+  }, [text]);
+
+  return <Component ref={el} className={className} />;
+}
+
 export default function HowWeWorks() {
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   useEffect(() => {
     if (!containerRef.current || !triggerRef.current || !wrapperRef.current)
       return;
 
     const ctx = gsap.context(() => {
-      // Horizontal Scroll Animation
-      // The track is inside a rotated wrapper.
-
       // 1. Initial Fade In (Independent of Scroll Position)
       gsap.fromTo(
         wrapperRef.current,
@@ -63,6 +108,31 @@ export default function HowWeWorks() {
           pin: true,
           scrub: 1, // Instant response to scroll
           anticipatePin: 1,
+          onUpdate: () => {
+            if (!containerRef.current) return;
+
+            const viewportCenter = window.innerWidth / 2;
+            const children = containerRef.current.children;
+            let closestIndex = -1;
+            let minDistance = Infinity;
+
+            for (let i = 0; i < children.length; i++) {
+              const rect = children[i].getBoundingClientRect();
+              const cardCenter = rect.left + rect.width / 2;
+              const distance = Math.abs(viewportCenter - cardCenter);
+              const threshold = rect.width / 2;
+
+              // Only active if close to center
+              if (distance < threshold) {
+                if (distance < minDistance) {
+                  minDistance = distance;
+                  closestIndex = i;
+                }
+              }
+            }
+
+            setActiveIndex(closestIndex);
+          },
         },
       });
 
@@ -87,8 +157,8 @@ export default function HowWeWorks() {
         Moving Left (against the slope) creates the visual effect of "Climbing" from BR to TL.
       */}
       {/* Static Title (Fixed inside the rotated container) */}
-      <div className="z-20 pointer-events-none absolute left-50 md:left-1/5 transform -translate-x-1/2">
-        <h2 className="text-5xl md:text-7xl font-black text-white italic tracking-tighter uppercase leading-[0.8] drop-shadow-xl max-w-sm text-wrap">
+      <div className="z-20 pointer-events-none absolute left-[15%] top-[20%] md:top-[25%] md:left-[10%] max-w-sm md:max-w-md">
+        <h2 className="text-5xl md:text-7xl font-black text-white italic tracking-tighter uppercase leading-[0.8] drop-shadow-xl text-wrap mb-8">
           How We Work
           <br />
           <span
@@ -98,6 +168,24 @@ export default function HowWeWorks() {
             Pathfinder
           </span>
         </h2>
+
+        {/* Dynamic Typing Title & Text */}
+        <div className="pointer-events-auto min-h-[120px]">
+          {activeIndex !== -1 && (
+            <>
+              <TypingText
+                text={cards[activeIndex].title}
+                as="h3"
+                className="text-3xl md:text-4xl font-bold text-pathfinder-green mb-2 uppercase tracking-wide"
+              />
+              <TypingText
+                text={cards[activeIndex].text}
+                as="p"
+                className="text-zinc-400 text-xl md:text-2xl font-light leading-relaxed"
+              />
+            </>
+          )}
+        </div>
       </div>
       <div
         ref={wrapperRef}
@@ -111,7 +199,11 @@ export default function HowWeWorks() {
           {cards.map((card, index) => (
             <div
               key={index}
-              className="shrink-0 w-[70vw] sm:w-[50vw] md:w-[50vw] lg:w-[40vw] h-[80vh] bg-black border border-white/10 rounded-lg p-10 flex flex-col justify-between group transition-all duration-500 hover:border-pathfinder-green/50 origin-center"
+              className={`shrink-0 w-[70vw] sm:w-[60vw] md:w-[50vw] lg:w-[40vw] h-[65vh] sm:h-[70vh] md:h-[80vh] bg-black border border-white/10 rounded-lg p-10 flex flex-col justify-between group transition-all duration-500 origin-center ${
+                index === activeIndex
+                  ? "border-pathfinder-green/50 shadow-[0_0_50px_-10px_rgba(46,204,113,0.1)] scale-100 opacity-100"
+                  : "opacity-40 scale-95"
+              }`}
               style={{
                 transform: "rotateX(15deg)",
               }}

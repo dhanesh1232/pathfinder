@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Playfair_Display } from "next/font/google"; // Import Playfair_Display
+import { Geist, Geist_Mono, Playfair_Display, Poppins } from "next/font/google"; // Import Poppins
 import SmoothScroll from "@/components/SmoothScroll";
 import GlobalNav from "@/components/GlobalNav";
 import "./globals.css";
@@ -17,6 +17,12 @@ const geistMono = Geist_Mono({
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
+});
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const viewport: Viewport = {
@@ -102,7 +108,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${poppins.variable} antialiased text-foreground`}
       >
         {/* Global Background & Noise */}
         <div className="fixed inset-0 z-[-1]">
