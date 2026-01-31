@@ -112,8 +112,7 @@ export default function RootLayout({
       >
         {/* Global Background & Noise */}
         <div className="fixed inset-0 z-[-1]">
-          <div className="absolute inset-0 bg-[linear-gradient(to_bottom_right,#1a1a1a,#0a0a0a)]" />
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.09] mix-blend-overlay" />
+          <div className="absolute inset-0 bg-[url(/website-bg.jpeg)] bg-cover bg-center bg-no-repeat" />
         </div>
         <main>
           <GlobalNav />

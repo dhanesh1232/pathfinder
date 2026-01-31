@@ -217,72 +217,76 @@ export default function ParallaxTeam() {
   }, []);
 
   return (
-    <section
-      ref={containerRef}
-      className="relative w-full h-svh overflow-hidden bg-inherit flex flex-col items-center justify-end"
-    >
-      <div className="absolute top-[15%] lg:top-[12%] -z-20 w-[90%] h-1/2 max-w-full mx-auto">
-        <div className="w-full h-full flex flex-col gap-6 md:gap-0 justify-center sm:justify-start md:justify-around lg:justify-start">
-          {/* Left Side Text */}
-          <h2 className="text-line-1 self-start text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tighter text-left text-wrap leading-[0.9] max-w-xl">
-            {"We know what it takes to make".split(" ").map((word, wI) => (
-              <span
-                key={wI}
-                className="inline-block whitespace-nowrap mr-[0.25em]"
-              >
-                {word.split("").map((char, cI) => (
-                  <span key={cI} className="char inline-block">
-                    {char}
-                  </span>
-                ))}
-              </span>
-            ))}
-          </h2>
+    <>
+      <section
+        ref={containerRef}
+        className="relative w-full h-svh overflow-hidden bg-inherit flex flex-col items-center justify-end"
+      >
+        <div className="absolute top-[15%] lg:top-[12%] -z-20 w-[90%] h-1/2 max-w-full mx-auto">
+          <div className="w-full h-full flex flex-col sm:gap-6 md:gap-0 justify-center gap-8 sm:justify-center md:justify-around lg:justify-start">
+            {/* Left Side Text */}
+            <h2 className="text-line-1 self-start text-5xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter text-left text-wrap leading-[0.9] max-w-xl">
+              {"We know what it takes to make".split(" ").map((word, wI) => (
+                <span
+                  key={wI}
+                  className="inline-block whitespace-nowrap mr-[0.25em]"
+                >
+                  {word.split("").map((char, cI) => (
+                    <span key={cI} className="char inline-block">
+                      {char}
+                    </span>
+                  ))}
+                </span>
+              ))}
+            </h2>
 
-          <h2 className="text-line-2 self-end text-pathfinder-green text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tighter text-right text-wrap leading-[0.9] max-w-xl">
-            {"your brand stand out".split(" ").map((word, wI) => (
-              <span
-                key={`l2-${wI}`}
-                className="inline-block whitespace-nowrap mr-[0.25em]"
-              >
-                {word.split("").map((char, cI) => (
-                  <span key={cI} className="char inline-block">
-                    {char}
-                  </span>
-                ))}
-              </span>
-            ))}
-          </h2>
-        </div>
-      </div>
-      <div className="relative z-10 w-full h-[90%] md:h-full max-w-[1600px] flex items-end justify-center perspective-[1000px] pb-0 md:pb-[5vh]">
-        {PEOPLE.map((person) => (
-          <div
-            key={person.id}
-            id={person.id}
-            className={`team-member-container absolute bottom-0 flex flex-col items-center justify-end
-               layer-${person.layer} ${person.position}`}
-          >
-            <div className="relative w-full">
-              {/* NORMAL IMAGE (Base) */}
-              <img
-                src={person.normal}
-                alt={person.name}
-                className="team-normal w-full h-auto object-contain drop-shadow-2xl will-change-filter"
-              />
-
-              {/* ACTIVE IMAGE (Green Overlay for Leader) */}
-              {person.active && (
-                <img
-                  src={person.active}
-                  alt={`${person.name} active`}
-                  className="team-active absolute top-0 left-0 w-full h-auto object-contain drop-shadow-2xl will-change-opacity"
-                />
-              )}
-            </div>
+            <h2 className="text-line-2 self-end text-pathfinder-green text-5xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter text-right text-wrap leading-[0.9] max-w-xl">
+              {"your brand stand out".split(" ").map((word, wI) => (
+                <span
+                  key={`l2-${wI}`}
+                  className="inline-block whitespace-nowrap mr-[0.25em]"
+                >
+                  {word.split("").map((char, cI) => (
+                    <span key={cI} className="char inline-block">
+                      {char}
+                    </span>
+                  ))}
+                </span>
+              ))}
+            </h2>
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
+        <div className="relative z-10 w-full h-[90%] md:h-full max-w-[1600px] flex items-end justify-center perspective-[1000px] pb-0 md:pb-[5vh]">
+          {PEOPLE.map((person) => (
+            <div
+              key={person.id}
+              id={person.id}
+              className={`team-member-container absolute bottom-0 flex flex-col items-center justify-end
+               layer-${person.layer} ${person.position}`}
+            >
+              <div className="relative w-full">
+                {/* NORMAL IMAGE (Base) */}
+                <img
+                  src={person.normal}
+                  alt={person.name}
+                  className="team-normal w-full h-auto object-contain drop-shadow-2xl will-change-filter"
+                />
+
+                {/* ACTIVE IMAGE (Green Overlay for Leader) */}
+                {person.active && (
+                  <img
+                    src={person.active}
+                    alt={`${person.name} active`}
+                    className="team-active absolute top-0 left-0 w-full h-auto object-contain drop-shadow-2xl will-change-opacity"
+                  />
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+      {/* Spacer between Hero and People */}
+      <div className="h-[315svh] sm:h-[300svh]" />
+    </>
   );
 }

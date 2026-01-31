@@ -54,15 +54,7 @@ export default function TrustedBy() {
   const bottomRowLogos = LOGOS.slice(midPoint);
 
   return (
-    <section className="w-full py-24 bg-transparent overflow-hidden">
-      {/* Header */}
-      <div className="text-center mb-12 px-6">
-        <p className="text-white/40 text-sm uppercase tracking-widest">
-          <span className="text-pathfinder-green">Trusted by</span> leading
-          companies worldwide
-        </p>
-      </div>
-
+    <section className="w-full mt-10 pt-24 bg-transparent overflow-hidden">
       {/* Marquee Container */}
       <div className="relative">
         {/* Gradient Overlays */}
@@ -79,20 +71,6 @@ export default function TrustedBy() {
           <div className="flex animate-marquee-left" aria-hidden="true">
             {topRowLogos.map((logo, index) => (
               <LogoCard key={`row1-duplicate-${index}`} logo={logo} />
-            ))}
-          </div>
-        </div>
-
-        {/* Second Marquee Row (Right to Left) */}
-        <div className="flex overflow-hidden">
-          <div className="flex animate-marquee-right">
-            {bottomRowLogos.map((logo, index) => (
-              <LogoCard key={`row2-${index}`} logo={logo} />
-            ))}
-          </div>
-          <div className="flex animate-marquee-right" aria-hidden="true">
-            {bottomRowLogos.map((logo, index) => (
-              <LogoCard key={`row2-duplicate-${index}`} logo={logo} />
             ))}
           </div>
         </div>

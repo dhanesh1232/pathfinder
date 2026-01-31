@@ -1,10 +1,11 @@
 import HandSplitHero from "@/components/HandSplitHero";
 import ParallaxTeam from "@/components/ParallaxTeam";
 import TrustedBy from "@/components/TrustedBy";
+import BannerCarousel from "@/components/BannerCarousel";
 import Metrics from "@/components/Metrics";
 import Services from "@/components/Services";
 import Portfolio from "@/components/Portfolio";
-import Testimonial from "@/components/Testimonial";
+import FounderNote from "@/components/FounderNote";
 import Footer from "@/components/Footer";
 import TransformativeSection from "@/components/HowWeWorks";
 
@@ -17,11 +18,11 @@ export default function Home() {
       {/* 2. Identity: People Section (Natural Scroll, IntersectionObserver) */}
       <ParallaxTeam />
 
-      {/* Spacer between Hero and People */}
-      <div className="h-[300svh]" />
-
       {/* 3. Trusted By / Logos */}
       <TrustedBy />
+
+      {/* 3b. Banner Carousel */}
+      <BannerCarousel />
 
       {/* 4. Metrics / Projects */}
       <Metrics />
@@ -32,14 +33,11 @@ export default function Home() {
       {/* 6. How We Works */}
       <TransformativeSection />
 
-      {/* Spacer between How We Works and Services */}
-      <div className="h-[1100svh]" />
-
       {/* 7. Portfolio */}
       <Portfolio />
 
-      {/* 8. Team / Testimonial */}
-      <Testimonial />
+      {/* 8. Founder Note / Team Philosophy */}
+      <FounderNote />
 
       {/* 9. Contact / Footer */}
       <Footer />
