@@ -92,7 +92,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} antialiased text-foreground`}>
+      <body
+        className={`${poppins.variable} antialiased text-foreground bg-black`}
+      >
         {/* Global Background & Noise */}
         <div className="fixed inset-0 z-[-1]">
           <div className="absolute inset-0 bg-[url(/website-bg.jpeg)] bg-cover bg-center bg-no-repeat" />

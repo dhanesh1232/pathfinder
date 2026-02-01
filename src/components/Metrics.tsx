@@ -40,7 +40,7 @@ export default function Metrics() {
         { yPercent: 100 },
         {
           yPercent: 0,
-          duration: 0.1,
+          duration: 0.3,
           ease: "power2.out",
           stagger: 0.02,
           scrollTrigger: {
@@ -57,7 +57,7 @@ export default function Metrics() {
         { yPercent: 100 },
         {
           yPercent: 0,
-          duration: 0.1,
+          duration: 0.3,
           ease: "power2.out",
           stagger: 0.005,
           scrollTrigger: {

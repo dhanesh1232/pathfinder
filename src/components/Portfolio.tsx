@@ -94,9 +94,12 @@ export default function Portfolio() {
   const [displayedItems, setDisplayedItems] = useState(
     ALL_PORTFOLIO_ITEMS.slice(0, 12),
   );
+  const [isShuffleActive, setIsShuffleActive] = useState(false);
 
   // Shuffle Logic
   useEffect(() => {
+    if (!isShuffleActive) return;
+
     const interval = setInterval(() => {
       // Pick 3 random indices to swap
       const indicesToSwap = new Set<number>();
@@ -154,10 +157,17 @@ export default function Portfolio() {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [displayedItems]); // Re-bind if array size changes (it won't)
+  }, [displayedItems, isShuffleActive]);
 
   useGSAP(
     () => {
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        onToggle: (self) => setIsShuffleActive(self.isActive),
+      });
+
       const items = gsap.utils.toArray<HTMLElement>(".portfolio-item");
 
       items.forEach((item, i) => {
@@ -187,10 +197,10 @@ export default function Portfolio() {
       ref={containerRef}
       className="w-full py-32 md:py-48 px-6 bg-transparent relative z-10"
     >
-      <div className="max-w-[1600px] mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-24 md:mb-32">
-          <h2 className="text-white font-poppins font-black text-6xl md:text-8xl lg:text-9xl tracking-tighter uppercase mb-6">
+          <h2 className="text-white font-poppins font-black text-5xl md:text-7xl lg:text-9xl tracking-tighter uppercase mb-2">
             Selected Works
           </h2>
           <p className="text-white/60 font-nohemi text-lg md:text-xl font-light max-w-2xl mx-auto">
@@ -199,7 +209,7 @@ export default function Portfolio() {
         </div>
 
         {/* Masonry Grid */}
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+        <div className="columns-2 md:columns-3 lg:columns-4 gap-3 space-y-3">
           {displayedItems.map((item, idx) => (
             <div
               key={idx} // Using Index as key here is crucial for keeping DOM nodes stable for animation sharing
@@ -216,7 +226,7 @@ export default function Portfolio() {
         </div>
 
         {/* Minimal Luxury Download CTA */}
-        <div className="mt-32 flex flex-col items-center justify-center">
+        <div className="mt-12 flex flex-col items-center justify-center">
           <a
             href="/portfolio.pdf"
             download="The_Pathfinders_Portfolio.pdf"

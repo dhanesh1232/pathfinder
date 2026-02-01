@@ -106,7 +106,7 @@ export default function Services() {
     >
       <div className="max-w-7xl w-full mx-auto">
         {/* Section Header */}
-        <div className="service-header text-center mb-24 md:mb-40">
+        <div className="service-header text-center mb-32 md:mb-48">
           <h2 className="flex flex-col items-center text-7xl md:text-9xl lg:text-[10rem] font-poppins font-black tracking-tight mb-12 text-white uppercase leading-[0.9]">
             {/* Line 1: OUR */}
             <div className="inline-block whitespace-nowrap">
@@ -150,39 +150,36 @@ export default function Services() {
           {SERVICES.map((service, index) => (
             <div
               key={index}
-              className="service-card group relative flex flex-col p-10 rounded-sm bg-zinc-900/40 backdrop-blur-xl border border-white/5 overflow-hidden transition-all duration-500 hover:bg-zinc-900/60 hover:-translate-y-2 op-0"
+              className="service-card group relative flex flex-col p-8 md:p-10 rounded-3xl bg-green-900/20 backdrop-blur-2xl border border-white/10 overflow-hidden transition-all duration-500 hover:border-emerald-500/40 hover:bg-emerald-950/20 hover:shadow-[0_0_40px_rgba(16,185,129,0.1)] opacity-0"
             >
-              {/* Vertical Path Line (Left Edge) */}
-              <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-white/5">
-                <div className="w-full h-full bg-pathfinder-green shadow-[0_0_15px_rgba(46,204,113,0.5)] -translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out" />
+              {/* Internal Emerald Glow Gradient */}
+              <div className="absolute -inset-1/2 bg-radial-gradient from-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-700 pointer-events-none" />
+
+              {/* Right Side Fluid Water Drop Animation */}
+              <div className="absolute right-0 top-0 bottom-0 w-[2px] pointer-events-none overflow-visible">
+                {/* The Droplet Runner */}
+                <div className="absolute top-full right-0 w-[2px] h-[100px] bg-gradient-to-t from-transparent to-emerald-400 group-hover:top-[50%] transition-all duration-[1.5s] ease-in-out">
+                  {/* Glowing Head with Emerald Noise */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[6px] h-[16px] bg-emerald-400 rounded-full blur-[1px] shadow-[0_0_15px_#34d399] overflow-hidden">
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC42NSIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIG9wYWNpdHk9IjAuNSIgZmlsdGVyPSJ1cmwoI2YpIi8+PC9zdmc+')] opacity-60 mix-blend-overlay" />
+                  </div>
+                  {/* Solid Core */}
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-[2.5px] bg-emerald-400 rounded-full opacity-100 shadow-[0_0_5px_green]" />
+                </div>
               </div>
 
-              {/* Service Index */}
-              <div className="mb-8">
-                <span className="text-xs font-mono text-zinc-600 tracking-widest">
-                  {(index + 1).toString().padStart(2, "0")}/
-                </span>
-              </div>
-
-              <div className="mb-auto">
-                {/* Title */}
-                <h3 className="text-2xl md:text-3xl font-medium text-white mb-4 group-hover:text-white transition-colors">
-                  {service.title}
-                </h3>
-                {/* Subtitle */}
-                <p className="text-pathfinder-green text-xs font-bold uppercase tracking-widest mb-6 opacity-90 font-aalto">
+              <div className="mb-auto mt-2 relative z-10">
+                {/* Subtitle (Moved Above Title for hierarchy) */}
+                <p className="text-emerald-400 text-xs font-bold uppercase tracking-[0.2em] mb-4 opacity-80 font-aalto">
                   {service.subtitle}
                 </p>
+                {/* Title */}
+                <h3 className="text-3xl md:text-4xl font-medium text-white mb-6 leading-tight group-hover:translate-x-0.5 transition-transform duration-300">
+                  {service.title}
+                </h3>
                 {/* Description */}
-                <p className="text-zinc-400 leading-relaxed text-sm md:text-base font-light font-nohemi">
+                <p className="text-zinc-400 group-hover:text-zinc-300 leading-relaxed text-sm md:text-base font-light font-nohemi transition-colors">
                   {service.description}
-                </p>
-              </div>
-
-              {/* Footer Note */}
-              <div className="mt-12 pt-6 border-t border-white/5">
-                <p className="text-zinc-500 text-xs md:text-sm italic font-light group-hover:text-zinc-400 transition-colors duration-300 font-nohemi">
-                  {service.note}
                 </p>
               </div>
             </div>
@@ -192,7 +189,7 @@ export default function Services() {
         {/* Section CTA */}
         <div className="service-card flex justify-center">
           <Link
-            href="https://wa.me/"
+            href="https://wa.me/+919676104199"
             target="_blank"
             className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full backdrop-blur-md transition-all duration-300"
           >

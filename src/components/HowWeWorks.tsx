@@ -200,7 +200,7 @@ export default function HowWeWorks() {
                 <TypingText
                   text={cards[activeIndex].text}
                   as="p"
-                  className="text-zinc-400 text-xl md:text-2xl font-light leading-relaxed font-nohemi"
+                  className="text-zinc-50 text-xl md:text-2xl font-light leading-relaxed font-nohemi"
                 />
               </>
             )}

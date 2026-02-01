@@ -67,7 +67,6 @@ export default function FounderNote() {
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-14 mb-32 items-center">
-          {/* Left: Personal Story */}
           {/* Left: Content Slider */}
           <div className="order-2 md:order-1 relative min-h-[400px]">
             {SLIDE_CONTENT.map((slide, index) => (
@@ -115,7 +114,7 @@ export default function FounderNote() {
           {/* Right: Team Context & Card */}
           <div className="flex flex-col gap-12 items-end relative order-1 lg:order-2">
             {/* Founder Card */}
-            <div className="founder-card relative group w-full max-w-md">
+            <div className="founder-card relative group w-full md:max-w-md">
               <div className="relative rounded-3xl overflow-hidden">
                 <img
                   src="/my-img.png"
