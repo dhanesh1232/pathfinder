@@ -119,18 +119,31 @@ function LogoCard({ logo }: { logo: string }) {
     .replace(/ logo$/i, "");
 
   return (
-    <div className="shrink-0 mx-6 md:mx-8 group">
-      <div className="relative w-24 h-16 md:w-30 md:h-20 flex items-center justify-center bg-white/5 rounded-lg border border-white/10 backdrop-blur-sm transition-all duration-300 group-hover:bg-white/10 group-hover:border-pathfinder-green/50 group-hover:scale-105">
-        {/* Logo Image */}
-        <div className="relative w-full h-full flex items-center justify-center p-4">
-          <Image
-            src={`/Website logo/${logo}`}
-            alt={`${name} logo`}
-            width={160}
-            height={96}
-            className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-opacity duration-300 filter grayscale-0"
-            unoptimized
-          />
+    <div className="shrink-0 mx-6 md:mx-8 group cursor-pointer">
+      <div className="relative w-24 h-16 md:w-30 md:h-20 overflow-hidden">
+        <div className="w-full h-full flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-full">
+          {/* Default Logo */}
+          <div className="shrink-0 w-full h-full flex items-center justify-center">
+            <Image
+              src={`/Website logo/${logo}`}
+              alt={`${name} logo`}
+              width={160}
+              height={96}
+              className="w-full h-full object-contain opacity-70 transition-opacity duration-300"
+              unoptimized
+            />
+          </div>
+          {/* Hover Logo (Slides in from bottom) */}
+          <div className="shrink-0 w-full h-full flex items-center justify-center">
+            <Image
+              src={`/Website logo/${logo}`}
+              alt={`${name} logo active`}
+              width={160}
+              height={96}
+              className="w-full h-full object-contain opacity-100"
+              unoptimized
+            />
+          </div>
         </div>
       </div>
     </div>

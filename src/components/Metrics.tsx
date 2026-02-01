@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const METRICS = [
   { label: "Projects Completed", value: 1000 },
@@ -8,37 +10,76 @@ const METRICS = [
   { label: "Years Experience", value: 5 },
 ];
 
+const WHY_TEXT_1 =
+  "Pathfinder exists to help brands find clarity, direction, and growth—no matter their size. From early‑stage startups to large‑scale companies, we work closely with businesses at every stage of their journey, offering creative and digital solutions that are impactful and affordable.";
+
+const WHY_TEXT_2 =
+  "We believe great branding should not be limited by budgets, which is why our approach is flexible, honest, and focused on real value. By combining strategy, design, and execution under one roof, we guide brands along the right path—delivering work that is purposeful, scalable, and built to last.";
+
 export default function Metrics() {
   const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.2 },
-    );
+    gsap.registerPlugin(ScrollTrigger);
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+    const ctx = gsap.context(() => {
+      // 0. Trigger Metrics Counter
+      ScrollTrigger.create({
+        trigger: ".metrics-grid",
+        start: "top 85%",
+        onEnter: () => setIsVisible(true),
+        onLeave: () => setIsVisible(false),
+        onEnterBack: () => setIsVisible(true),
+        onLeaveBack: () => setIsVisible(false),
+      });
 
-    return () => observer.disconnect();
+      // 1. Header Char Reveal (WHY PATHFINDER)
+      gsap.fromTo(
+        ".why-char",
+        { yPercent: 100 },
+        {
+          yPercent: 0,
+          duration: 0.1,
+          ease: "power2.out",
+          stagger: 0.02,
+          scrollTrigger: {
+            trigger: ".why-header",
+            start: "top 85%",
+            toggleActions: "play reverse play reverse",
+          },
+        },
+      );
+
+      // 2. Description Char Reveal
+      gsap.fromTo(
+        ".why-char-desc",
+        { yPercent: 100 },
+        {
+          yPercent: 0,
+          duration: 0.1,
+          ease: "power2.out",
+          stagger: 0.005,
+          scrollTrigger: {
+            trigger: ".why-content",
+            start: "top 85%",
+            toggleActions: "play reverse play reverse",
+          },
+        },
+      );
+    }, containerRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
     <section
-      ref={sectionRef}
+      ref={containerRef}
       className="relative w-full py-14 md:py-20 bg-transparent overflow-hidden"
     >
       <div className="relative z-10 max-w-6xl mx-auto px-6">
         {/* Metrics Grid */}
-        <div
-          className={`grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-16 mb-20 transition-all duration-1000 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-        >
+        <div className="metrics-grid grid grid-cols-2 sm:grid-cols-3 gap-8 md:gap-16 mb-20 transition-all duration-1000 max-w-4xl mx-auto">
           {METRICS.map((metric, index) => (
             <Counter
               key={index}
@@ -46,41 +87,66 @@ export default function Metrics() {
               label={metric.label}
               startAnimating={isVisible}
               delay={index * 150}
+              className={index === 2 ? "col-span-2 sm:col-span-1" : ""}
             />
           ))}
         </div>
 
         {/* Why Pathfinder Section */}
-        <div
-          className={`max-w-4xl mx-auto text-center transition-all duration-1000 delay-300 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-          }`}
-        >
+        <div className="max-w-4xl mx-auto text-center">
           {/* Decorative Line */}
           <div className="w-20 h-0.5 bg-linear-to-r from-transparent via-pathfinder-green to-transparent mx-auto mb-8" />
 
-          <h2 className="text-white font-poppins text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 relative">
-            <span className="relative inline-block">
-              WHY PATHFINDER
-              <div className="absolute -bottom-2 left-0 right-0 h-px bg-linear-to-r from-transparent via-pathfinder-green/30 to-transparent" />
-            </span>
+          {/* Animated Header */}
+          <h2 className="why-header flex flex-col items-center gap-x-4 text-white font-poppins text-5xl md:text-7xl lg:text-9xl font-bold tracking-tight mb-8 relative">
+            <div className="inline-block whitespace-nowrap">
+              {"WHY".split("").map((char, i) => (
+                <div key={i} className="overflow-hidden inline-block">
+                  <span className="why-char inline-block">{char}</span>
+                </div>
+              ))}
+            </div>
+            <div className="inline-block whitespace-nowrap">
+              {"PATHFINDER".split("").map((char, i) => (
+                <div key={i} className="overflow-hidden inline-block">
+                  <span className="why-char inline-block">{char}</span>
+                </div>
+              ))}
+            </div>
+            <div className="absolute -bottom-2 left-0 right-0 h-px bg-linear-to-r from-transparent via-pathfinder-green/30 to-transparent" />
           </h2>
 
-          <p className="text-white/70 text-base md:text-lg leading-relaxed font-light font-poppins max-w-3xl mx-auto">
-            Pathfinder exists to help brands find clarity, direction, and
-            growth—no matter their size. From early‑stage startups to
-            large‑scale companies, we work closely with businesses at every
-            stage of their journey, offering creative and digital solutions that
-            are impactful and affordable.
-          </p>
-
-          <p className="text-white/70 text-base md:text-lg leading-relaxed font-light font-poppins max-w-3xl mx-auto mt-4">
-            We believe great branding should not be limited by budgets, which is
-            why our approach is flexible, honest, and focused on real value. By
-            combining strategy, design, and execution under one roof, we guide
-            brands along the right path—delivering work that is purposeful,
-            scalable, and built to last.
-          </p>
+          {/* Animated Description */}
+          <div className="why-content text-white/70 text-base md:text-lg leading-relaxed font-light font-nohemi max-w-3xl mx-auto">
+            <div className="mb-4">
+              {WHY_TEXT_1.split(" ").map((word, i) => (
+                <span key={i} className="inline-block whitespace-nowrap mr-1.5">
+                  {word.split("").map((char, j) => (
+                    <span
+                      key={j}
+                      className="overflow-hidden inline-block align-bottom"
+                    >
+                      <span className="why-char-desc inline-block">{char}</span>
+                    </span>
+                  ))}
+                </span>
+              ))}
+            </div>
+            <div>
+              {WHY_TEXT_2.split(" ").map((word, i) => (
+                <span key={i} className="inline-block whitespace-nowrap mr-1.5">
+                  {word.split("").map((char, j) => (
+                    <span
+                      key={j}
+                      className="overflow-hidden inline-block align-bottom"
+                    >
+                      <span className="why-char-desc inline-block">{char}</span>
+                    </span>
+                  ))}
+                </span>
+              ))}
+            </div>
+          </div>
 
           {/* Decorative Bottom Element */}
           <div className="mt-10 flex items-center justify-center gap-2">
@@ -99,11 +165,13 @@ function Counter({
   label,
   startAnimating,
   delay = 0,
+  className = "",
 }: {
   end: number;
   label: string;
   startAnimating: boolean;
   delay?: number;
+  className?: string;
 }) {
   const [count, setCount] = useState(0);
 
@@ -139,12 +207,14 @@ function Counter({
   }, [startAnimating, end, delay]);
 
   return (
-    <div className="group relative flex flex-col items-center gap-3 p-6 rounded-2xl transition-all duration-500">
+    <div
+      className={`group relative flex flex-col items-center gap-3 p-6 rounded-2xl transition-all duration-500 ${className}`}
+    >
       <div className="relative z-10 flex flex-col items-center gap-2">
         <span className="text-5xl md:text-6xl lg:text-7xl font-poppins font-bold bg-linear-to-br from-pathfinder-green via-pathfinder-green to-emerald-400 bg-clip-text text-transparent">
           {count.toLocaleString()}+
         </span>
-        <span className="text-white/60 text-xs md:text-sm text-center text-wrap uppercase tracking-widest font-medium font-poppins">
+        <span className="text-white/60 text-xs md:text-sm text-center text-wrap uppercase tracking-widest font-medium font-aalto">
           {label}
         </span>
       </div>

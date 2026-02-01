@@ -195,12 +195,12 @@ export default function HowWeWorks() {
                 <TypingText
                   text={cards[activeIndex].title}
                   as="h3"
-                  className="text-3xl md:text-4xl font-bold text-pathfinder-green mb-2 uppercase tracking-wide"
+                  className="text-3xl md:text-4xl font-bold text-pathfinder-green mb-2 uppercase tracking-wide font-aalto"
                 />
                 <TypingText
                   text={cards[activeIndex].text}
                   as="p"
-                  className="text-zinc-400 text-xl md:text-2xl font-light leading-relaxed"
+                  className="text-zinc-400 text-xl md:text-2xl font-light leading-relaxed font-nohemi"
                 />
               </>
             )}

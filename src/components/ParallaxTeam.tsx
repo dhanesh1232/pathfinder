@@ -284,6 +284,8 @@ export default function ParallaxTeam() {
             </div>
           ))}
         </div>
+        {/* Bottom Fade Gradient for smooth edge */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-linear-to-t from-black via-black/50 to-transparent z-30 pointer-events-none" />
       </section>
       {/* Spacer between Hero and People */}
       <div className="h-[315svh] sm:h-[300svh]" />

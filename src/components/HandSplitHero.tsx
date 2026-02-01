@@ -214,7 +214,7 @@ export default function HandSplitHero() {
     <>
       {/* Video Intro Overlay */}
       {!videoFinished && (
-        <div className="fixed inset-0 z-[60] bg-black flex items-center justify-center">
+        <div className="fixed inset-0 z-60 bg-black flex items-center justify-center">
           <video
             autoPlay
             muted
@@ -276,10 +276,10 @@ function AnimationText({
       ref={textRef as React.RefObject<HTMLDivElement>}
       className="absolute z-10 text-center"
     >
-      <h1 className="text-white font-playfair text-5xl md:text-7xl lg:text-8xl leading-tight font-medium tracking-wide drop-shadow-2xl">
+      <h1 className="text-white font-poppins text-5xl md:text-7xl lg:text-8xl leading-tight font-medium tracking-wide drop-shadow-2xl">
         <SplitText>The Best Path For</SplitText>
         <br />
-        <span className="text-pathfinder-green italic font-semibold">
+        <span className="text-pathfinder-green italic font-semibold font-aalto">
           <SplitText>Your Brand</SplitText>
         </span>
       </h1>

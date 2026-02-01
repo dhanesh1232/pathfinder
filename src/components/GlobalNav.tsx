@@ -124,7 +124,7 @@ export default function GlobalNav() {
               setIsMobileMenuOpen(false);
               if (item === "Home") scrollToTop();
             }}
-            className="text-white text-3xl font-playfair font-medium hover:text-pathfinder-green transition-colors duration-300"
+            className="text-white text-3xl font-poppins font-medium hover:text-pathfinder-green transition-colors duration-300"
           >
             {item}
           </Link>

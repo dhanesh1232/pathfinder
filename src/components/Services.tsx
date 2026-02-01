@@ -60,24 +60,7 @@ export default function Services() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // 1. Heading Text Reveal (OUR SERVICES - Char by Char)
-      const headingAnim = gsap.fromTo(
-        ".service-char",
-        { yPercent: 100 },
-        {
-          yPercent: 0,
-          duration: 1,
-          ease: "power2.out",
-          stagger: 0.03, // Faster stagger for chars
-          scrollTrigger: {
-            trigger: ".service-header",
-            start: "top 85%",
-            toggleActions: "play reverse play reverse",
-          },
-        },
-      );
-
-      // 2. Description Char Reveal
+      // 1. Description Char Reveal
       gsap.fromTo(
         ".service-char-desc",
         { yPercent: 100 },
@@ -94,7 +77,7 @@ export default function Services() {
         },
       );
 
-      // 3. Cards Stagger Reveal
+      // 2. Cards Stagger Reveal
       gsap.fromTo(
         ".service-card",
         { opacity: 0, y: 40 },
@@ -121,7 +104,7 @@ export default function Services() {
       ref={containerRef}
       className="relative w-full py-32 md:py-48 flex flex-col items-center justify-center px-6 md:px-8 z-10"
     >
-      <div className="max-w-[1400px] w-full mx-auto">
+      <div className="max-w-7xl w-full mx-auto">
         {/* Section Header */}
         <div className="service-header text-center mb-24 md:mb-40">
           <h2 className="flex flex-col items-center text-7xl md:text-9xl lg:text-[10rem] font-poppins font-black tracking-tight mb-12 text-white uppercase leading-[0.9]">
@@ -144,7 +127,7 @@ export default function Services() {
           </h2>
 
           {/* Description with Char-by-Char Animation */}
-          <div className="service-subtitle text-zinc-300 text-lg md:text-xl leading-relaxed max-w-4xl mx-auto font-light">
+          <div className="service-subtitle text-zinc-300 text-lg md:text-xl leading-relaxed max-w-4xl mx-auto font-light font-nohemi">
             {DESCRIPTION_TEXT.split(" ").map((word, i) => (
               <span key={i} className="inline-block whitespace-nowrap mr-1.5">
                 {word.split("").map((char, j) => (
@@ -187,18 +170,18 @@ export default function Services() {
                   {service.title}
                 </h3>
                 {/* Subtitle */}
-                <p className="text-pathfinder-green text-xs font-bold uppercase tracking-widest mb-6 opacity-90">
+                <p className="text-pathfinder-green text-xs font-bold uppercase tracking-widest mb-6 opacity-90 font-aalto">
                   {service.subtitle}
                 </p>
                 {/* Description */}
-                <p className="text-zinc-400 leading-relaxed text-sm md:text-base font-light">
+                <p className="text-zinc-400 leading-relaxed text-sm md:text-base font-light font-nohemi">
                   {service.description}
                 </p>
               </div>
 
               {/* Footer Note */}
               <div className="mt-12 pt-6 border-t border-white/5">
-                <p className="text-zinc-500 text-xs md:text-sm italic font-light group-hover:text-zinc-400 transition-colors duration-300">
+                <p className="text-zinc-500 text-xs md:text-sm italic font-light group-hover:text-zinc-400 transition-colors duration-300 font-nohemi">
                   {service.note}
                 </p>
               </div>

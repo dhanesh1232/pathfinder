@@ -1,11 +1,27 @@
 "use client";
 
-import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { useRef, useState, useEffect } from "react";
 
-gsap.registerPlugin(ScrollTrigger);
+const SLIDE_CONTENT = [
+  {
+    title: "One team. One vision. One Pathfinder Built with belief.",
+    highlight: "Driven by purpose.",
+    p1: "I started Pathfinder with a simple belief—great brands shouldn't be limited to big budgets. In a space where creativity is often rushed or overpriced, we chose a different path.",
+    p2: "We focus on clarity, quality, and honest delivery, helping brands grow with confidence. Every project we take is personal, and every solution is built with intention, capability, and respect for the client's vision.",
+  },
+  {
+    title: "A Collective of Creators. United by Passion.",
+    highlight: "Defined by Excellence.",
+    p1: "Our team is a diverse blend of strategists, designers, and developers who share a common goal: to build brands that matter. We don't just work for you; we work with you.",
+    p2: "We believe in the power of collaboration. By bringing together different perspectives and skills, we create holistic solutions that are as functional as they are beautiful.",
+  },
+  {
+    title: "About Us. More Than Just an Agency.",
+    highlight: "Partners in Growth.",
+    p1: "Pathfinder isn't just a creative agency; we are your partners in growth. We understand the challenges of modern business and provide the strategic edge you need to stand out.",
+    p2: "From the first spark of an idea to the final launch, we are there every step of the way. Our mission is to empower your brand to reach its full potential and beyond.",
+  },
+];
 
 const TESTIMONIALS = [
   {
@@ -27,63 +43,14 @@ const TESTIMONIALS = [
 
 export default function FounderNote() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-  useGSAP(
-    () => {
-      // Animate text sections
-      gsap.fromTo(
-        ".founder-reveal",
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          stagger: 0.1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 70%",
-            toggleActions: "play none none reverse",
-          },
-        },
-      );
-
-      // Animate Image Card
-      gsap.fromTo(
-        ".founder-card",
-        { opacity: 0, scale: 0.95, rotationY: 10 },
-        {
-          opacity: 1,
-          scale: 1,
-          rotationY: 0,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".founder-card",
-            start: "top 80%",
-          },
-        },
-      );
-
-      // Animate Testimonials
-      gsap.fromTo(
-        ".testimonial-card",
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".testimonials-grid",
-            start: "top 85%",
-          },
-        },
-      );
-    },
-    { scope: containerRef },
-  );
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % SLIDE_CONTENT.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
     <section
@@ -101,59 +68,73 @@ export default function FounderNote() {
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-14 mb-32 items-center">
           {/* Left: Personal Story */}
-          <div className="order-2 md:order-1">
-            <h3 className="text-2xl md:text-3xl lg:text-4xl font-poppins font-bold text-white leading-[1.1]">
-              One team. One vision. One Pathfinder Built with belief.{" "}
-              <span className="text-pathfinder-green">Driven by purpose.</span>
-            </h3>
-            <div className="w-20 my-4 h-0.5 bg-linear-to-r from-transparent via-pathfinder-green to-transparent mx-0 mb-8" />
-            <div className="founder-reveal space-y-8">
-              <p className="text-base md:text-lg text-zinc-300 font-light leading-relaxed font-poppins">
-                I started Pathfinder with a simple belief—great brands shouldn't
-                be limited to big budgets. In a space where creativity is often
-                rushed or overpriced, we chose a different path.
-              </p>
-              <p className="text-base md:text-lg text-zinc-300 font-light leading-relaxed font-poppins">
-                We focus on clarity, quality, and honest delivery, helping
-                brands grow with confidence. Every project we take is personal,
-                and every solution is built with intention, capability, and
-                respect for the client's vision.
-              </p>
+          {/* Left: Content Slider */}
+          <div className="order-2 md:order-1 relative min-h-[400px]">
+            {SLIDE_CONTENT.map((slide, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                  index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+                }`}
+              >
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-poppins font-bold text-white leading-[1.1]">
+                  {slide.title}{" "}
+                  <span className="text-pathfinder-green">
+                    {slide.highlight}
+                  </span>
+                </h3>
+                <div className="w-20 my-4 h-0.5 bg-linear-to-r from-transparent via-pathfinder-green to-transparent mx-0 mb-8" />
+                <div className="space-y-8">
+                  <p className="text-base md:text-lg text-zinc-300 font-light leading-relaxed font-nohemi">
+                    {slide.p1}
+                  </p>
+                  <p className="text-base md:text-lg text-zinc-300 font-light leading-relaxed font-nohemi">
+                    {slide.p2}
+                  </p>
 
-              {/* Dots Decoration */}
-              <div className="flex gap-3 mt-8">
-                <div className="w-4 h-4 rounded-full bg-pathfinder-green/40 animate-pulse" />
-                <div className="w-4 h-4 rounded-full bg-pathfinder-green/70 animate-pulse delay-100" />
-                <div className="w-4 h-4 rounded-full bg-pathfinder-green animate-pulse delay-200" />
+                  {/* Dots Decoration / Indicators */}
+                  <div className="flex gap-3 mt-8">
+                    {SLIDE_CONTENT.map((_, dotIndex) => (
+                      <button
+                        key={dotIndex}
+                        onClick={() => setCurrentSlide(dotIndex)}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                          dotIndex === currentSlide
+                            ? "bg-pathfinder-green w-6"
+                            : "bg-pathfinder-green/30 hover:bg-pathfinder-green/50"
+                        }`}
+                        aria-label={`Go to slide ${dotIndex + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
 
           {/* Right: Team Context & Card */}
           <div className="flex flex-col gap-12 items-end relative order-1 lg:order-2">
             {/* Founder Card */}
             <div className="founder-card relative group w-full max-w-md">
-              {/* Giant Watermark Name behind image - Vertical */}
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 -z-10 hidden lg:flex pointer-events-none select-none mix-blend-overlay opacity-20 h-[120%] items-center">
-                <span
-                  className="text-4xl font-black text-transparent stroke-2 stroke-white leading-none whitespace-nowrap"
-                  style={{
-                    WebkitTextStroke: "2px white",
-                    writingMode: "vertical-rl",
-                    transform: "rotate(180deg)", // To make it read bottom-to-top if desired, or remove for top-to-bottom
-                  }}
-                >
-                  JASWANTH
-                </span>
-              </div>
-
-              <div className="absolute inset-0 bg-pathfinder-green/20 blur-2xl rounded-full opacity-0 group-hover:opacity-40 transition-opacity duration-700" />
-              <div className="relative rounded-3xl overflow-hidden border border-white/10 bg-zinc-900/50 backdrop-blur-sm">
+              <div className="relative rounded-3xl overflow-hidden">
                 <img
                   src="/my-img.png"
                   alt="Founder"
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-700"
                 />
+                {/* Giant Watermark Name behind image - Vertical */}
+                <div className="absolute right-0 -top-20 h-full -z-10 flex items-center justify-center pointer-events-none select-none mix-blend-overlay opacity-20">
+                  <span
+                    className="text-6xl font-black text-transparent stroke-2 stroke-white leading-none whitespace-nowrap"
+                    style={{
+                      WebkitTextStroke: "0.2px white",
+                      writingMode: "vertical-rl",
+                      transform: "rotate(180deg)",
+                    }}
+                  >
+                    JASWANTH
+                  </span>
+                </div>
 
                 {/* Gradient Overlay at bottom */}
                 <div className="absolute inset-0 bg-linear-to-t from-black/90 via-transparent to-transparent" />
@@ -162,7 +143,7 @@ export default function FounderNote() {
                   <h4 className="text-white font-poppins font-bold text-2xl tracking-wide">
                     Jaswanth
                   </h4>
-                  <p className="text-pathfinder-green font-poppins uppercase tracking-wider text-sm mt-1">
+                  <p className="text-pathfinder-green font-aalto uppercase tracking-wider text-sm mt-1">
                     Founder & Creative Director
                   </p>
                 </div>
@@ -183,14 +164,14 @@ export default function FounderNote() {
                 <div className="text-pathfinder-green text-4xl font-serif">
                   "
                 </div>
-                <p className="text-zinc-300 font-poppins text-lg leading-relaxed">
+                <p className="text-zinc-300 font-nohemi text-lg leading-relaxed">
                   {t.text}
                 </p>
                 <div>
                   <p className="text-white font-bold font-poppins">
                     {t.author}
                   </p>
-                  <p className="text-zinc-500 text-sm font-poppins">{t.role}</p>
+                  <p className="text-zinc-500 text-sm font-aalto">{t.role}</p>
                 </div>
               </div>
             ))}
