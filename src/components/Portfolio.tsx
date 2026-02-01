@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import ShimmerButton from "./ui/shinny-button";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -159,10 +160,16 @@ export default function Portfolio() {
     return () => clearInterval(interval);
   }, [displayedItems, isShuffleActive]);
 
-  useGSAP(
-    () => {
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const scrollerEl = document.getElementById("smooth-wrapper");
+      const scroller = scrollerEl || window;
+
       ScrollTrigger.create({
         trigger: containerRef.current,
+        scroller: scroller,
         start: "top bottom",
         end: "bottom top",
         onToggle: (self) => setIsShuffleActive(self.isActive),
@@ -181,6 +188,7 @@ export default function Portfolio() {
             ease: "power3.out",
             scrollTrigger: {
               trigger: item,
+              scroller: scroller,
               start: "top 90%",
               toggleActions: "play none none reverse",
             },
@@ -188,9 +196,10 @@ export default function Portfolio() {
           },
         );
       });
-    },
-    { scope: containerRef },
-  );
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
@@ -230,34 +239,24 @@ export default function Portfolio() {
           <a
             href="/portfolio.pdf"
             download="The_Pathfinders_Portfolio.pdf"
-            className="group relative inline-flex items-center gap-4 px-10 py-5 overflow-hidden rounded-full border border-white/30 hover:border-pathfinder-green transition-colors duration-500 bg-black/20 backdrop-blur-sm"
+            className="group cursor-pointer"
           >
-            <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-            <span className="font-aalto font-light text-white uppercase tracking-[0.2em] text-sm group-hover:text-pathfinder-green transition-colors">
-              Portfolio
-            </span>
-
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5 text-white/70 group-hover:text-pathfinder-green transition-colors"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 15V3" />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m7 10 5 5 5-5"
-              />
-            </svg>
+            <ShimmerButton>
+              <div className="flex items-center gap-4 font-aalto font-light uppercase tracking-[0.2em] text-sm">
+                Portfolio
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                  className="w-5 h-5 text-gray-900 dark:text-white/70 group-hover:text-pathfinder-green transition-colors"
+                >
+                  <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                  <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                </svg>
+              </div>
+            </ShimmerButton>
           </a>
         </div>
       </div>

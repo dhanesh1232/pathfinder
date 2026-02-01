@@ -23,10 +23,16 @@ export default function Metrics() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    if (!containerRef.current) return;
+
     const ctx = gsap.context(() => {
+      const scrollerEl = document.getElementById("smooth-wrapper");
+      const scroller = scrollerEl || window;
+
       // 0. Trigger Metrics Counter
       ScrollTrigger.create({
         trigger: ".metrics-grid",
+        scroller: scroller,
         start: "top 85%",
         onEnter: () => setIsVisible(true),
         onLeave: () => setIsVisible(false),
@@ -45,23 +51,25 @@ export default function Metrics() {
           stagger: 0.02,
           scrollTrigger: {
             trigger: ".why-header",
+            scroller: scroller,
             start: "top 85%",
             toggleActions: "play reverse play reverse",
           },
         },
       );
 
-      // 2. Description Char Reveal
+      // 2. Description Typewriter Effect
       gsap.fromTo(
         ".why-char-desc",
-        { yPercent: 100 },
+        { opacity: 0 },
         {
-          yPercent: 0,
-          duration: 0.3,
-          ease: "power2.out",
-          stagger: 0.005,
+          opacity: 1,
+          duration: 0.01,
+          ease: "none",
+          stagger: 0.01,
           scrollTrigger: {
             trigger: ".why-content",
+            scroller: scroller,
             start: "top 85%",
             toggleActions: "play reverse play reverse",
           },
@@ -109,7 +117,15 @@ export default function Metrics() {
             <div className="inline-block whitespace-nowrap">
               {"PATHFINDER".split("").map((char, i) => (
                 <div key={i} className="overflow-hidden inline-block">
-                  <span className="why-char inline-block">{char}</span>
+                  <span
+                    className="why-char inline-block"
+                    style={{
+                      WebkitTextStroke: "2px rgba(255, 255, 255, 0.5)",
+                      color: "transparent",
+                    }}
+                  >
+                    {char}
+                  </span>
                 </div>
               ))}
             </div>

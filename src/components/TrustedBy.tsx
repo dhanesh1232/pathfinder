@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Logomarquee from "./Marquee";
 
 // Actual logo filenames from /public/Website logo
 const RAW_LOGOS = [
@@ -48,104 +49,18 @@ const RAW_LOGOS = [
 const LOGOS = [...RAW_LOGOS, ...RAW_LOGOS, ...RAW_LOGOS];
 
 export default function TrustedBy() {
-  // Split logos into two rows
-  const midPoint = Math.ceil(LOGOS.length / 2);
-  const topRowLogos = LOGOS.slice(0, midPoint);
-  const bottomRowLogos = LOGOS.slice(midPoint);
-
   return (
     <section className="w-full mt-10 pt-24 bg-transparent overflow-hidden">
-      {/* Marquee Container */}
-      <div className="relative">
+      <h1 className="text-white text-center text-xl mb-14 font-poppins">
+        <span className="text-pathfinder-green">We're trusted</span> by
+        companies like
+      </h1>
+      <div className="relative max-w-full mx-auto">
         {/* Gradient Overlays */}
-        <div className="absolute left-0 top-0 bottom-0 w-12 bg-linear-to-r from-black to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-12 bg-linear-to-l from-black to-transparent z-10 pointer-events-none" />
-
-        {/* First Marquee Row (Left to Right) */}
-        <div className="flex mb-8 overflow-hidden">
-          <div className="flex animate-marquee-left">
-            {topRowLogos.map((logo, index) => (
-              <LogoCard key={`row1-${index}`} logo={logo} />
-            ))}
-          </div>
-          <div className="flex animate-marquee-left" aria-hidden="true">
-            {topRowLogos.map((logo, index) => (
-              <LogoCard key={`row1-duplicate-${index}`} logo={logo} />
-            ))}
-          </div>
-        </div>
+        <div className="absolute left-0 top-0 bottom-0 w-20 bg-linear-to-r from-black to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-20 bg-linear-to-l from-black to-transparent z-10 pointer-events-none" />
+        <Logomarquee logos2={LOGOS} logos1={LOGOS} />
       </div>
-
-      <style jsx>{`
-        @keyframes marquee-left {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-100%);
-          }
-        }
-
-        @keyframes marquee-right {
-          0% {
-            transform: translateX(-100%);
-          }
-          100% {
-            transform: translateX(0);
-          }
-        }
-
-        .animate-marquee-left {
-          animation: marquee-left 60s linear infinite;
-        }
-
-        .animate-marquee-right {
-          animation: marquee-right 60s linear infinite;
-        }
-
-        .animate-marquee-left:hover,
-        .animate-marquee-right:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
     </section>
-  );
-}
-
-function LogoCard({ logo }: { logo: string }) {
-  // Extract name for alt text: remove extension and possibly " logo" suffix
-  const name = logo
-    .replace(/\.(png|jpg|jpeg|svg)$/i, "")
-    .replace(/ logo$/i, "");
-
-  return (
-    <div className="shrink-0 mx-6 md:mx-8 group cursor-pointer">
-      <div className="relative w-24 h-16 md:w-30 md:h-20 overflow-hidden">
-        <div className="w-full h-full flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-full">
-          {/* Default Logo */}
-          <div className="shrink-0 w-full h-full flex items-center justify-center">
-            <Image
-              src={`/Website logo/${logo}`}
-              alt={`${name} logo`}
-              width={160}
-              height={96}
-              className="w-full h-full object-contain opacity-70 transition-opacity duration-300"
-              unoptimized
-            />
-          </div>
-          {/* Hover Logo (Slides in from bottom) */}
-          <div className="shrink-0 w-full h-full flex items-center justify-center">
-            <Image
-              src={`/Website logo/${logo}`}
-              alt={`${name} logo active`}
-              width={160}
-              height={96}
-              className="w-full h-full object-contain opacity-100"
-              unoptimized
-            />
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }

@@ -119,7 +119,7 @@ export default function FounderNote() {
                 <img
                   src="/my-img.png"
                   alt="Founder"
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-700"
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-100 scale-95 group-hover:drop-shadow-[0_0_15px_rgba(46,204,113,0.5)] transition-all duration-700"
                 />
                 {/* Giant Watermark Name behind image - Vertical */}
                 <div className="absolute right-0 -top-20 h-full -z-10 flex items-center justify-center pointer-events-none select-none mix-blend-overlay opacity-20">

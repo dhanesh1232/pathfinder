@@ -59,7 +59,12 @@ export default function Services() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    if (!containerRef.current) return;
+
     const ctx = gsap.context(() => {
+      const scrollerEl = document.getElementById("smooth-wrapper");
+      const scroller = scrollerEl || window;
+
       // 1. Description Char Reveal
       gsap.fromTo(
         ".service-char-desc",
@@ -71,6 +76,7 @@ export default function Services() {
           stagger: 0.005, // Very fast stagger for long text
           scrollTrigger: {
             trigger: ".service-header",
+            scroller: scroller,
             start: "top 85%",
             toggleActions: "play reverse play reverse",
           },
@@ -89,6 +95,7 @@ export default function Services() {
           stagger: 0.1,
           scrollTrigger: {
             trigger: ".service-grid",
+            scroller: scroller,
             start: "top 85%",
           },
         },
@@ -102,7 +109,7 @@ export default function Services() {
     <section
       id="service"
       ref={containerRef}
-      className="relative w-full py-32 md:py-48 flex flex-col items-center justify-center px-6 md:px-8 z-10"
+      className="relative w-full py-32 md:py-48 flex bg-linear-to-b from-green-700/40 to-green-800/30 flex-col items-center justify-center px-6 md:px-8 z-10"
     >
       <div className="max-w-7xl w-full mx-auto">
         {/* Section Header */}

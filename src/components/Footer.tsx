@@ -19,6 +19,9 @@ export default function ContactSection() {
         ease: "sine.inOut",
       });
 
+      const scrollerEl = document.getElementById("smooth-wrapper");
+      const scroller = scrollerEl || window;
+
       // Reveal animation on scroll
       gsap.fromTo(
         ".footer-reveal",
@@ -30,6 +33,7 @@ export default function ContactSection() {
           stagger: 0.1,
           scrollTrigger: {
             trigger: containerRef.current,
+            scroller: scroller,
             start: "top 80%",
           },
         },
@@ -42,7 +46,7 @@ export default function ContactSection() {
     <footer
       ref={containerRef}
       id="contact"
-      className="relative w-full pt-32 pb-12 px-6 bg-transparent border-t border-white/5 overflow-hidden"
+      className="relative w-full pt-32 z-20 pb-12 px-6 bg-transparent border-t border-white/5 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto flex flex-col items-center justify-center text-center">
         {/* Main Headline */}

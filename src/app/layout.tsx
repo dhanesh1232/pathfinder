@@ -99,9 +99,19 @@ export default function RootLayout({
         <div className="fixed inset-0 z-[-1]">
           <div className="absolute inset-0 bg-[url(/website-bg.jpeg)] bg-cover bg-center bg-no-repeat" />
         </div>
-        <main>
+        <main className="h-full w-full">
           <GlobalNav />
-          <div className="z-10 flex flex-col relative">{children}</div>
+          <div
+            id="smooth-wrapper"
+            className="w-full h-full overflow-y-auto overflow-x-hidden"
+          >
+            <div
+              id="smooth-content"
+              className="z-10 flex flex-col relative min-h-full"
+            >
+              {children}
+            </div>
+          </div>
           <SmoothScroll />
         </main>
       </body>

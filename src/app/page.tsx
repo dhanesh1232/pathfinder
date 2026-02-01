@@ -8,6 +8,8 @@ import Portfolio from "@/components/Portfolio";
 import FounderNote from "@/components/FounderNote";
 import Footer from "@/components/Footer";
 import TransformativeSection from "@/components/HowWeWorks";
+import { CanvasWave } from "@/components/ScrollStory/wave";
+import ContactForm from "@/components/ContactForm";
 
 export default function Home() {
   return (
@@ -39,7 +41,10 @@ export default function Home() {
       {/* 8. Founder Note / Team Philosophy */}
       <FounderNote />
 
-      {/* 9. Contact / Footer */}
+      {/* 9. Contact Form */}
+      <ContactForm />
+
+      {/* 10. Footer */}
       <Footer />
     </>
   );

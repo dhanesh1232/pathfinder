@@ -100,6 +100,9 @@ export default function HowWeWorks() {
       return;
 
     const ctx = gsap.context(() => {
+      const scrollerEl = document.getElementById("smooth-wrapper");
+      const scroller = scrollerEl || window;
+
       // 1. Initial Fade In (Independent of Scroll Position)
       gsap.fromTo(
         wrapperRef.current,
@@ -110,6 +113,7 @@ export default function HowWeWorks() {
           ease: "power2.out",
           scrollTrigger: {
             trigger: triggerRef.current,
+            scroller: scroller,
             start: "top center", // Appear when section hits center
             toggleActions: "play none none reverse",
           },
@@ -121,6 +125,7 @@ export default function HowWeWorks() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: triggerRef.current,
+          scroller: scroller,
           start: "top top",
           end,
           pin: true,
@@ -159,6 +164,24 @@ export default function HowWeWorks() {
         x: () => -(containerRef.current!.scrollWidth - window.innerWidth),
         ease: "none",
       });
+      // 3. Header Typing Animation (How We Work Pathfinder)
+      // 3. Header Typing Animation (How We Work Pathfinder)
+      gsap.fromTo(
+        ".hww-char",
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.05,
+          stagger: 0.04,
+          ease: "none",
+          scrollTrigger: {
+            trigger: triggerRef.current,
+            scroller: scroller,
+            start: "top 60%", // Start when section enters view
+            toggleActions: "play reverse play reverse",
+          },
+        },
+      );
     }, triggerRef);
 
     return () => ctx.revert();
@@ -176,16 +199,25 @@ export default function HowWeWorks() {
         Moving Left (against the slope) creates the visual effect of "Climbing" from BR to TL.
       */}
         {/* Static Title (Fixed inside the rotated container) */}
-        <div className="z-20 pointer-events-none absolute left-[7%] top-[20%] md:top-[25%] md:left-[8%] max-w-sm md:max-w-md">
+        <div className="hww-header-container z-20 pointer-events-none absolute left-[7%] top-[20%] md:top-[25%] md:left-[8%] max-w-sm md:max-w-md">
           <h2 className="text-5xl md:text-7xl font-black text-white italic tracking-tighter uppercase leading-[0.8] drop-shadow-xl text-wrap mb-8">
-            How We Work
-            <br />
-            <span
-              className="text-transparent"
+            <div className="block mb-2">
+              {"How We Work".split("").map((char, i) => (
+                <span key={i} className="hww-char opacity-0">
+                  {char}
+                </span>
+              ))}
+            </div>
+            <div
+              className="text-transparent block"
               style={{ WebkitTextStroke: "2px white" }}
             >
-              Pathfinder
-            </span>
+              {"Pathfinder".split("").map((char, i) => (
+                <span key={i} className="hww-char opacity-0">
+                  {char}
+                </span>
+              ))}
+            </div>
           </h2>
 
           {/* Dynamic Typing Title & Text */}
@@ -251,7 +283,7 @@ export default function HowWeWorks() {
         </div>
       </section>
       {/* Spacer between How We Works and Services */}
-      <div className="h-[1650svh] sm:h-[1500svh]" />
+      <div className="h-[1500svh]" />
     </>
   );
 }

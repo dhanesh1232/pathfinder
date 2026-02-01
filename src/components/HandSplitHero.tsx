@@ -123,6 +123,9 @@ export default function HandSplitHero() {
     if (!introFinished || !containerRef.current) return;
 
     const ctx = gsap.context(() => {
+      const scrollerEl = document.getElementById("smooth-wrapper");
+      const scroller = scrollerEl || window;
+
       // Re-assert "start" positions to ensure ScrollTrigger matches Intro end state
       gsap.set(leftHandRef.current, { xPercent: 20, rotate: 0 });
       gsap.set(rightHandRef.current, { xPercent: -20, rotate: 0 });
@@ -140,6 +143,7 @@ export default function HandSplitHero() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
+          scroller: scroller,
           start: "top top",
           end: "+=150%",
           pin: true,

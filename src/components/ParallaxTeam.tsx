@@ -57,6 +57,10 @@ export default function ParallaxTeam() {
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
+      // Use element directly if found, otherwise window
+      const scrollerEl = document.getElementById("smooth-wrapper");
+      const scroller = scrollerEl || window;
+
       // 1. Initial State Setup
       // Images: Hidden below, Grayscale
       gsap.set(".team-member-container", { yPercent: 100 });
@@ -66,14 +70,10 @@ export default function ParallaxTeam() {
       gsap.set(".team-active", { opacity: 0 });
 
       // Text: Hidden below (y=100%), Opacity 0, Solid Color (no stroke yet)
-      // Note: We need a wrapper to hide the overflow if we want a "mask" effect,
-      // but "opacity: 0" + "yPercent: 100" gives a nice "rising fade" effect which is often cleaner.
-      // User said "hide into y... reveal all chars"
       gsap.set(".char", {
         yPercent: 100,
         opacity: 0,
         color: (i, target) => {
-          // Keep original colors: Line 1 white, Line 2 green
           return target.closest(".text-line-2") ? "#2ecc71" : "white";
         },
         webkitTextStroke: "0px transparent",
@@ -82,10 +82,11 @@ export default function ParallaxTeam() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
+          scroller: scroller,
           start: "top top",
-          end: "+=300%", // Increased from 300% to make everything feel slower/more spread out
+          end: "+=300%",
           pin: true,
-          scrub: 1, // Smooth scrub
+          scrub: 1,
           anticipatePin: 1,
         },
       });
@@ -220,7 +221,7 @@ export default function ParallaxTeam() {
     <>
       <section
         ref={containerRef}
-        className="relative w-full h-svh overflow-hidden bg-inherit flex flex-col items-center justify-end"
+        className="relative w-full h-svh overflow-hidden bg-black flex flex-col items-center justify-end"
       >
         <div className="absolute top-[15%] lg:top-[12%] -z-20 w-[90%] h-1/2 max-w-full mx-auto">
           <div className="w-full h-full flex flex-col sm:gap-6 md:gap-0 justify-center gap-8 sm:justify-center md:justify-around lg:justify-start">
@@ -288,7 +289,7 @@ export default function ParallaxTeam() {
         <div className="absolute bottom-0 left-0 right-0 h-32 md:h-48 bg-linear-to-t from-black via-black/50 to-transparent z-30 pointer-events-none" />
       </section>
       {/* Spacer between Hero and People */}
-      <div className="h-[315svh] sm:h-[300svh]" />
+      <div className="h-[300svh]" />
     </>
   );
 }
