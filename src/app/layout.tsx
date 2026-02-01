@@ -91,7 +91,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="bg-black">
       <body
         className={`${poppins.variable} antialiased text-foreground bg-black`}
       >
