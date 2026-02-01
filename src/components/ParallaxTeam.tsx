@@ -145,7 +145,7 @@ export default function ParallaxTeam() {
         ".text-line-1 .char",
         {
           color: "transparent",
-          webkitTextStroke: "1px white",
+          webkitTextStroke: "0.5px white",
           duration: 0.5,
           stagger: {
             amount: 1.5,
@@ -161,7 +161,7 @@ export default function ParallaxTeam() {
         ".text-line-2 .char",
         {
           color: "transparent",
-          webkitTextStroke: "1px #2ecc71", // Matching pathfinder-green
+          webkitTextStroke: "0.5px #2ecc71", // Matching pathfinder-green
           duration: 0.5,
           stagger: {
             amount: 1.5,
@@ -176,7 +176,7 @@ export default function ParallaxTeam() {
         ".text-line-1 .char",
         {
           color: "white",
-          webkitTextStroke: "1px white", // Matching pathfinder-green
+          webkitTextStroke: "0.5px white", // Matching pathfinder-green
           duration: 0.5,
           stagger: {
             amount: 1.5,

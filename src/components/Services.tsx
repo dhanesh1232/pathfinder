@@ -158,7 +158,7 @@ export default function Services() {
               {/* Right Side Fluid Water Drop Animation */}
               <div className="absolute right-0 top-0 bottom-0 w-[2px] pointer-events-none overflow-visible">
                 {/* The Droplet Runner */}
-                <div className="absolute top-full right-0 w-[2px] h-[100px] bg-gradient-to-t from-transparent to-emerald-400 group-hover:top-[50%] transition-all duration-[1.5s] ease-in-out">
+                <div className="absolute top-full right-0 w-[2px] h-[100px] bg-linear-to-t from-transparent to-emerald-400 group-hover:top-[50%] transition-all duration-[1.5s] ease-in-out">
                   {/* Glowing Head with Emerald Noise */}
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[6px] h-[16px] bg-emerald-400 rounded-full blur-[1px] shadow-[0_0_15px_#34d399] overflow-hidden">
                     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC42NSIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIG9wYWNpdHk9IjAuNSIgZmlsdGVyPSJ1cmwoI2YpIi8+PC9zdmc+')] opacity-60 mix-blend-overlay" />
