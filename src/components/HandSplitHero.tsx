@@ -221,7 +221,7 @@ export default function HandSplitHero() {
         <div className="fixed inset-0 z-60 bg-black flex items-center justify-center">
           <video
             autoPlay
-            muted
+            muted={false}
             playsInline
             className="w-full h-full object-cover"
             src="/video/PathFinder%20Logo%20animation%20Video.mp4"

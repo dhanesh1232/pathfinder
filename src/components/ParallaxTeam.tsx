@@ -118,6 +118,21 @@ export default function ParallaxTeam() {
         "start",
       );
 
+      tl.to(
+        ".text-line-2 .char",
+        {
+          color: "transparent",
+          webkitTextStroke: "0.5px white",
+          duration: 0.5,
+          stagger: {
+            amount: 1.5,
+            from: "start",
+          },
+          ease: "power1.inOut",
+        },
+        "<+=0.5",
+      );
+
       // --- PHASE 2: FOCUS (Center Green) ---
       // Occurs after text is fully revealed
       tl.to(
@@ -161,8 +176,7 @@ export default function ParallaxTeam() {
       tl.to(
         ".text-line-2 .char",
         {
-          color: "transparent",
-          webkitTextStroke: "0.5px #2ecc71", // Matching pathfinder-green
+          color: "#2ecc71",
           duration: 0.5,
           stagger: {
             amount: 1.5,
@@ -188,27 +202,27 @@ export default function ParallaxTeam() {
         ">-=0.5",
       );
 
-      tl.to(".text-line-1 .char", {
-        opacity: 0,
-        duration: 0.5,
-        yPercent: -100,
-        stagger: {
-          amount: 1.5,
-          from: "start",
-        },
-        ease: "power1.out",
-      });
+      // tl.to(".text-line-1 .char", {
+      //   opacity: 0,
+      //   duration: 0.5,
+      //   yPercent: -100,
+      //   stagger: {
+      //     amount: 1.5,
+      //     from: "start",
+      //   },
+      //   ease: "power1.out",
+      // });
 
-      tl.to(".text-line-2 .char", {
-        opacity: 0,
-        duration: 0.5,
-        yPercent: -100,
-        stagger: {
-          amount: 1.5,
-          from: "start",
-        },
-        ease: "power1.out",
-      });
+      // tl.to(".text-line-2 .char", {
+      //   opacity: 0,
+      //   duration: 0.5,
+      //   yPercent: -100,
+      //   stagger: {
+      //     amount: 1.5,
+      //     from: "start",
+      //   },
+      //   ease: "power1.out",
+      // });
 
       // Buffer at end
       tl.to({}, { duration: 1 });
