@@ -11,6 +11,18 @@ import TransformativeSection from "@/components/HowWeWorks";
 import { CanvasWave } from "@/components/ScrollStory/wave";
 import ContactForm from "@/components/ContactForm";
 import WaveReveal from "@/components/WaveReveal";
+import ThreeDCarousel from "@/components/how/3d";
+
+const PORTFOLIO_IMAGES = [
+  "/portfolio one/jewel.png",
+  "/portfolio one/v mart.png",
+  "/portfolio one/gyn phy.png",
+  "/portfolio one/overseas.png",
+  "/portfolio one/cetaphil.png",
+  "/portfolio one/elan 2.png",
+  "/portfolio one/glamogo.png",
+  "/portfolio one/book my studio.png",
+];
 
 export default function Home() {
   return (
@@ -31,11 +43,14 @@ export default function Home() {
         <BannerCarousel />
       </div>
 
-      {/* 3c. Wave Reveal Transition */}
-      <WaveReveal />
-
       {/* 4. Metrics / Projects */}
       <Metrics />
+
+      {/* 4b. Wave Reveal Transition */}
+      <WaveReveal />
+
+      {/* 4c. 3D Slides Portfolio Showcase */}
+      {/* <ThreeDCarousel images={PORTFOLIO_IMAGES} /> */}
 
       {/* 5. Services */}
       <Services />

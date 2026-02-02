@@ -10,15 +10,38 @@ const METRICS = [
   { label: "Years Experience", value: 5 },
 ];
 
-const WHY_TEXT_1 =
-  "Pathfinder exists to help brands find clarity, direction, and growth—no matter their size. From early‑stage startups to large‑scale companies, we work closely with businesses at every stage of their journey, offering creative and digital solutions that are impactful and affordable.";
-
-const WHY_TEXT_2 =
-  "We believe great branding should not be limited by budgets, which is why our approach is flexible, honest, and focused on real value. By combining strategy, design, and execution under one roof, we guide brands along the right path—delivering work that is purposeful, scalable, and built to last.";
+const SLIDES = [
+  {
+    title: "Why Pathfinder",
+    content: [
+      "Pathfinder exists to help brands find clarity, direction, and growth—no matter their size. From early‑stage startups to large‑scale companies, we work closely with businesses at every stage of their journey, offering creative and digital solutions that are impactful and affordable.",
+    ],
+  },
+  {
+    title: "Why Choose Us",
+    content: [
+      "We believe great branding should not be limited by budgets, which is why our approach is flexible, honest, and focused on real value. By combining strategy, design, and execution under one roof, we guide brands along the right path—delivering work that is purposeful, scalable, and built to last.",
+    ],
+  },
+  {
+    title: "Our Approach",
+    content: [
+      "We believe in a collaborative journey. Our process is rooted in understanding your unique challenges and opportunities. We don't just deliver assets; we deliver solutions that are tailored to your specific needs. By leveraging data-driven insights and creative innovation, we ensure that every step we take is calculated to maximize your brand's potential.",
+    ],
+  },
+];
 
 export default function Metrics() {
   const [isVisible, setIsVisible] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -52,25 +75,26 @@ export default function Metrics() {
           scrollTrigger: {
             trigger: ".why-header",
             scroller: scroller,
-            start: "top 85%",
+            start: "top 65%",
             toggleActions: "play reverse play reverse",
           },
         },
       );
 
-      // 2. Description Typewriter Effect
+      // 2. Description Block Reveal
       gsap.fromTo(
-        ".why-char-desc",
-        { opacity: 0 },
+        ".why-text-block",
+        { opacity: 0, y: 30 },
         {
           opacity: 1,
-          duration: 0.01,
-          ease: "none",
-          stagger: 0.01,
+          y: 0,
+          duration: 0.8,
+          ease: "power2.out",
+          stagger: 0.2,
           scrollTrigger: {
             trigger: ".why-content",
             scroller: scroller,
-            start: "top 85%",
+            start: "top 75%",
             toggleActions: "play reverse play reverse",
           },
         },
@@ -106,69 +130,93 @@ export default function Metrics() {
           <div className="w-20 h-0.5 bg-linear-to-r from-transparent via-pathfinder-green to-transparent mx-auto mb-8" />
 
           {/* Animated Header */}
-          <h2 className="why-header flex flex-col items-center gap-x-4 text-white font-poppins text-5xl md:text-7xl lg:text-9xl font-bold tracking-tight mb-8 relative">
-            <div className="inline-block whitespace-nowrap">
-              {"WHY".split("").map((char, i) => (
-                <div key={i} className="overflow-hidden inline-block">
-                  <span className="why-char inline-block">{char}</span>
+          {/* Animated Header */}
+          <h2 className="why-header relative w-full mb-12 grid grid-rows-1 grid-cols-1 items-center justify-items-center">
+            {SLIDES.map((slide, index) => {
+              const words = slide.title.split(" ");
+              const firstLine = words[0].toUpperCase();
+              const secondLine = words.slice(1).join(" ").toUpperCase();
+
+              return (
+                <div
+                  key={index}
+                  className={`col-start-1 row-start-1 flex flex-col items-center justify-center transition-opacity duration-1000 ${
+                    index === currentSlide
+                      ? "opacity-100 z-10"
+                      : "opacity-0 z-0 pointer-events-none"
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-x-4 text-5xl md:text-7xl lg:text-9xl font-bold tracking-tight leading-[0.9]">
+                    <div className="inline-block whitespace-nowrap">
+                      {firstLine.split("").map((char, i) => (
+                        <div
+                          key={`${index}-1-${i}`}
+                          className="overflow-hidden inline-block"
+                        >
+                          <span className="why-char inline-block">{char}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="inline-block whitespace-nowrap">
+                      {secondLine.split("").map((char, i) => (
+                        <div
+                          key={`${index}-2-${i}`}
+                          className="overflow-hidden inline-block"
+                        >
+                          <span
+                            className="why-char inline-block"
+                            style={{
+                              WebkitTextStroke: "2px rgba(255, 255, 255, 0.5)",
+                              color: "transparent",
+                            }}
+                          >
+                            {char}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Divider Line (Included in slide to fade with it) */}
+                  <div className="absolute -bottom-2 left-0 right-0 h-px bg-linear-to-r from-transparent via-pathfinder-green/30 to-transparent" />
                 </div>
-              ))}
-            </div>
-            <div className="inline-block whitespace-nowrap">
-              {"PATHFINDER".split("").map((char, i) => (
-                <div key={i} className="overflow-hidden inline-block">
-                  <span
-                    className="why-char inline-block"
-                    style={{
-                      WebkitTextStroke: "2px rgba(255, 255, 255, 0.5)",
-                      color: "transparent",
-                    }}
-                  >
-                    {char}
-                  </span>
-                </div>
-              ))}
-            </div>
-            <div className="absolute -bottom-2 left-0 right-0 h-px bg-linear-to-r from-transparent via-pathfinder-green/30 to-transparent" />
+              );
+            })}
           </h2>
 
-          {/* Animated Description */}
-          <div className="why-content text-white/70 text-base md:text-lg leading-relaxed font-light font-nohemi max-w-3xl mx-auto">
-            <div className="mb-4">
-              {WHY_TEXT_1.split(" ").map((word, i) => (
-                <span key={i} className="inline-block whitespace-nowrap mr-1.5">
-                  {word.split("").map((char, j) => (
-                    <span
-                      key={j}
-                      className="overflow-hidden inline-block align-bottom"
-                    >
-                      <span className="why-char-desc inline-block">{char}</span>
-                    </span>
-                  ))}
-                </span>
-              ))}
-            </div>
-            <div>
-              {WHY_TEXT_2.split(" ").map((word, i) => (
-                <span key={i} className="inline-block whitespace-nowrap mr-1.5">
-                  {word.split("").map((char, j) => (
-                    <span
-                      key={j}
-                      className="overflow-hidden inline-block align-bottom"
-                    >
-                      <span className="why-char-desc inline-block">{char}</span>
-                    </span>
-                  ))}
-                </span>
-              ))}
-            </div>
+          {/* Animated Description Slider */}
+          <div className="why-content grid grid-rows-1 grid-cols-1 text-white/70 text-base md:text-lg leading-relaxed font-light font-nohemi max-w-3xl mx-auto mt-6 mb-8">
+            {SLIDES.map((slide, index) => (
+              <div
+                key={index}
+                className={`col-start-1 row-start-1 transition-opacity duration-1000 flex flex-col gap-6 text-center ${
+                  index === currentSlide
+                    ? "opacity-100 z-10"
+                    : "opacity-0 z-0 pointer-events-none"
+                }`}
+              >
+                {slide.content.map((text, i) => (
+                  <p key={i} className="why-text-block">
+                    {text}
+                  </p>
+                ))}
+              </div>
+            ))}
           </div>
 
-          {/* Decorative Bottom Element */}
-          <div className="mt-10 flex items-center justify-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-pathfinder-green/50" />
-            <div className="w-2 h-2 rounded-full bg-pathfinder-green" />
-            <div className="w-2 h-2 rounded-full bg-pathfinder-green/50" />
+          {/* Slide Indicators */}
+          <div className="flex items-center justify-center gap-3">
+            {SLIDES.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`transition-all ease-in-out duration-300 rounded-full ${
+                  currentSlide === index
+                    ? "w-8 h-2 bg-pathfinder-green"
+                    : "w-2 h-2 bg-white/20 cursor-pointer hover:bg-white/40"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>

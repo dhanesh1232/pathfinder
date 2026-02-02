@@ -48,7 +48,7 @@ export default function FounderNote() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % SLIDE_CONTENT.length);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(timer);
   }, []);
 
@@ -72,7 +72,7 @@ export default function FounderNote() {
             {SLIDE_CONTENT.map((slide, index) => (
               <div
                 key={index}
-                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
                   index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
                 }`}
               >
@@ -115,11 +115,12 @@ export default function FounderNote() {
           <div className="flex flex-col gap-12 items-end relative order-1 lg:order-2">
             {/* Founder Card */}
             <div className="founder-card relative group w-full md:max-w-md">
+              <div className="absolute inset-0 bg-pathfinder-green/20 blur-2xl rounded-full opacity-0 group-hover:opacity-40 transition-opacity duration-700" />
               <div className="relative rounded-3xl overflow-hidden">
                 <img
                   src="/my-img.png"
                   alt="Founder"
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-100 scale-95 group-hover:drop-shadow-[0_0_15px_rgba(46,204,113,0.5)] transition-all duration-700"
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-100 scale-95 transition-all duration-700"
                 />
                 {/* Giant Watermark Name behind image - Vertical */}
                 <div className="absolute right-0 -top-20 h-full -z-10 flex items-center justify-center pointer-events-none select-none mix-blend-overlay opacity-20">

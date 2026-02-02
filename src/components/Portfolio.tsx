@@ -1,7 +1,9 @@
 "use client";
 
 import ShimmerButton from "./ui/shinny-button";
-import { InfiniteDraggableGrid, GalleryItem } from "./infinity-grid";
+import { useRef, useState, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const ALL_PORTFOLIO_ITEMS = [
   {
@@ -85,19 +87,119 @@ const ALL_PORTFOLIO_ITEMS = [
   { src: "/portfolio one/vity.jpeg", alt: "Vity" },
 ];
 
-const galleryItems: GalleryItem[] = ALL_PORTFOLIO_ITEMS.map((item, index) => ({
-  id: index,
-  thumb_src: item.src,
-  full_src: item.src,
-  title: item.alt,
-}));
-
 export default function Portfolio() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const headerTextRef = useRef<HTMLDivElement>(null); // New Ref for floating header
+  const [displayedItems, setDisplayedItems] = useState(
+    ALL_PORTFOLIO_ITEMS.slice(0, 12),
+  );
+  const [isShuffleActive, setIsShuffleActive] = useState(false);
+
+  // Shuffle Logic
+  useEffect(() => {
+    if (!isShuffleActive) return;
+
+    const interval = setInterval(() => {
+      // Pick 1 random index to swap for constant low-level activity
+      const indexToSwap = Math.floor(Math.random() * displayedItems.length);
+      const cards = containerRef.current?.querySelectorAll(".portfolio-item");
+
+      if (!cards) return;
+
+      // 1. Fade OUT selected card
+      gsap.to(cards[indexToSwap], {
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.5,
+        onComplete: () => {
+          // 2. Swap Data
+          setDisplayedItems((prev) => {
+            const newItems = [...prev];
+            // Pick a random image from ALL items
+            let newItem =
+              ALL_PORTFOLIO_ITEMS[
+                Math.floor(Math.random() * ALL_PORTFOLIO_ITEMS.length)
+              ];
+            newItems[indexToSwap] = newItem;
+            return newItems;
+          });
+
+          // 3. Fade IN
+          gsap.to(cards[indexToSwap], {
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            delay: 0.1,
+            ease: "power2.out",
+          });
+        },
+      });
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [displayedItems, isShuffleActive]);
+
+  // GSAP Logic
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const scrollerEl = document.getElementById("smooth-wrapper");
+      const scroller = scrollerEl || window;
+
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        scroller: scroller,
+        start: "top bottom",
+        end: "bottom top",
+        onToggle: (self) => setIsShuffleActive(self.isActive),
+      });
+
+      const items = gsap.utils.toArray<HTMLElement>(".portfolio-item");
+
+      items.forEach((item, i) => {
+        gsap.fromTo(
+          item,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: item,
+              scroller: scroller,
+              start: "top 90%",
+              toggleActions: "play none none reverse",
+            },
+            delay: (i % 3) * 0.1,
+            onComplete: () => {
+              // Anime-style floating effect
+              gsap.to(item, {
+                y: -10,
+                duration: 2 + Math.random() * 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+                delay: Math.random(),
+              });
+            },
+          },
+        );
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="w-full py-32 md:py-48 bg-transparent relative z-10">
-      <div className="max-w-full mx-auto">
-        {/* Header */}
-        <div className="text-center mb-4">
+    <section
+      ref={containerRef}
+      className="w-full py-32 md:py-48 px-6 bg-transparent relative z-10"
+    >
+      <div className="max-w-7xl mx-auto">
+        {/* Header (Floating) */}
+        <div ref={headerTextRef} className="text-center mb-16">
           <h2 className="text-white font-poppins font-black text-5xl md:text-6xl lg:text-8xl tracking-tighter uppercase mb-2">
             Selected Works
           </h2>
@@ -106,9 +208,21 @@ export default function Portfolio() {
           </p>
         </div>
 
-        {/* Masonry Grid (Infinite Draggable) */}
-        <div className="w-full h-[80vh] min-h-[500px] relative overflow-hidden border border-white/10">
-          <InfiniteDraggableGrid gallery={galleryItems} />
+        {/* Masonry Grid (Fixed Aspect Ratio for Uniform Height) */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {displayedItems.map((item, idx) => (
+            <div
+              key={idx}
+              className="portfolio-item relative rounded-lg overflow-hidden bg-zinc-900/50 border border-white/5 aspect-[3/4] group"
+            >
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out"
+                loading="lazy"
+              />
+            </div>
+          ))}
         </div>
 
         {/* Minimal Luxury Download CTA */}

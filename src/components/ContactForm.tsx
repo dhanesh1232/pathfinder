@@ -1,5 +1,6 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
 import React, { useRef, useEffect, useState } from "react";
 
 const SparkleTrail = ({
@@ -220,7 +221,7 @@ export default function ContactForm() {
             role="cell"
             aria-label="Send an inquiry"
             onClick={() => setActiveTab("inquiry")}
-            className={`px-12 py-4 text-sm font-medium transition-colors uppercase tracking-widest bg-[#D4AF37] text-black relative z-20 cursor-pointer`}
+            className={`px-12 py-4 text-sm font-medium transition-colors uppercase tracking-widest bg-pathfinder-green text-black relative z-20 cursor-pointer`}
             style={{
               clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)",
             }}
@@ -238,7 +239,7 @@ export default function ContactForm() {
                 <input
                   type="text"
                   placeholder="Name"
-                  className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-[#D4AF37] focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
+                  className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
                 />
               </div>
               {/* Email */}
@@ -246,7 +247,7 @@ export default function ContactForm() {
                 <input
                   type="email"
                   placeholder="Email"
-                  className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-[#D4AF37] focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
+                  className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
                 />
               </div>
               {/* Phone */}
@@ -254,7 +255,7 @@ export default function ContactForm() {
                 <input
                   type="tel"
                   placeholder="Phone"
-                  className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-[#D4AF37] focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
+                  className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
                 />
               </div>
             </div>
@@ -263,7 +264,7 @@ export default function ContactForm() {
               {/* How did you find us */}
               <div className="space-y-2 relative group">
                 <div className="relative">
-                  <select className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-[#D4AF37] focus:outline-none appearance-none transition-colors text-lg">
+                  <select className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none appearance-none transition-colors text-lg">
                     <option className="bg-black">How did you find us?</option>
                     <option className="bg-black text-white">
                       Social Media
@@ -291,7 +292,7 @@ export default function ContactForm() {
                 <input
                   type="text"
                   placeholder="What's your website?"
-                  className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-[#D4AF37] focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
+                  className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
                 />
               </div>
             </div>
@@ -301,7 +302,7 @@ export default function ContactForm() {
               <textarea
                 rows={1}
                 placeholder="How can we help?"
-                className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-[#D4AF37] focus:outline-none transition-colors resize-none placeholder:text-zinc-500 text-lg min-h-[60px]"
+                className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none transition-colors resize-none placeholder:text-zinc-500 text-lg min-h-[60px]"
               />
             </div>
 
@@ -318,21 +319,9 @@ export default function ContactForm() {
               </button>
               <button
                 type="button"
-                className="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-[#D4AF37] hover:text-black text-white transition-all border border-white/10"
+                className="w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-pathfinder-green hover:text-black text-white transition-all border border-white/10"
               >
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 12h14" />
-                  <path d="m12 5 7 7-7 7" />
-                </svg>
+                <ArrowRight className="w-6 h-6" />
               </button>
             </div>
           </form>

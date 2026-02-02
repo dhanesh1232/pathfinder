@@ -7,38 +7,39 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const cards = [
-  {
-    title: "Discovery & Strategy",
-    text: "We dive deep into your brand, audience, and goals to build a roadmap for success.",
-    image: "/portfolio one/overseas.png",
-  },
-  {
-    title: "Research & Analysis",
-    text: "Gathering insights and analyzing market trends to inform every decision we make.",
-    image: "/portfolio one/book my studio.png",
-  },
-  {
-    title: "Design & Experience",
-    text: "Crafting intuitive interfaces and memorable brand identities that resonate with users.",
-    image: "/portfolio one/ui.jpeg",
-  },
-  {
-    title: "Development & Engineering",
-    text: "Turning designs into high-performance digital products using cutting-edge technologies.",
-    image: "/portfolio one/v mart.png",
-  },
-  {
-    title: "Testing & QA",
-    text: "Rigorous testing across devices and platforms to ensure a flawless user experience.",
-    image: "/portfolio one/cetaphil.png",
-  },
-  {
-    title: "Launch & Growth",
-    text: "Deploying your product and continuously optimizing for long-term impact and scale.",
-    image: "/portfolio one/jewel.png",
-  },
-];
+const cards: { title: string; text: string; video?: string; image?: string }[] =
+  [
+    {
+      title: "Discovery & Strategy",
+      text: "We dive deep into your brand, audience, and goals to build a roadmap for success.",
+      video: "/video/how-we-work/0_Goal_Setting_Strategy_1920x1080.mp4",
+    },
+    {
+      title: "Research & Analysis",
+      text: "Gathering insights and analyzing market trends to inform every decision we make.",
+      video: "/video/how-we-work/research and analysis.mp4",
+    },
+    {
+      title: "Design & Experience",
+      text: "Crafting intuitive interfaces and memorable brand identities that resonate with users.",
+      video: "/video/how-we-work/design and experience.mp4",
+    },
+    {
+      title: "Development & Engineering",
+      text: "Turning designs into high-performance digital products using cutting-edge technologies.",
+      video: "/video/how-we-work/development and engineering.mp4",
+    },
+    {
+      title: "Testing & QA",
+      text: "Rigorous testing across devices and platforms to ensure a flawless user experience.",
+      video: "/video/how-we-work/q and a.mp4",
+    },
+    {
+      title: "Launch & Growth",
+      text: "Deploying your product and continuously optimizing for long-term impact and scale.",
+      image: "/og-image.jpg",
+    },
+  ];
 
 function TypingText({
   text,
@@ -58,7 +59,7 @@ function TypingText({
     const words = text.split(" ");
     el.current.innerHTML = "";
 
-    words.forEach((word, wordIndex) => {
+    words.forEach((word) => {
       const wordSpan = document.createElement("span");
       wordSpan.style.display = "inline-block";
       wordSpan.style.whiteSpace = "nowrap";
@@ -76,6 +77,20 @@ function TypingText({
       el.current!.appendChild(wordSpan);
     });
 
+    // Detect new lines and apply stroke style
+    const wordSpans = Array.from(el.current.children) as HTMLElement[];
+    if (wordSpans.length > 0) {
+      const firstLineTop = wordSpans[0].offsetTop;
+
+      wordSpans.forEach((span) => {
+        // Check if the word has wrapped to a new line
+        if (span.offsetTop > firstLineTop + 10) {
+          span.style.color = "transparent";
+          span.style.webkitTextStroke = "1px #2ecc71"; // Explicit Green Stroke
+        }
+      });
+    }
+
     gsap.to(el.current.querySelectorAll(".typing-char"), {
       opacity: 1,
       stagger: 0.02,
@@ -85,6 +100,42 @@ function TypingText({
   }, [text]);
 
   return <Component ref={el} className={className} />;
+}
+
+function VideoItem({ src, className }: { src: string; className?: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {}); // Ignore autoplay errors
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.1 }, // Play as soon as 10% visible
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      loop
+      muted
+      playsInline
+      className={className}
+    />
+  );
 }
 
 export default function HowWeWorks() {
@@ -227,12 +278,7 @@ export default function HowWeWorks() {
                 <TypingText
                   text={cards[activeIndex].title}
                   as="h3"
-                  className="text-3xl md:text-4xl font-bold text-pathfinder-green mb-2 uppercase tracking-wide font-aalto"
-                />
-                <TypingText
-                  text={cards[activeIndex].text}
-                  as="p"
-                  className="text-zinc-50 text-xl md:text-2xl font-light leading-relaxed font-nohemi"
+                  className="text-4xl md:text-5xl font-bold text-pathfinder-green mb-2 uppercase tracking-wide font-aalto"
                 />
               </>
             )}
@@ -255,17 +301,20 @@ export default function HowWeWorks() {
                   transform: "rotateX(25deg)",
                 }}
               >
-                {/* Image Background */}
+                {/* Video or Image Background */}
                 <div className="absolute inset-0 z-0">
-                  <img
-                    src={card.image}
-                    alt={card.title}
-                    className="w-full h-full object-cover transition-transform duration-700"
-                    onError={(e) => {
-                      e.currentTarget.src =
-                        "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800"; // Fallback abstract image
-                    }}
-                  />
+                  {card.video ? (
+                    <VideoItem
+                      src={card.video}
+                      className="w-full h-full object-cover transition-transform duration-700"
+                    />
+                  ) : (
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      className="w-full h-full object-cover transition-transform duration-700"
+                    />
+                  )}
                 </div>
 
                 {/* Card Content Overlay */}

@@ -49,8 +49,8 @@ class Wave {
     this.phase = Math.random() * Math.PI * 2;
     this.speed = 0.02 + Math.random() * 0.01;
 
-    // Solid black
-    this.color = "#000000";
+    // Pathfinder Green
+    this.color = "#2ecc71";
   }
 
   update(damping = 0.04) {

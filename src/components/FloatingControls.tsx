@@ -2,10 +2,12 @@
 
 import { BsWhatsapp } from "react-icons/bs";
 import { HiChevronUp } from "react-icons/hi";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 function BackToTop() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -61,7 +63,7 @@ function BackToTop() {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={scrollToTop}
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 cursor-pointer flex items-center justify-center p-2" // Added padding for easy hover area
+          className="fixed bottom-8 left-4 z-50 cursor-pointer flex items-center justify-center p-2" // Added padding for easy hover area
           aria-label="Back to top"
           onHoverStart={() => controls.start("hover")}
           onHoverEnd={() => controls.start("idle")}
@@ -128,10 +130,25 @@ function BackToTop() {
 
 function WhatsAppFloat() {
   const [isHovered, setIsHovered] = useState(false);
+  const floatRef = useRef(null);
+
+  useGSAP(
+    () => {
+      gsap.to(floatRef.current, {
+        y: -10,
+        duration: 1,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+    },
+    { scope: floatRef },
+  );
 
   return (
     <Link
-      href="https://wa.me/917993424680?text=Hello%20Pathfinders%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services."
+      ref={floatRef}
+      href="https://wa.me/919676104199?text=Hello%20Pathfinders%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services."
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-8 right-6 md:right-8 z-50 flex items-center justify-end"

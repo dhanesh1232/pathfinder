@@ -8,11 +8,21 @@ import Link from "next/link";
 export default function ContactSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLAnchorElement>(null);
 
   useGSAP(
     () => {
       // Gentle floating animation for the large text
       gsap.to(textRef.current, {
+        y: -10,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+
+      // Float animation for button
+      gsap.to(buttonRef.current, {
         y: -10,
         duration: 3,
         repeat: -1,
@@ -64,7 +74,9 @@ export default function ContactSection() {
 
         {/* CTA Button */}
         <a
-          href="mailto:contact@pathfinder.com"
+          ref={buttonRef}
+          href="https://wa.me/+919676104199"
+          target="_blank"
           className="footer-reveal group relative inline-flex items-center gap-4 px-12 py-5 bg-white text-black rounded-full overflow-hidden hover:bg-pathfinder-green transition-colors duration-500"
         >
           <span className="relative z-10 font-poppins font-medium text-lg tracking-wide group-hover:text-white transition-colors duration-300">

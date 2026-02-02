@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import { useGSAP } from "@gsap/react";
 
 const SERVICES = [
   {
@@ -55,6 +56,7 @@ const DESCRIPTION_TEXT =
 
 export default function Services() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const serviceCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -65,27 +67,45 @@ export default function Services() {
       const scrollerEl = document.getElementById("smooth-wrapper");
       const scroller = scrollerEl || window;
 
-      // 1. Description Char Reveal
       gsap.fromTo(
-        ".service-char-desc",
+        ".service-char",
         { yPercent: 100 },
         {
           yPercent: 0,
-          duration: 0.5,
+          duration: 0.3,
           ease: "power2.out",
-          stagger: 0.005, // Very fast stagger for long text
+          stagger: 0.02,
           scrollTrigger: {
             trigger: ".service-header",
             scroller: scroller,
-            start: "top 85%",
+            start: "top 65%",
             toggleActions: "play reverse play reverse",
           },
         },
       );
 
-      // 2. Cards Stagger Reveal
+      // 2. Description Block Reveal
       gsap.fromTo(
-        ".service-card",
+        ".service-text-block",
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power2.out",
+          stagger: 0.2,
+          scrollTrigger: {
+            trigger: ".service-content",
+            scroller: scroller,
+            start: "top 75%",
+            toggleActions: "play reverse play reverse",
+          },
+        },
+      );
+
+      // 2. Cards Stagger Reveal (Wrapper)
+      gsap.fromTo(
+        ".service-card-wrapper",
         { opacity: 0, y: 40 },
         {
           opacity: 1,
@@ -105,15 +125,31 @@ export default function Services() {
     return () => ctx.revert();
   }, []);
 
+  useGSAP(() => {
+    gsap.to(serviceCardRef.current, {
+      y: -10,
+      duration: 2,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
+  });
+
   return (
     <section
       id="service"
       ref={containerRef}
-      className="relative w-full py-32 md:py-48 flex bg-linear-to-b from-green-700/40 to-green-800/30 flex-col items-center justify-center px-6 md:px-8 z-10"
+      className="relative w-full py-32 md:py-48 flex flex-col items-center justify-center px-6 md:px-8 z-10 overflow-hidden"
     >
+      {/* Ambient Blurred Background */}
+      <div className="absolute inset-0 pointer-events-none -z-10">
+        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-green-900/30 rounded-full blur-[120px] mix-blend-screen" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] bg-emerald-900/20 rounded-full blur-[120px] mix-blend-screen" />
+      </div>
+
       <div className="max-w-7xl w-full mx-auto">
         {/* Section Header */}
-        <div className="service-header text-center mb-32 md:mb-48">
+        <div className="service-header text-center mb-12">
           <h2 className="flex flex-col items-center text-7xl md:text-9xl lg:text-[10rem] font-poppins font-black tracking-tight mb-12 text-white uppercase leading-[0.9]">
             {/* Line 1: OUR */}
             <div className="inline-block whitespace-nowrap">
@@ -134,21 +170,8 @@ export default function Services() {
           </h2>
 
           {/* Description with Char-by-Char Animation */}
-          <div className="service-subtitle text-zinc-300 text-lg md:text-xl leading-relaxed max-w-4xl mx-auto font-light font-nohemi">
-            {DESCRIPTION_TEXT.split(" ").map((word, i) => (
-              <span key={i} className="inline-block whitespace-nowrap mr-1.5">
-                {word.split("").map((char, j) => (
-                  <span
-                    key={j}
-                    className="overflow-hidden inline-block align-bottom"
-                  >
-                    <span className="service-char-desc inline-block">
-                      {char}
-                    </span>
-                  </span>
-                ))}
-              </span>
-            ))}
+          <div className="service-content text-white/70 text-base md:text-lg leading-relaxed font-light font-nohemi max-w-3xl mx-auto mt-8 flex flex-col gap-6">
+            <p className="service-text-block opacity-0">{DESCRIPTION_TEXT}</p>
           </div>
         </div>
 
@@ -156,55 +179,60 @@ export default function Services() {
         <div className="service-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
           {SERVICES.map((service, index) => (
             <div
+              ref={serviceCardRef}
               key={index}
-              className="service-card group relative flex flex-col p-8 md:p-10 rounded-3xl bg-green-900/20 backdrop-blur-2xl border border-white/10 overflow-hidden transition-all duration-500 hover:border-emerald-500/40 hover:bg-emerald-950/20 hover:shadow-[0_0_40px_rgba(16,185,129,0.1)] opacity-0"
+              className="service-card-wrapper"
             >
-              {/* Internal Emerald Glow Gradient */}
-              <div className="absolute -inset-1/2 bg-radial-gradient from-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-700 pointer-events-none" />
+              <div className="service-card h-full group relative flex flex-col p-8 md:p-10 rounded-3xl bg-green-900/20 backdrop-blur-2xl border border-white/10 overflow-hidden transition-all duration-500 hover:border-emerald-500/40 hover:bg-emerald-950/20 hover:shadow-[0_0_40px_rgba(16,185,129,0.1)]">
+                {/* Internal Emerald Glow Gradient */}
+                <div className="absolute -inset-1/2 bg-radial-gradient from-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-700 pointer-events-none" />
 
-              {/* Right Side Fluid Water Drop Animation */}
-              <div className="absolute right-0 top-0 bottom-0 w-[2px] pointer-events-none overflow-visible">
-                {/* The Droplet Runner */}
-                <div className="absolute top-full right-0 w-[2px] h-[100px] bg-linear-to-t from-transparent to-emerald-400 group-hover:top-[50%] transition-all duration-[1.5s] ease-in-out">
-                  {/* Glowing Head with Emerald Noise */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[6px] h-[16px] bg-emerald-400 rounded-full blur-[1px] shadow-[0_0_15px_#34d399] overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC42NSIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIG9wYWNpdHk9IjAuNSIgZmlsdGVyPSJ1cmwoI2YpIi8+PC9zdmc+')] opacity-60 mix-blend-overlay" />
+                {/* Right Side Fluid Water Drop Animation */}
+                <div className="absolute right-0 top-0 bottom-0 w-[2px] pointer-events-none overflow-visible">
+                  {/* The Droplet Runner */}
+                  <div className="absolute top-full right-0 w-[2px] h-[100px] bg-linear-to-t from-transparent to-emerald-400 group-hover:top-[50%] transition-all duration-[1.5s] ease-in-out">
+                    {/* Glowing Head with Emerald Noise */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[6px] h-[16px] bg-emerald-400 rounded-full blur-[1px] shadow-[0_0_15px_#34d399] overflow-hidden">
+                      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC42NSIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIG9wYWNpdHk9IjAuNSIgZmlsdGVyPSJ1cmwoI2YpIi8+PC9zdmc+')] opacity-60 mix-blend-overlay" />
+                    </div>
+                    {/* Solid Core */}
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-[2.5px] bg-emerald-400 rounded-full opacity-100 shadow-[0_0_5px_green]" />
                   </div>
-                  {/* Solid Core */}
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-[2.5px] bg-emerald-400 rounded-full opacity-100 shadow-[0_0_5px_green]" />
                 </div>
-              </div>
 
-              <div className="mb-auto mt-2 relative z-10">
-                {/* Subtitle (Moved Above Title for hierarchy) */}
-                <p className="text-emerald-400 text-xs font-bold uppercase tracking-[0.2em] mb-4 opacity-80 font-aalto">
-                  {service.subtitle}
-                </p>
-                {/* Title */}
-                <h3 className="text-3xl md:text-4xl font-medium text-white mb-6 leading-tight group-hover:translate-x-0.5 transition-transform duration-300">
-                  {service.title}
-                </h3>
-                {/* Description */}
-                <p className="text-zinc-400 group-hover:text-zinc-300 leading-relaxed text-sm md:text-base font-light font-nohemi transition-colors">
-                  {service.description}
-                </p>
+                <div className="mb-auto mt-2 relative z-10">
+                  {/* Subtitle (Moved Above Title for hierarchy) */}
+                  <p className="text-emerald-400 text-xs font-bold uppercase tracking-[0.2em] mb-4 opacity-80 font-aalto">
+                    {service.subtitle}
+                  </p>
+                  {/* Title */}
+                  <h3 className="text-3xl md:text-4xl font-medium text-white mb-6 leading-tight group-hover:translate-x-0.5 transition-transform duration-300">
+                    {service.title}
+                  </h3>
+                  {/* Description */}
+                  <p className="text-zinc-400 group-hover:text-zinc-300 leading-relaxed text-sm md:text-base font-light font-nohemi transition-colors">
+                    {service.description}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
         {/* Section CTA */}
-        <div className="service-card flex justify-center">
-          <Link
-            href="https://wa.me/+919676104199"
-            target="_blank"
-            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full backdrop-blur-md transition-all duration-300"
-          >
-            <span className="text-white text-sm font-medium tracking-wide uppercase">
-              Start Your Project
-            </span>
-            <span className="w-2 h-2 rounded-full bg-pathfinder-green shadow-[0_0_10px_rgba(46,204,113,0.8)] group-hover:scale-125 transition-transform duration-300" />
-          </Link>
+        <div className="service-card-wrapper flex justify-center">
+          <div className="service-card">
+            <Link
+              href="https://wa.me/+919676104199"
+              target="_blank"
+              className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full backdrop-blur-md transition-all duration-300"
+            >
+              <span className="text-white text-sm font-medium tracking-wide uppercase">
+                Start Your Project
+              </span>
+              <span className="w-2 h-2 rounded-full bg-pathfinder-green shadow-[0_0_10px_rgba(46,204,113,0.8)] group-hover:scale-125 transition-transform duration-300" />
+            </Link>
+          </div>
         </div>
       </div>
     </section>

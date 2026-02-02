@@ -3,6 +3,8 @@
 import { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const BANNER_ITEMS = [
   {
@@ -25,7 +27,6 @@ const BANNER_ITEMS = [
 export default function BannerCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
 
   const nextSlide = () => {
     setActiveIndex((prev) => (prev + 1) % BANNER_ITEMS.length);
@@ -65,7 +66,7 @@ export default function BannerCarousel() {
       ref={containerRef}
       className="w-full py-10 bg-transparent relative z-10 px-6"
     >
-      <div className="max-w-[1400px] mx-auto relative group">
+      <div className="max-w-7xl mx-auto relative group">
         {/* Main Display Area */}
         <div className="relative w-full aspect-video md:aspect-21/9 rounded-sm overflow-hidden border border-white/10 bg-zinc-900 shadow-2xl">
           {BANNER_ITEMS.map((item, index) => (
@@ -97,44 +98,18 @@ export default function BannerCarousel() {
           {/* Navigation Arrows (Visible on Hover/Always on Mobile) */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-50 lg:opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
+            className="absolute left-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/30 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-50 lg:opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
             aria-label="Previous Slide"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 19.5 8.25 12l7.5-7.5"
-              />
-            </svg>
+            <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/30 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-50 lg:opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0"
+            className="absolute right-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/30 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-50 lg:opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0"
             aria-label="Next Slide"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-5 h-5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m8.25 4.5 7.5 7.5-7.5 7.5"
-              />
-            </svg>
+            <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
           </button>
 
           {/* Indicators */}

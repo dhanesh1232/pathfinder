@@ -92,7 +92,6 @@ export default function ParallaxTeam() {
       });
 
       // --- PHASE 1: ENTRANCE (Team Rise + Text Y-Reveal) ---
-      // Team rises up
       tl.to(
         ".team-member-container",
         {
@@ -104,7 +103,6 @@ export default function ParallaxTeam() {
         "start",
       );
 
-      // Text rises/fades in (Staggered Y-axis reveal)
       // "slowly come text hide to visible"
       tl.to(
         ".char",
@@ -187,43 +185,15 @@ export default function ParallaxTeam() {
         ">-=0.5",
       );
 
-      tl.to(
-        ".text-line-1 .char",
-        {
-          color: "white",
-          webkitTextStroke: "0.5px white", // Matching pathfinder-green
-          duration: 0.5,
-          stagger: {
-            amount: 1.5,
-            from: "start",
-          },
-          ease: "power1.out",
+      tl.to(".char", {
+        opacity: 0,
+        duration: 0.5,
+        stagger: {
+          amount: 1.5,
+          from: "start",
         },
-        ">-=0.5",
-      );
-
-      // tl.to(".text-line-1 .char", {
-      //   opacity: 0,
-      //   duration: 0.5,
-      //   yPercent: -100,
-      //   stagger: {
-      //     amount: 1.5,
-      //     from: "start",
-      //   },
-      //   ease: "power1.out",
-      // });
-
-      // tl.to(".text-line-2 .char", {
-      //   opacity: 0,
-      //   duration: 0.5,
-      //   yPercent: -100,
-      //   stagger: {
-      //     amount: 1.5,
-      //     from: "start",
-      //   },
-      //   ease: "power1.out",
-      // });
-
+        ease: "power2.in",
+      });
       // Buffer at end
       tl.to({}, { duration: 1 });
     }, containerRef);
@@ -271,7 +241,7 @@ export default function ParallaxTeam() {
             </h2>
           </div>
         </div>
-        <div className="relative z-10 w-full h-[90%] md:h-full max-w-[1600px] flex items-end justify-center perspective-[1000px] pb-0 md:pb-[5vh]">
+        <div className="relative z-10 w-full h-[90%] md:h-full max-w-7xl flex items-end justify-center perspective-[1000px] pb-0 md:pb-[5vh]">
           {PEOPLE.map((person) => (
             <div
               key={person.id}

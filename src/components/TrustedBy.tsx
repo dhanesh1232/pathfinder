@@ -50,15 +50,15 @@ const LOGOS = [...RAW_LOGOS, ...RAW_LOGOS, ...RAW_LOGOS];
 
 export default function TrustedBy() {
   return (
-    <section className="w-full mt-10 pt-24 bg-transparent overflow-hidden">
+    <section className="w-full pt-24 bg-black overflow-hidden">
       <h1 className="text-white text-center text-xl mb-14 font-poppins">
         <span className="text-pathfinder-green">We're trusted</span> by
         companies like
       </h1>
       <div className="relative max-w-full mx-auto">
         {/* Gradient Overlays */}
-        <div className="absolute left-0 top-0 bottom-0 w-20 bg-linear-to-r from-black to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-20 bg-linear-to-l from-black to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-32 md:w-72 bg-linear-to-r from-black via-black/80 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-32 md:w-72 bg-linear-to-l from-black via-black/80 to-transparent z-10 pointer-events-none" />
         <Logomarquee logos2={LOGOS} logos1={LOGOS} />
       </div>
     </section>
