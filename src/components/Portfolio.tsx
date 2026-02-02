@@ -1,12 +1,7 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
 import ShimmerButton from "./ui/shinny-button";
-
-gsap.registerPlugin(ScrollTrigger);
+import { InfiniteDraggableGrid, GalleryItem } from "./infinity-grid";
 
 const ALL_PORTFOLIO_ITEMS = [
   {
@@ -90,126 +85,20 @@ const ALL_PORTFOLIO_ITEMS = [
   { src: "/portfolio one/vity.jpeg", alt: "Vity" },
 ];
 
+const galleryItems: GalleryItem[] = ALL_PORTFOLIO_ITEMS.map((item, index) => ({
+  id: index,
+  thumb_src: item.src,
+  full_src: item.src,
+  title: item.alt,
+}));
+
 export default function Portfolio() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [displayedItems, setDisplayedItems] = useState(
-    ALL_PORTFOLIO_ITEMS.slice(0, 12),
-  );
-  const [isShuffleActive, setIsShuffleActive] = useState(false);
-
-  // Shuffle Logic
-  useEffect(() => {
-    if (!isShuffleActive) return;
-
-    const interval = setInterval(() => {
-      // Pick 3 random indices to swap
-      const indicesToSwap = new Set<number>();
-      while (indicesToSwap.size < 3) {
-        indicesToSwap.add(Math.floor(Math.random() * displayedItems.length));
-      }
-
-      const indicesArray = Array.from(indicesToSwap);
-      const cards = containerRef.current?.querySelectorAll(".portfolio-item");
-
-      if (!cards) return;
-
-      // 1. Fade OUT selected cards
-      const anim = gsap.to(
-        indicesArray.map((i) => cards[i]),
-        {
-          opacity: 0,
-          scale: 0.95,
-          duration: 0.5,
-          stagger: 0.1,
-          onComplete: () => {
-            // 2. Swap Data
-            setDisplayedItems((prev) => {
-              const newItems = [...prev];
-              indicesArray.forEach((idx) => {
-                // Pick a random image from ALL items that is NOT currently displayed
-                // Simple approach: just pick random from ALL (collision chance is low with 46 items)
-                let newItem =
-                  ALL_PORTFOLIO_ITEMS[
-                    Math.floor(Math.random() * ALL_PORTFOLIO_ITEMS.length)
-                  ];
-                newItems[idx] = newItem;
-              });
-              return newItems;
-            });
-
-            // 3. Fade IN (Needs to wait for state update render, but GSAP doesn't wait for React)
-            // We use a small timeout or just animate the SAME DOM elements back in
-            // React keeps the DOM elements, just updates the src.
-            // So we can animate them back in.
-            gsap.to(
-              indicesArray.map((i) => cards[i]),
-              {
-                opacity: 1,
-                scale: 1,
-                duration: 0.8,
-                delay: 0.1,
-                stagger: 0.1,
-                ease: "power2.out",
-              },
-            );
-          },
-        },
-      );
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [displayedItems, isShuffleActive]);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const ctx = gsap.context(() => {
-      const scrollerEl = document.getElementById("smooth-wrapper");
-      const scroller = scrollerEl || window;
-
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        scroller: scroller,
-        start: "top bottom",
-        end: "bottom top",
-        onToggle: (self) => setIsShuffleActive(self.isActive),
-      });
-
-      const items = gsap.utils.toArray<HTMLElement>(".portfolio-item");
-
-      items.forEach((item, i) => {
-        gsap.fromTo(
-          item,
-          { opacity: 0, y: 50 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: item,
-              scroller: scroller,
-              start: "top 90%",
-              toggleActions: "play none none reverse",
-            },
-            delay: (i % 3) * 0.1, // Stagger based on column position roughly
-          },
-        );
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section
-      ref={containerRef}
-      className="w-full py-32 md:py-48 px-6 bg-transparent relative z-10"
-    >
-      <div className="max-w-7xl mx-auto">
+    <section className="w-full py-32 md:py-48 bg-transparent relative z-10">
+      <div className="max-w-full mx-auto">
         {/* Header */}
-        <div className="text-center mb-24 md:mb-32">
-          <h2 className="text-white font-poppins font-black text-5xl md:text-7xl lg:text-9xl tracking-tighter uppercase mb-2">
+        <div className="text-center mb-4">
+          <h2 className="text-white font-poppins font-black text-5xl md:text-6xl lg:text-8xl tracking-tighter uppercase mb-2">
             Selected Works
           </h2>
           <p className="text-white/60 font-nohemi text-lg md:text-xl font-light max-w-2xl mx-auto">
@@ -217,21 +106,9 @@ export default function Portfolio() {
           </p>
         </div>
 
-        {/* Masonry Grid */}
-        <div className="columns-2 md:columns-3 lg:columns-4 gap-3 space-y-3">
-          {displayedItems.map((item, idx) => (
-            <div
-              key={idx} // Using Index as key here is crucial for keeping DOM nodes stable for animation sharing
-              className="portfolio-item break-inside-avoid relative mb-6 rounded-lg overflow-hidden bg-zinc-900/50 border border-white/5"
-            >
-              <img
-                src={item.src}
-                alt={item.alt}
-                className="w-full h-auto object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700 ease-out min-h-[200px]"
-                loading="lazy"
-              />
-            </div>
-          ))}
+        {/* Masonry Grid (Infinite Draggable) */}
+        <div className="w-full h-[80vh] min-h-[500px] relative overflow-hidden border border-white/10">
+          <InfiniteDraggableGrid gallery={galleryItems} />
         </div>
 
         {/* Minimal Luxury Download CTA */}

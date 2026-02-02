@@ -26,13 +26,14 @@ export default function SmoothScroll() {
     const lenis = new Lenis({
       wrapper: wrapper,
       content: content,
-      duration: 1.2,
+      duration: 1.5, // Slower, smoother feel
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential smoothing
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       syncTouch: true,
       touchMultiplier: 2,
+      wheelMultiplier: 0.8, // Heavier feel for precision
     });
 
     // Synchronize Lenis with ScrollTrigger

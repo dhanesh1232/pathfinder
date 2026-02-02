@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import Link from "next/link";
 
 export default function ContactSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -114,7 +115,16 @@ export default function ContactSection() {
             </a>
           </div>
 
-          <div className="text-zinc-600">Designed by Pathfinder</div>
+          <div className="text-zinc-600">
+            Developed by{" "}
+            <Link
+              href="https://services.ecodrix.com"
+              target="_blank"
+              className="hover:text-pathfinder-green transition-colors"
+            >
+              <span className="text-blue-500">ECODrIx</span>
+            </Link>
+          </div>
         </div>
       </div>
 

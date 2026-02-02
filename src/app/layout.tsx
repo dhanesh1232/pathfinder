@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google"; // Import Poppins
 import SmoothScroll from "@/components/SmoothScroll";
 import GlobalNav from "@/components/GlobalNav";
+import FloatingControls from "@/components/FloatingControls";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -113,6 +114,7 @@ export default function RootLayout({
             </div>
           </div>
           <SmoothScroll />
+          <FloatingControls />
         </main>
       </body>
     </html>

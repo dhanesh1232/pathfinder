@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import TransformativeSection from "@/components/HowWeWorks";
 import { CanvasWave } from "@/components/ScrollStory/wave";
 import ContactForm from "@/components/ContactForm";
+import WaveReveal from "@/components/WaveReveal";
 
 export default function Home() {
   return (
@@ -21,10 +22,17 @@ export default function Home() {
       <ParallaxTeam />
 
       {/* 3. Trusted By / Logos */}
-      <TrustedBy />
+      <div data-lenis-speed="0.8" className="relative z-10">
+        <TrustedBy />
+      </div>
 
       {/* 3b. Banner Carousel */}
-      <BannerCarousel />
+      <div data-lenis-speed="1.1" className="relative z-10">
+        <BannerCarousel />
+      </div>
+
+      {/* 3c. Wave Reveal Transition */}
+      <WaveReveal />
 
       {/* 4. Metrics / Projects */}
       <Metrics />
