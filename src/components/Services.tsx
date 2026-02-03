@@ -152,18 +152,12 @@ export default function Services() {
     <section
       id="service"
       ref={containerRef}
-      className="relative w-full py-32 md:py-48 flex flex-col items-center justify-center px-6 md:px-8 z-10 overflow-hidden"
+      className="relative w-full py-24 lg:py-32 flex flex-col items-center justify-center px-6 md:px-8 z-10 overflow-hidden"
     >
-      {/* Ambient Blurred Background */}
-      <div className="absolute inset-0 pointer-events-none -z-10">
-        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-green-900/30 rounded-full blur-[120px] mix-blend-screen" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] bg-emerald-900/20 rounded-full blur-[120px] mix-blend-screen" />
-      </div>
-
       <div className="max-w-7xl w-full mx-auto">
         {/* Section Header */}
         <div className="service-header text-center mb-12">
-          <h2 className="flex flex-col items-center text-7xl md:text-9xl lg:text-[10rem] font-poppins font-black tracking-tight mb-12 text-white uppercase leading-[0.9]">
+          <h2 className="flex flex-col items-center text-7xl md:text-9xl lg:text-[10rem] font-poppins font-black tracking-tight mb-4 text-white uppercase leading-[0.9]">
             {/* Line 1: OUR */}
             <div className="inline-block whitespace-nowrap">
               {"OUR".split("").map((char, i) => (
@@ -183,9 +177,10 @@ export default function Services() {
           </h2>
 
           {/* Description with Char-by-Char Animation */}
-          <div className="service-content text-white/70 text-base md:text-lg leading-relaxed font-light font-nohemi max-w-3xl mx-auto mt-8 flex flex-col gap-6">
+          <div className="service-content text-white/70 text-base md:text-lg leading-relaxed font-light font-nohemi max-w-3xl mx-auto flex flex-col gap-6">
             <p className="service-text-block opacity-0">{DESCRIPTION_TEXT}</p>
           </div>
+          <div className="w-full h-px bg-linear-to-r from-transparent via-pathfinder-green/20 to-transparent my-4" />
         </div>
 
         {/* Services Grid */}
@@ -207,6 +202,14 @@ export default function Services() {
                     {/* Solid Core */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-[2.5px] bg-emerald-400 rounded-full opacity-100 shadow-[0_0_5px_green]" />
                   </div>
+                </div>
+
+                {/* Glass Effect Overlay */}
+                <div className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                  <div className="absolute inset-0 bg-linear-to-b from-white/20 to-transparent mix-blend-overlay" />
+                  <div className="absolute inset-0 ring-1 ring-inset ring-white/30 rounded-3xl" />
+                  {/* Shine Sheen - Left to Right */}
+                  <div className="absolute top-0 -left-[150%] w-[150%] h-full bg-linear-to-r from-transparent via-pathfinder-green/20 to-transparent transform -skew-x-12 group-hover:left-[100%] transition-all duration-1000 ease-in-out" />
                 </div>
 
                 <div className="mb-auto mt-2 relative z-10">

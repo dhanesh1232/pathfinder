@@ -79,7 +79,7 @@ function TypingText({
 
     // Detect new lines and apply stroke style
     const wordSpans = Array.from(el.current.children) as HTMLElement[];
-    if (wordSpans.length > 0) {
+    if (wordSpans.length > 0 && Component.startsWith("h")) {
       const firstLineTop = wordSpans[0].offsetTop;
 
       wordSpans.forEach((span) => {
@@ -156,6 +156,7 @@ export default function HowWeWorks() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(-1);
   const isMobile = useIsMobile(640);
+  const isMobileLg = useIsMobile(768);
   const isTablet = useIsMobile(1024);
 
   useEffect(() => {
@@ -227,7 +228,7 @@ export default function HowWeWorks() {
         x: () => -(containerRef.current!.scrollWidth - window.innerWidth),
         ease: "none",
       });
-      // 3. Header Typing Animation (How We Work Pathfinder)
+
       // 3. Header Typing Animation (How We Work Pathfinder)
       gsap.fromTo(
         ".hww-char",
@@ -241,7 +242,9 @@ export default function HowWeWorks() {
             trigger: triggerRef.current,
             scroller: scroller,
             start: "top 60%", // Start when section enters view
-            toggleActions: "play reverse play reverse",
+            toggleActions: isMobileLg
+              ? "play reverse play reverse"
+              : "play none none reverse",
           },
         },
       );
@@ -254,7 +257,7 @@ export default function HowWeWorks() {
     <>
       <section
         ref={triggerRef}
-        className="relative bg-transparent h-screen w-full overflow-hidden flex items-center justify-center"
+        className="relative bg-transparent h-screen w-full overflow-hidden flex flex-col md:flex-row md:items-center md:justify-center"
       >
         {/* 
         Rotated Wrapper 
@@ -262,8 +265,8 @@ export default function HowWeWorks() {
         Moving Left (against the slope) creates the visual effect of "Climbing" from BR to TL.
       */}
         {/* Static Title (Fixed inside the rotated container) */}
-        <div className="hww-header-container z-20 pointer-events-none absolute left-[7%] top-[20%] md:top-[25%] md:left-[8%] max-w-sm md:max-w-md">
-          <h2 className="text-5xl md:text-7xl font-black text-white italic tracking-tighter uppercase leading-[0.8] drop-shadow-xl text-wrap mb-8">
+        <div className="z-20 pointer-events-none relative md:absolute w-full md:w-auto px-6 pt-24 md:p-0 left-auto top-auto md:left-[8%] md:top-[25%] max-w-sm md:max-w-md">
+          <h2 className="text-4xl md:text-7xl font-black text-white italic tracking-tighter uppercase leading-[0.8] drop-shadow-xl text-wrap md:mb-8">
             <div className="block mb-2">
               {"How We Work".split("").map((char, i) => (
                 <span key={i} className="hww-char opacity-0">
@@ -284,7 +287,7 @@ export default function HowWeWorks() {
           </h2>
 
           {/* Dynamic Typing Title & Text */}
-          <div className="pointer-events-auto min-h-[120px]">
+          <div className="hidden md:block pointer-events-auto min-h-[120px]">
             {activeIndex !== -1 && (
               <>
                 <TypingText
@@ -292,26 +295,28 @@ export default function HowWeWorks() {
                   as="h3"
                   className="text-4xl md:text-5xl font-bold text-pathfinder-green mb-2 uppercase tracking-wide font-aalto"
                 />
+                <TypingText
+                  text={cards[activeIndex].text}
+                  as="p"
+                  className="text-lg md:text-xl text-white"
+                />
               </>
             )}
           </div>
         </div>
         <div
           ref={wrapperRef}
-          className="relative w-screen h-[60vh] md:h-[80vh] bg-transparent rotate-6 flex items-center opacity-0 will-change-transform perspective-[2500px]"
+          className="relative w-screen h-auto flex-1 md:h-[90vh] bg-transparent rotate-0 md:rotate-6 flex items-center opacity-0 will-change-transform perspective-[2500px]"
         >
           {/* Scrollable Track */}
           <div
             ref={containerRef}
-            className="flex items-center gap-4 pl-[80vw] pr-[20vw] rotate-x-20"
+            className="flex items-center pl-[80vw] pr-[20vw] rotate-x-0 md:rotate-x-20"
           >
             {cards.map((card, index) => (
               <div
                 key={index}
-                className={`relative shrink-0 w-[80vw] sm:w-[70vw] md:w-[60vw] lg:w-[50vw] h-[70vh] sm:h-[75vh] md:h-[80vh] lg:h-[85vh] bg-black border border-white/10 rounded overflow-hidden flex flex-col justify-between group transition-all duration-500 origin-center`}
-                style={{
-                  transform: "rotateX(25deg)",
-                }}
+                className={`relative shrink-0 w-[95vw] sm:w-[85vw] md:w-[60vw] lg:w-[50vw] h-[70vh] sm:h-[75vh] md:h-[80vh] lg:h-[85vh] bg-black border border-white/10 rounded overflow-hidden flex flex-col justify-between group transition-all duration-500 origin-center md:transform-[rotateX(25deg)]`}
               >
                 {/* Video or Image Background */}
                 <div className="absolute inset-0 z-0">
@@ -341,6 +346,24 @@ export default function HowWeWorks() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Mobile-only Bottom Content (Typing) */}
+        <div className="w-full md:hidden absolute left-2 px-2 max-w-sm bottom-26 z-20 flex flex-col justify-start pr-4 bg-linear-to-r from-black/20 to-transparent">
+          {activeIndex !== -1 && (
+            <>
+              <TypingText
+                text={cards[activeIndex].title}
+                as="h3"
+                className="text-3xl font-bold text-pathfinder-green mb-2 uppercase tracking-wide font-aalto"
+              />
+              <TypingText
+                text={cards[activeIndex].text}
+                as="p"
+                className="text-base text-white/90 leading-relaxed"
+              />
+            </>
+          )}
         </div>
       </section>
       {/* Spacer between How We Works and Services */}

@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import TransformativeSection from "@/components/HowWeWorks";
 import ContactForm from "@/components/ContactForm";
 import WaveReveal from "@/components/WaveReveal";
+import OurWork from "@/components/OurWork";
 
 export default function Home() {
   return (
@@ -47,6 +48,9 @@ export default function Home() {
 
       {/* 7. Portfolio */}
       <Portfolio />
+
+      {/* 7b. Our Work / Reels Showcase */}
+      <OurWork />
 
       {/* 8. Founder Note / Team Philosophy */}
       <FounderNote />

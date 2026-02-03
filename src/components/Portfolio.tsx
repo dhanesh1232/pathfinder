@@ -196,7 +196,7 @@ export default function Portfolio() {
   return (
     <section
       ref={containerRef}
-      className="w-full py-32 md:py-48 px-6 bg-transparent relative z-10"
+      className="w-full py-12 md:py-24 px-6 bg-transparent relative z-10"
     >
       <div className="max-w-7xl mx-auto">
         {/* Header (Floating) */}
@@ -221,8 +221,15 @@ export default function Portfolio() {
                 alt={item.alt}
                 fill
                 sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                className="object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out"
+                className="object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out"
               />
+              {/* Glass Effect Overlay */}
+              <div className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                <div className="absolute inset-0 bg-linear-to-b from-white/20 to-transparent mix-blend-overlay" />
+                <div className="absolute inset-0 ring-1 ring-inset ring-white/30 rounded-lg" />
+                {/* Shine Sheen - Left to Right */}
+                <div className="absolute top-0 -left-[150%] w-[150%] h-full bg-linear-to-r from-transparent via-pathfinder-green/20 to-transparent transform -skew-x-12 group-hover:left-[100%] transition-all duration-1000 ease-in-out" />
+              </div>
             </div>
           ))}
         </div>
@@ -243,7 +250,7 @@ export default function Portfolio() {
                   height="16"
                   fill="currentColor"
                   viewBox="0 0 16 16"
-                  className="w-5 h-5 text-gray-900 dark:text-white/70 group-hover:text-pathfinder-green transition-colors"
+                  className="w-5 h-5 text-gray-900 group-hover:text-white transition-colors"
                 >
                   <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
                   <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />

@@ -49,8 +49,8 @@ class Wave {
     this.phase = Math.random() * Math.PI * 2;
     this.speed = 0.02 + Math.random() * 0.01;
 
-    // Pathfinder Green
-    this.color = "#2ecc71";
+    //  Black
+    this.color = "#000000";
   }
 
   update(damping = 0.04) {
@@ -211,7 +211,7 @@ export default function WaveReveal() {
   return (
     <div
       ref={container}
-      className="relative h-screen w-full bg-white text-black overflow-hidden"
+      className="relative h-screen w-full bg-pathfinder-green text-black overflow-hidden"
     >
       {/* SVG Filter for Wave Text Effect */}
       <svg className="hidden">

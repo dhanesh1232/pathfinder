@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -53,33 +54,87 @@ const PEOPLE = [
 export default function ParallaxTeam() {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const ctx = gsap.context(() => {
-      // Use element directly if found, otherwise window
+  useGSAP(
+    () => {
       const scrollerEl = document.getElementById("smooth-wrapper");
       const scroller = scrollerEl || window;
 
-      // 1. Initial State Setup
-      // Images: Hidden below, Grayscale
+      // --- INITIAL STATES ---
+      // Team
       gsap.set(".team-member-container", { yPercent: 100 });
       gsap.set(".team-normal", {
         filter: "grayscale(100%) contrast(125%) brightness(110%)",
       });
       gsap.set(".team-active", { opacity: 0 });
 
-      // Text: Hidden below (y=100%), Opacity 0, Solid Color (no stroke yet)
-      gsap.set(".char", {
-        yPercent: 100,
-        opacity: 0,
-        color: (i, target) => {
-          return target.closest(".text-line-2") ? "#2ecc71" : "white";
-        },
+      // Text Chars (Hidden initially)
+      gsap.set(".char", { yPercent: 100, opacity: 0 });
+
+      // Left Text (Line 1): Starts Solid White
+      gsap.set(".text-line-1 .char", {
+        color: "white",
         webkitTextStroke: "0px transparent",
       });
 
-      const tl = gsap.timeline({
+      // Right Text (Line 2): Starts Stroke Green
+      gsap.set(".text-line-2 .char", {
+        color: "transparent",
+        webkitTextStroke: "1px #2ecc71",
+      });
+
+      // --- 1. ENTRANCE TIMELINE (Auto-play / Reveal) ---
+      // "before person images came" -> starts earlier at top 75%
+      // "same text animation" on scroll up/down -> toggleActions handles replay
+      // --- 1. ENTRANCE TIMELINE (Auto-play / Reveal) ---
+      // "before person images came" -> starts earlier at top 75%
+      // "same text animation" on scroll up/down -> toggleActions handles replay
+      const enterTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          scroller: scroller,
+          start: "top 75%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      // 1. Reveal Left Text (y-100 -> 0)
+      enterTl.to(".char", {
+        yPercent: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: "power3.out",
+        stagger: 0.05,
+      });
+
+      // 2. Style Swap (After Reveals) - "Sweep" left to right
+      // Left: Solid -> Stroke
+      enterTl.to(
+        ".text-line-1 .char",
+        {
+          color: "transparent",
+          webkitTextStroke: "1px white",
+          duration: 0.3, // Faster individual char transition
+          ease: "power2.inOut",
+          stagger: { amount: 1, from: "start" }, // Sweep effect
+        },
+        ">",
+      );
+
+      // Right: Stroke -> Solid
+      enterTl.to(
+        ".text-line-2 .char",
+        {
+          color: "#2ecc71",
+          webkitTextStroke: "0px transparent",
+          duration: 0.3,
+          ease: "power2.inOut",
+          stagger: { amount: 1, from: "start" }, // Sweep effect
+        },
+        "<", // Start at same time as line 1 sweep (or slightly after if preferred, but < aligns them)
+      );
+
+      // --- 2. SCROLL SCRUB TIMELINE (Team + Exit) ---
+      const scrubTl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
           scroller: scroller,
@@ -91,115 +146,43 @@ export default function ParallaxTeam() {
         },
       });
 
-      // --- PHASE 1: ENTRANCE (Team Rise + Text Y-Reveal) ---
-      tl.to(
+      // Team Rise
+      scrubTl.to(
         ".team-member-container",
         {
           yPercent: 0,
-          duration: 3, // Slower rise
+          duration: 3,
           ease: "power2.out",
           stagger: { amount: 0.8, from: "edges" },
         },
         "start",
       );
 
-      // "slowly come text hide to visible"
-      tl.to(
-        ".char",
-        {
-          yPercent: 0,
-          opacity: 1,
-          duration: 2, // Much slower relative duration
-          ease: "power2.out",
-          stagger: { amount: 1.2, from: "start" },
-        },
-        "start",
-      );
-
-      tl.to(
-        ".text-line-2 .char",
-        {
-          color: "transparent",
-          webkitTextStroke: "0.5px white",
-          duration: 0.5,
-          stagger: {
-            amount: 1.5,
-            from: "start",
-          },
-          ease: "power1.inOut",
-        },
-        "<+=0.5",
-      );
-
-      // --- PHASE 2: FOCUS (Center Green) ---
-      // Occurs after text is fully revealed
-      tl.to(
+      // Focus
+      scrubTl.to(
         ".team-active",
         {
           opacity: 1,
-          duration: 3,
+          duration: 2,
           ease: "power2.inOut",
         },
-        ">-=0.5",
+        ">-1",
       );
-
-      tl.to(
+      scrubTl.to(
         "#center .team-normal",
         {
           filter: "grayscale(0%) contrast(100%) brightness(100%)",
-          duration: 3,
+          duration: 2,
           ease: "power2.inOut",
         },
         "<",
       );
 
-      // --- PHASE 3: EXIT / TRANSFORMATION (Solid -> Stroke) ---
-      // "solid to stroke slowly action not pastly"
-      tl.to(
-        ".text-line-1 .char",
-        {
-          color: "transparent",
-          webkitTextStroke: "0.5px white",
-          duration: 0.5,
-          stagger: {
-            amount: 1.5,
-            from: "start",
-          },
-          ease: "power1.inOut",
-        },
-        "<+=0.5",
-      );
-
-      // Line 2: Green -> Transparent with Green Stroke
-      tl.to(
-        ".text-line-2 .char",
-        {
-          color: "#2ecc71",
-          duration: 0.5,
-          stagger: {
-            amount: 1.5,
-            from: "start",
-          },
-          ease: "power1.inOut",
-        },
-        ">-=0.5",
-      );
-
-      tl.to(".char", {
-        opacity: 0,
-        duration: 0.5,
-        stagger: {
-          amount: 1.5,
-          from: "start",
-        },
-        ease: "power2.in",
-      });
-      // Buffer at end
-      tl.to({}, { duration: 1 });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+      // Buffer
+      scrubTl.to({}, { duration: 1 });
+    },
+    { scope: containerRef },
+  );
 
   return (
     <>

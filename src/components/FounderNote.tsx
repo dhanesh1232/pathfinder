@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const SLIDE_CONTENT = [
   {
@@ -14,6 +16,12 @@ const SLIDE_CONTENT = [
     highlight: "Defined by Excellence.",
     p1: "Our team is a diverse blend of strategists, designers, and developers who share a common goal: to build brands that matter. We don't just work for you; we work with you.",
     p2: "We believe in the power of collaboration. By bringing together different perspectives and skills, we create holistic solutions that are as functional as they are beautiful.",
+  },
+  {
+    title: "About Us. More Than Just an Agency.",
+    highlight: "Partners in Growth.",
+    p1: "Pathfinder isn't just a creative agency; we are your partners in growth. We understand the challenges of modern business and provide the strategic edge you need to stand out.",
+    p2: "From the first spark of an idea to the final launch, we are there every step of the way. Our mission is to empower your brand to reach its full potential and beyond.",
   },
   {
     title: "About Us. More Than Just an Agency.",
@@ -45,12 +53,91 @@ export default function FounderNote() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Auto-slide Timer
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % SLIDE_CONTENT.length);
-    }, 10000);
+    }, 8000); // Adjusted timing for better pace
     return () => clearInterval(timer);
   }, []);
+
+  // GSAP Setup (ScrollTriggers)
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (!containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const scrollerEl = document.getElementById("smooth-wrapper");
+      const scroller = scrollerEl || window;
+
+      // 1. Text Reveal (Our Team)
+      gsap.fromTo(
+        ".founder-char",
+        { yPercent: 100 },
+        {
+          yPercent: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          stagger: 0.03,
+          scrollTrigger: {
+            trigger: ".founder-reveal",
+            scroller: scroller,
+            start: "top 80%",
+            toggleActions: "play reverse play reverse",
+          },
+        },
+      );
+
+      // 2. Image Reveal (Anime-style Zoom & Blur Out)
+      gsap.fromTo(
+        ".founder-img-anim",
+        { scale: 0.9, opacity: 0, filter: "blur(12px)" }, // Start small
+        {
+          scale: 1,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 1.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".founder-card",
+            scroller: scroller,
+            start: "top 75%",
+            end: "bottom 20%",
+            toggleActions: "play reverse play reverse",
+          },
+        },
+      );
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Slide Animation (Triggered on State Change)
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // Animate content of the new active slide
+    const activeElements = containerRef.current.querySelectorAll(
+      `.slide-${currentSlide} .animate-item`,
+    );
+
+    if (activeElements.length > 0) {
+      gsap.fromTo(
+        activeElements,
+        { y: 20, opacity: 0, filter: "blur(4px)" },
+        {
+          y: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 1,
+          stagger: 0.1,
+          ease: "power3.out",
+          overwrite: true, // Ensure we override any ongoing logic
+        },
+      );
+    }
+  }, [currentSlide]);
 
   return (
     <section
@@ -60,8 +147,21 @@ export default function FounderNote() {
       <div className="max-w-7xl mx-auto">
         {/* Top Header */}
         <div className="text-center mb-4 md:mb-8 founder-reveal">
-          <h2 className="text-4xl md:text-5xl lg:text-7xl font-poppins font-bold text-white leading-[1.1]">
-            Our Team
+          <h2 className="text-4xl md:text-5xl lg:text-7xl font-poppins font-bold text-white leading-[1.1] uppercase tracking-tight">
+            {/* Text Split for Animation */}
+            <div className="inline-block whitespace-nowrap">
+              {"OUR TEAM".split("").map((char, i) => (
+                <div key={i} className="overflow-hidden inline-block relative">
+                  <span
+                    className={`founder-char inline-block ${
+                      char === " " ? "w-4 md:w-6" : ""
+                    }`}
+                  >
+                    {char}
+                  </span>
+                </div>
+              ))}
+            </div>
           </h2>
         </div>
 
@@ -72,22 +172,22 @@ export default function FounderNote() {
             {SLIDE_CONTENT.map((slide, index) => (
               <div
                 key={index}
-                className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
+                className={`absolute inset-0 transition-opacity duration-[1000ms] ease-in-out slide-${index} ${
                   index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
                 }`}
               >
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-poppins font-bold text-white leading-[1.1]">
+                <h3 className="animate-item text-2xl md:text-3xl lg:text-4xl font-poppins font-bold text-white leading-[1.1]">
                   {slide.title}{" "}
                   <span className="text-pathfinder-green">
                     {slide.highlight}
                   </span>
                 </h3>
-                <div className="w-20 my-4 h-0.5 bg-linear-to-r from-transparent via-pathfinder-green to-transparent mx-0 mb-8" />
+                <div className="animate-item w-20 my-4 h-0.5 bg-linear-to-r from-transparent via-pathfinder-green to-transparent mx-0 mb-8" />
                 <div className="space-y-8">
-                  <p className="text-base md:text-lg text-zinc-300 font-light leading-relaxed font-nohemi">
+                  <p className="animate-item text-base md:text-lg text-zinc-300 font-light leading-relaxed font-nohemi">
                     {slide.p1}
                   </p>
-                  <p className="text-base md:text-lg text-zinc-300 font-light leading-relaxed font-nohemi">
+                  <p className="animate-item text-base md:text-lg text-zinc-300 font-light leading-relaxed font-nohemi">
                     {slide.p2}
                   </p>
 
@@ -116,7 +216,7 @@ export default function FounderNote() {
             {/* Founder Card */}
             <div className="founder-card relative group w-full md:max-w-md">
               <div className="absolute inset-0 bg-pathfinder-green/20 blur-2xl rounded-full opacity-0 group-hover:opacity-40 transition-opacity duration-700" />
-              <div className="relative rounded-3xl overflow-hidden">
+              <div className="founder-img-anim relative rounded-3xl overflow-hidden">
                 <img
                   src="/my-img.png"
                   alt="Founder"

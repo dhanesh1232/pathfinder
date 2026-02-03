@@ -76,10 +76,16 @@ export default function ContactForm() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
   const [isInsideForm, setIsInsideForm] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+
+    // Mobile Check
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = el.getBoundingClientRect();
@@ -100,6 +106,7 @@ export default function ContactForm() {
     el.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
+      window.removeEventListener("resize", checkMobile);
       el.removeEventListener("mousemove", handleMouseMove);
       el.removeEventListener("mouseenter", handleMouseEnter);
       el.removeEventListener("mouseleave", handleMouseLeave);
@@ -145,42 +152,58 @@ export default function ContactForm() {
 
       {/* Background Text Layers (Marquee) */}
       <div className="absolute inset-0 z-0 pointer-events-none flex flex-col justify-center h-full w-full overflow-hidden">
-        {/* Layer 1: Hidden Text (Base Layout - Black) */}
-        <div className="absolute inset-0 flex items-center select-none w-full">
-          <div className="flex gap-16 animate-marquee whitespace-nowrap w-[200%]">
-            <h2 className="text-[15vw] font-normal leading-none text-black handwritten tracking-wide shrink-0">
-              Let's Create A Bigger Story Together — Let's Create A Bigger Story
-              Together —
-            </h2>
-            <h2 className="text-[15vw] font-normal leading-none text-black handwritten tracking-wide shrink-0">
-              Let's Create A Bigger Story Together — Let's Create A Bigger Story
-              Together —
-            </h2>
-          </div>
+        {/* Layer 1: Hidden Text (Base Layout - Black/Invisible) */}
+        <div className="absolute inset-0 flex flex-col justify-center gap-10 md:gap-20 select-none w-full opacity-0">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="flex gap-16 animate-marquee whitespace-nowrap w-[200%]"
+            >
+              <h2 className="text-[12vw] md:text-[10vw] font-normal leading-none text-black handwritten tracking-wide shrink-0">
+                Let's Create A Bigger Story Together — Let's Create A Bigger
+                Story Together —
+              </h2>
+              <h2 className="text-[12vw] md:text-[10vw] font-normal leading-none text-black handwritten tracking-wide shrink-0">
+                Let's Create A Bigger Story Together — Let's Create A Bigger
+                Story Together —
+              </h2>
+            </div>
+          ))}
         </div>
 
         {/* Layer 2: Reveal Text (Gradient) - Soft Mask Reveal */}
         <div
-          className="absolute inset-0 flex items-center select-none h-full w-full pointer-events-none transition-opacity duration-300"
+          className={`absolute inset-0 flex flex-col justify-center gap-10 md:gap-20 select-none h-full w-full pointer-events-none transition-opacity duration-300 ${
+            isMobile ? "opacity-30" : ""
+          }`}
           style={{
-            maskImage: `radial-gradient(circle ${
-              isHovering ? "400px" : "0px"
-            } at var(--x) var(--y), black 10%, transparent 70%)`,
-            WebkitMaskImage: `radial-gradient(circle ${
-              isHovering ? "400px" : "0px"
-            } at var(--x) var(--y), black 10%, transparent 70%)`,
+            maskImage: isMobile
+              ? "none"
+              : `radial-gradient(circle ${
+                  isHovering ? "400px" : "0px"
+                } at var(--x) var(--y), black 10%, transparent 70%)`,
+            WebkitMaskImage: isMobile
+              ? "none"
+              : `radial-gradient(circle ${
+                  isHovering ? "400px" : "0px"
+                } at var(--x) var(--y), black 10%, transparent 70%)`,
           }}
         >
-          <div className="flex gap-16 animate-marquee whitespace-nowrap w-[200%]">
-            <h2 className="text-[15vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(255,235,191,0.2)] shrink-0">
-              Let's Create A Bigger Story Together — Let's Create A Bigger Story
-              Together —
-            </h2>
-            <h2 className="text-[15vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(255,235,191,0.2)] shrink-0">
-              Let's Create A Bigger Story Together — Let's Create A Bigger Story
-              Together —
-            </h2>
-          </div>
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="flex gap-16 animate-marquee whitespace-nowrap w-[200%]"
+            >
+              <h2 className="text-[12vw] md:text-[10vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(255,235,191,0.2)] shrink-0">
+                Let's Create A Bigger Story Together — Let's Create A Bigger
+                Story Together —
+              </h2>
+              <h2 className="text-[12vw] md:text-[10vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(255,235,191,0.2)] shrink-0">
+                Let's Create A Bigger Story Together — Let's Create A Bigger
+                Story Together —
+              </h2>
+            </div>
+          ))}
         </div>
       </div>
 

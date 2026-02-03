@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
@@ -24,9 +24,57 @@ const BANNER_ITEMS = [
   },
 ];
 
+const SlideItem = ({
+  item,
+  isActive,
+  isInView,
+}: {
+  item: (typeof BANNER_ITEMS)[0];
+  isActive: boolean;
+  isInView: boolean;
+}) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (item.type !== "video" || !videoRef.current) return;
+
+    if (isActive && isInView) {
+      videoRef.current.play().catch(() => {});
+    } else {
+      videoRef.current.pause();
+    }
+  }, [isActive, isInView, item.type]);
+
+  return (
+    <div
+      className={`absolute inset-0 w-full h-full transition-opacity duration-700 ${
+        isActive ? "opacity-100 z-10" : "opacity-0 z-0"
+      }`}
+    >
+      {item.type === "video" ? (
+        <video
+          ref={videoRef}
+          src={item.src}
+          className="w-full h-full object-cover active-slide-media"
+          muted
+          loop
+          playsInline
+        />
+      ) : (
+        <img
+          src={item.src}
+          alt={item.alt}
+          className="w-full h-full object-cover active-slide-media"
+        />
+      )}
+    </div>
+  );
+};
+
 export default function BannerCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(true);
 
   const nextSlide = () => {
     setActiveIndex((prev) => (prev + 1) % BANNER_ITEMS.length);
@@ -37,6 +85,22 @@ export default function BannerCarousel() {
       (prev) => (prev - 1 + BANNER_ITEMS.length) % BANNER_ITEMS.length,
     );
   };
+
+  // Intersection Observer to stop playback when out of view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.1 },
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   useGSAP(
     () => {
@@ -53,9 +117,7 @@ export default function BannerCarousel() {
         duration: 5,
         ease: "linear",
         repeat: -1,
-        // Note: If we want auto-advance we can add logic, but user asked for "click to change".
-        // I'll leave auto-advance OUT as requested "click to change".
-        paused: true, // Paused for now unless we add auto-play
+        paused: true,
       });
     },
     { dependencies: [activeIndex], scope: containerRef },
@@ -64,64 +126,47 @@ export default function BannerCarousel() {
   return (
     <section
       ref={containerRef}
-      className="w-full py-10 bg-transparent relative z-10 px-6"
+      className="w-full h-screen bg-black relative z-10 p-0 m-0 overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto relative group">
+      <div className="w-full h-full relative group">
         {/* Main Display Area */}
-        <div className="relative w-full aspect-video md:aspect-21/9 rounded-sm overflow-hidden border border-white/10 bg-zinc-900 shadow-2xl">
+        <div className="relative w-full h-full overflow-hidden bg-zinc-900">
           {BANNER_ITEMS.map((item, index) => (
-            <div
+            <SlideItem
               key={index}
-              className={`absolute inset-0 w-full h-full transition-opacity duration-700 ${
-                index === activeIndex ? "opacity-100 z-10" : "opacity-0 z-0"
-              }`}
-            >
-              {item.type === "video" ? (
-                <video
-                  src={item.src}
-                  className={`w-full h-full object-cover active-slide-media ${index === activeIndex ? "" : "paused"}`}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
-              ) : (
-                <img
-                  src={item.src}
-                  alt={item.alt}
-                  className="w-full h-full object-cover active-slide-media"
-                />
-              )}
-            </div>
+              item={item}
+              isActive={index === activeIndex}
+              isInView={isInView}
+            />
           ))}
 
           {/* Navigation Arrows (Visible on Hover/Always on Mobile) */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/30 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-50 lg:opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
+            className="absolute left-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/20 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0"
             aria-label="Previous Slide"
           >
-            <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+            <ChevronLeft className="w-6 h-6" />
           </button>
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/30 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-50 lg:opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0"
+            className="absolute right-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/20 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
             aria-label="Next Slide"
           >
-            <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+            <ChevronRight className="w-6 h-6" />
           </button>
 
           {/* Indicators */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex gap-4">
             {BANNER_ITEMS.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setActiveIndex(idx)}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${
+                className={`h-1.5 rounded-full transition-all duration-500 ${
                   idx === activeIndex
-                    ? "bg-pathfinder-green w-8"
-                    : "bg-white/30 hover:bg-white/60"
+                    ? "bg-pathfinder-green w-12"
+                    : "bg-white/30 w-12 hover:bg-white/60"
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />

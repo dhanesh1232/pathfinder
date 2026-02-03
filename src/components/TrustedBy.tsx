@@ -50,8 +50,8 @@ const LOGOS = [...RAW_LOGOS, ...RAW_LOGOS, ...RAW_LOGOS];
 
 export default function TrustedBy() {
   return (
-    <section className="w-full pt-24 bg-black overflow-hidden">
-      <h1 className="text-white text-center text-xl mb-14 font-poppins">
+    <section className="w-full py-24 bg-black overflow-hidden">
+      <h1 className="text-white text-center text-2xl md:text-3xl mb-14 font-poppins">
         <span className="text-pathfinder-green">We're trusted</span> by
         companies like
       </h1>

@@ -38,18 +38,18 @@ export default function ShimmerButton({
     <>
       <style>{customCss}</style>
       <button
-        className={`relative inline-flex items-center cursor-pointer justify-center p-[1.5px] bg-gray-300 dark:bg-black rounded-full overflow-hidden group ${className}`}
+        className={`relative inline-flex items-center cursor-pointer justify-center p-[1.5px] bg-pathfinder-green/40 rounded-full overflow-hidden group ${className}`}
         {...props}
       >
         <div
           className="absolute inset-0"
           style={{
             background:
-              "conic-gradient(from var(--angle), transparent 25%, green, transparent 50%)",
+              "conic-gradient(from var(--angle), transparent 25%, #ffffff, transparent 50%)",
             animation: "shimmer-spin 2.5s linear infinite",
           }}
         />
-        <span className="relative z-10 inline-flex items-center justify-center w-full h-full px-8 py-3 text-gray-900 dark:text-white group-hover:text-pathfinder-green bg-white dark:bg-gray-900 rounded-full group-hover:bg-gray-100 dark:group-hover:bg-gray-800 transition-colors duration-300">
+        <span className="relative z-10 inline-flex items-center justify-center w-full h-full px-8 py-3 text-black font-medium bg-pathfinder-green rounded-full group-hover:bg-[#26af61] transition-colors duration-300">
           {children}
         </span>
       </button>

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -53,8 +52,6 @@ export default function HandSplitHero() {
   const textRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-
   const [isLoading, setIsLoading] = useState(true);
   const [loadedCount, setLoadedCount] = useState(0);
   const [videoFinished, setVideoFinished] = useState(false);
@@ -63,39 +60,6 @@ export default function HandSplitHero() {
   const handleImageLoad = () => {
     setLoadedCount((prev) => prev + 1);
   };
-
-  useEffect(() => {
-    // Robust Autoplay Logic:
-    // 1. Try to play with sound.
-    // 2. If blocked, play muted (visuals work) and unmute on first interaction.
-    const video = videoRef.current;
-    if (!video || videoFinished) return;
-
-    const attemptPlay = async () => {
-      try {
-        video.muted = false;
-        await video.play();
-      } catch (err) {
-        console.log("Autoplay blocked. Falling back to muted.", err);
-        video.muted = true;
-        video.play().catch((e) => console.error("Muted play failed", e));
-
-        // Unmute on interaction
-        const unmute = () => {
-          video.muted = false;
-          ["click", "keydown", "touchstart", "wheel"].forEach((e) =>
-            document.removeEventListener(e, unmute),
-          );
-        };
-
-        ["click", "keydown", "touchstart", "wheel"].forEach((e) =>
-          document.addEventListener(e, unmute, { once: true }),
-        );
-      }
-    };
-
-    attemptPlay();
-  }, [videoFinished]);
 
   useEffect(() => {
     if (leftHandRef.current?.complete && rightHandRef.current?.complete) {
@@ -254,11 +218,11 @@ export default function HandSplitHero() {
     <>
       {/* Video Intro Overlay */}
       {!videoFinished && (
-        <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
+        <div className="fixed inset-0 z-60 bg-inherit flex items-center justify-center">
           <video
-            ref={videoRef}
+            autoPlay
+            muted
             playsInline
-            preload="auto"
             className="w-full h-full object-cover"
             src="/video/PathFinder%20Logo%20animation%20Video.mp4"
             onEnded={() => setVideoFinished(true)}
@@ -281,21 +245,17 @@ export default function HandSplitHero() {
 
           <div className="relative z-20 w-full max-w-full flex items-center justify-center pointer-events-none mt-20">
             <div className="relative w-1/2 flex justify-end px-4">
-              <Image
+              <img
                 ref={leftHandRef}
                 src="/hands/Right-Hand.png"
                 alt="Left Hand"
                 onLoad={handleImageLoad}
-                width={800}
-                height={600}
                 className="w-[180%] md:w-[140%] max-w-[800px] lg:w-[280%] lg:max-w-[1000px] h-auto object-contain filter brightness-150 contrast-125"
               />
             </div>
 
             <div className="relative w-1/2 flex justify-start px-4">
-              <Image
-                width={800}
-                height={600}
+              <img
                 ref={rightHandRef}
                 src="/hands/Left-Hand.png"
                 alt="Right Hand"
