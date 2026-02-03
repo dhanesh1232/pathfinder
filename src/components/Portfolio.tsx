@@ -4,6 +4,7 @@ import ShimmerButton from "./ui/shinny-button";
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
 const ALL_PORTFOLIO_ITEMS = [
   {
@@ -215,11 +216,12 @@ export default function Portfolio() {
               key={idx}
               className="portfolio-item relative rounded-lg overflow-hidden bg-zinc-900/50 border border-white/5 aspect-[3/4] group"
             >
-              <img
+              <Image
                 src={item.src}
                 alt={item.alt}
-                className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out"
-                loading="lazy"
+                fill
+                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out"
               />
             </div>
           ))}

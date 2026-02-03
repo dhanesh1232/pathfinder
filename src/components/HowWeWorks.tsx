@@ -109,22 +109,33 @@ function VideoItem({ src, className }: { src: string; className?: string }) {
     const video = videoRef.current;
     if (!video) return;
 
+    // Force load immediately
+    video.load();
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            video.play().catch(() => {}); // Ignore autoplay errors
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(() => {
+                // Auto-play was prevented
+              });
+            }
           } else {
             video.pause();
           }
         });
       },
-      { threshold: 0.1 }, // Play as soon as 10% visible
+      {
+        threshold: 0,
+        rootMargin: "200px", // Start playing (and loading if needed) well before it enters viewport
+      },
     );
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, []); // Src is static constant from parent, so [] is safe and fixes HMR error
 
   return (
     <video
@@ -133,6 +144,7 @@ function VideoItem({ src, className }: { src: string; className?: string }) {
       loop
       muted
       playsInline
+      preload="auto" // Critical: Load the video file immediately
       className={className}
     />
   );

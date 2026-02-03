@@ -74,7 +74,6 @@ const SparkleTrail = ({
 
 export default function ContactForm() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeTab, setActiveTab] = useState<"inquiry" | "call">("inquiry");
   const [isHovering, setIsHovering] = useState(false);
   const [isInsideForm, setIsInsideForm] = useState(false);
 
@@ -128,12 +127,12 @@ export default function ContactForm() {
             font-family: 'Mrs Saint Delafield', cursive;
           }
           .gold-sparkle-text {
-            background: linear-gradient(90deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+            background: linear-gradient(90deg, #b58153, #ffebbf, #b58153);
             background-size: 200% auto;
             color: transparent;
             -webkit-background-clip: text;
             background-clip: text;
-            animation: sparkle 2s linear infinite;
+            animation: sparkle 3s linear infinite;
           }
           .animate-marquee {
             animation: marquee 30s linear infinite;
@@ -146,36 +145,38 @@ export default function ContactForm() {
 
       {/* Background Text Layers (Marquee) */}
       <div className="absolute inset-0 z-0 pointer-events-none flex flex-col justify-center h-full w-full overflow-hidden">
-        {/* Layer 1: Dim/Hidden Text */}
+        {/* Layer 1: Hidden Text (Base Layout - Black) */}
         <div className="absolute inset-0 flex items-center select-none w-full">
           <div className="flex gap-16 animate-marquee whitespace-nowrap w-[200%]">
-            <h2 className="text-[15vw] font-normal leading-none text-white/5 handwritten tracking-wide shrink-0">
+            <h2 className="text-[15vw] font-normal leading-none text-black handwritten tracking-wide shrink-0">
               Let's Create A Bigger Story Together — Let's Create A Bigger Story
               Together —
             </h2>
-            <h2 className="text-[15vw] font-normal leading-none text-white/5 handwritten tracking-wide shrink-0">
+            <h2 className="text-[15vw] font-normal leading-none text-black handwritten tracking-wide shrink-0">
               Let's Create A Bigger Story Together — Let's Create A Bigger Story
               Together —
             </h2>
           </div>
         </div>
 
-        {/* Layer 2: Reveal Text (Gold Sparkles) - Clipped by cursor */}
+        {/* Layer 2: Reveal Text (Gradient) - Soft Mask Reveal */}
         <div
-          className="absolute inset-0 flex items-center select-none h-full w-full pointer-events-none"
+          className="absolute inset-0 flex items-center select-none h-full w-full pointer-events-none transition-opacity duration-300"
           style={{
-            clipPath: isHovering
-              ? "circle(200px at var(--x) var(--y))"
-              : "circle(0px at var(--x) var(--y))",
-            transition: "clip-path 0.5s ease-in-out",
+            maskImage: `radial-gradient(circle ${
+              isHovering ? "400px" : "0px"
+            } at var(--x) var(--y), black 10%, transparent 70%)`,
+            WebkitMaskImage: `radial-gradient(circle ${
+              isHovering ? "400px" : "0px"
+            } at var(--x) var(--y), black 10%, transparent 70%)`,
           }}
         >
           <div className="flex gap-16 animate-marquee whitespace-nowrap w-[200%]">
-            <h2 className="text-[15vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(253,246,186,0.2)] shrink-0">
+            <h2 className="text-[15vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(255,235,191,0.2)] shrink-0">
               Let's Create A Bigger Story Together — Let's Create A Bigger Story
               Together —
             </h2>
-            <h2 className="text-[15vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(253,246,186,0.2)] shrink-0">
+            <h2 className="text-[15vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(255,235,191,0.2)] shrink-0">
               Let's Create A Bigger Story Together — Let's Create A Bigger Story
               Together —
             </h2>
@@ -220,7 +221,6 @@ export default function ContactForm() {
           <span
             role="cell"
             aria-label="Send an inquiry"
-            onClick={() => setActiveTab("inquiry")}
             className={`px-12 py-4 text-sm font-medium transition-colors uppercase tracking-widest bg-pathfinder-green text-black relative z-20 cursor-pointer`}
             style={{
               clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)",

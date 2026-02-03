@@ -56,7 +56,6 @@ const DESCRIPTION_TEXT =
 
 export default function Services() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const serviceCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -87,7 +86,7 @@ export default function Services() {
       // 2. Description Block Reveal
       gsap.fromTo(
         ".service-text-block",
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 20 },
         {
           opacity: 1,
           y: 0,
@@ -102,38 +101,52 @@ export default function Services() {
           },
         },
       );
-
-      // 2. Cards Stagger Reveal (Wrapper)
-      gsap.fromTo(
-        ".service-card-wrapper",
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power2.out",
-          stagger: 0.1,
-          scrollTrigger: {
-            trigger: ".service-grid",
-            scroller: scroller,
-            start: "top 85%",
-          },
-        },
-      );
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
-  useGSAP(() => {
-    gsap.to(serviceCardRef.current, {
-      y: -10,
-      duration: 2,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    });
-  });
+  useGSAP(
+    () => {
+      // Continuous Float & Shaky Animation for Cards
+      // Randomized start positions and delays for organic feel
+      gsap.utils.toArray<HTMLElement>(".service-card-anim").forEach((card) => {
+        // Vertical Float
+        gsap.to(card, {
+          y: -15,
+          duration: gsap.utils.random(2, 3.5),
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          delay: gsap.utils.random(0, 1.5),
+        });
+
+        // Subtle Shaky/Wobble (Rotation)
+        gsap.to(card, {
+          rotation: gsap.utils.random(-1.5, 1.5),
+          duration: gsap.utils.random(2, 4),
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          delay: gsap.utils.random(0, 2),
+        });
+      });
+
+      // Header Float Animation (Reference from Footer)
+      const headerTitle =
+        containerRef.current?.querySelector(".service-header h2");
+      if (headerTitle) {
+        gsap.to(headerTitle, {
+          y: -10,
+          duration: 3,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+        });
+      }
+    },
+    { scope: containerRef },
+  );
 
   return (
     <section
@@ -178,11 +191,7 @@ export default function Services() {
         {/* Services Grid */}
         <div className="service-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
           {SERVICES.map((service, index) => (
-            <div
-              ref={serviceCardRef}
-              key={index}
-              className="service-card-wrapper"
-            >
+            <div key={index} className="service-card-wrapper service-card-anim">
               <div className="service-card h-full group relative flex flex-col p-8 md:p-10 rounded-3xl bg-green-900/20 backdrop-blur-2xl border border-white/10 overflow-hidden transition-all duration-500 hover:border-emerald-500/40 hover:bg-emerald-950/20 hover:shadow-[0_0_40px_rgba(16,185,129,0.1)]">
                 {/* Internal Emerald Glow Gradient */}
                 <div className="absolute -inset-1/2 bg-radial-gradient from-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-700 pointer-events-none" />
@@ -220,7 +229,7 @@ export default function Services() {
         </div>
 
         {/* Section CTA */}
-        <div className="service-card-wrapper flex justify-center">
+        <div className="service-card-wrapper flex justify-center service-card-anim">
           <div className="service-card">
             <Link
               href="https://wa.me/+919676104199"

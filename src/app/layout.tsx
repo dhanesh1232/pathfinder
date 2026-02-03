@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google"; // Import Poppins
-import SmoothScroll from "@/components/SmoothScroll";
-import GlobalNav from "@/components/GlobalNav";
-import FloatingControls from "@/components/FloatingControls";
+import { Providers } from "@/app/providers";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -101,20 +99,7 @@ export default function RootLayout({
           <div className="absolute inset-0 bg-[url(/website-bg.jpeg)] bg-cover bg-center bg-no-repeat" />
         </div>
         <main className="h-full w-full">
-          <GlobalNav />
-          <div
-            id="smooth-wrapper"
-            className="w-full h-full overflow-y-auto overflow-x-hidden"
-          >
-            <div
-              id="smooth-content"
-              className="z-10 flex flex-col relative min-h-full"
-            >
-              {children}
-            </div>
-          </div>
-          <SmoothScroll />
-          <FloatingControls />
+          <Providers>{children}</Providers>
         </main>
       </body>
     </html>

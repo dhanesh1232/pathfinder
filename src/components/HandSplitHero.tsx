@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -280,17 +281,21 @@ export default function HandSplitHero() {
 
           <div className="relative z-20 w-full max-w-full flex items-center justify-center pointer-events-none mt-20">
             <div className="relative w-1/2 flex justify-end px-4">
-              <img
+              <Image
                 ref={leftHandRef}
                 src="/hands/Right-Hand.png"
                 alt="Left Hand"
                 onLoad={handleImageLoad}
+                width={800}
+                height={600}
                 className="w-[180%] md:w-[140%] max-w-[800px] lg:w-[280%] lg:max-w-[1000px] h-auto object-contain filter brightness-150 contrast-125"
               />
             </div>
 
             <div className="relative w-1/2 flex justify-start px-4">
-              <img
+              <Image
+                width={800}
+                height={600}
                 ref={rightHandRef}
                 src="/hands/Left-Hand.png"
                 alt="Right Hand"

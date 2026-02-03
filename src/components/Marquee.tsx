@@ -212,7 +212,6 @@ function LogoCard({ logo }: { logo: string }) {
               width={160}
               height={96}
               className="w-full h-full object-contain opacity-70 transition-opacity duration-300"
-              unoptimized
             />
           </div>
           {/* Hover Logo (Slides in from bottom) */}
@@ -223,7 +222,6 @@ function LogoCard({ logo }: { logo: string }) {
               width={160}
               height={96}
               className="w-full h-full object-contain opacity-100"
-              unoptimized
             />
           </div>
         </div>

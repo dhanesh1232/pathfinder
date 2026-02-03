@@ -210,7 +210,7 @@ export default function ParallaxTeam() {
         <div className="absolute top-[15%] lg:top-[12%] -z-20 w-[90%] h-1/2 max-w-full mx-auto">
           <div className="w-full h-full flex flex-col sm:gap-6 md:gap-0 justify-center gap-8 sm:justify-center md:justify-around lg:justify-start">
             {/* Left Side Text */}
-            <h2 className="text-line-1 self-start text-5xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter text-left text-wrap leading-[0.9] max-w-xl">
+            <h2 className="text-line-1 self-start text-5xl md:text-6xl lg:text-7xl font-bold hidden sm:block uppercase tracking-tighter text-left text-wrap leading-[0.9] max-w-xl">
               {"We know what it takes to make".split(" ").map((word, wI) => (
                 <span
                   key={wI}
@@ -225,7 +225,7 @@ export default function ParallaxTeam() {
               ))}
             </h2>
 
-            <h2 className="text-line-2 self-end text-pathfinder-green text-5xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter text-right text-wrap leading-[0.9] max-w-xl">
+            <h2 className="text-line-2 self-end text-pathfinder-green text-6xl md:text-6xl lg:text-7xl font-bold uppercase tracking-tighter text-center sm:text-right text-wrap leading-[0.9] max-w-xl">
               {"your brand stand out".split(" ").map((word, wI) => (
                 <span
                   key={`l2-${wI}`}
