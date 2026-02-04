@@ -3,13 +3,12 @@
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const BANNER_ITEMS = [
   {
     type: "video",
-    src: "/banner/5884478_Women_Team_1920x1080.mp4",
+    src: "https://ik.imagekit.io/gclqlaadh/pathfinder/5884478_Women_Team_1920x1080_v-lIrclnz.mp4",
     alt: "Team Collaboration Video",
   },
   {

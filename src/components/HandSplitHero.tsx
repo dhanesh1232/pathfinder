@@ -250,7 +250,7 @@ export default function HandSplitHero() {
             muted
             playsInline
             className="w-full h-full object-cover"
-            src="/video/PathFinder%20Logo%20animation%20Video.mp4"
+            src="https://ik.imagekit.io/gclqlaadh/pathfinder/PathFinder%20Logo%20animation%20Video_OA2IyTipo.mp4"
             onEnded={() => setVideoFinished(true)}
           />
         </div>

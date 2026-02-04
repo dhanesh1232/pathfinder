@@ -12,27 +12,32 @@ const cards: { title: string; text: string; video?: string; image?: string }[] =
     {
       title: "Discovery & Strategy",
       text: "We dive deep into your brand, audience, and goals to build a roadmap for success.",
-      video: "/video/how-we-work/0_Goal_Setting_Strategy_1920x1080.mp4",
+      video:
+        "https://ik.imagekit.io/gclqlaadh/pathfinder/how-we-work/0_Goal_Setting_Strategy_1920x1080_HCaDzRpHG.mp4",
     },
     {
       title: "Research & Analysis",
       text: "Gathering insights and analyzing market trends to inform every decision we make.",
-      video: "/video/how-we-work/research and analysis.mp4",
+      video:
+        "https://ik.imagekit.io/gclqlaadh/pathfinder/how-we-work/research%20and%20analysis_WwTnNLIEX.mp4",
     },
     {
       title: "Design & Experience",
       text: "Crafting intuitive interfaces and memorable brand identities that resonate with users.",
-      video: "/video/how-we-work/design and experience.mp4",
+      video:
+        "https://ik.imagekit.io/gclqlaadh/pathfinder/how-we-work/design%20and%20experience_HM3XITPLh.mp4",
     },
     {
       title: "Development & Engineering",
       text: "Turning designs into high-performance digital products using cutting-edge technologies.",
-      video: "/video/how-we-work/development and engineering.mp4",
+      video:
+        "https://ik.imagekit.io/gclqlaadh/pathfinder/how-we-work/development%20and%20engineering_IeZnIXC0x.mp4",
     },
     {
       title: "Testing & QA",
       text: "Rigorous testing across devices and platforms to ensure a flawless user experience.",
-      video: "/video/how-we-work/q and a.mp4",
+      video:
+        "https://ik.imagekit.io/gclqlaadh/pathfinder/how-we-work/q%20and%20a_KX2Ak3A_h.mp4",
     },
     {
       title: "Launch & Growth",
