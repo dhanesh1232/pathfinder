@@ -147,7 +147,6 @@ export default function OurWork() {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const marqueeTween = useRef<gsap.core.Tween | null>(null);
-  const [activeIndex, setActiveId] = useState(0);
 
   useEffect(() => {
     // Marquee Effect
@@ -159,14 +158,6 @@ export default function OurWork() {
         ease: "none",
         duration: 40, // Adjust speed
         repeat: -1,
-        onUpdate: function () {
-          const prog = this.progress(); // 0-1
-          const total = WORK_ITEMS.length;
-          // Calculate approx index based on progress
-          // Note: The marquee shows multiple items, but we map progress to the "first" visible item of the set
-          const idx = Math.floor(gsap.utils.wrap(0, 1, prog) * total);
-          setActiveId(idx);
-        },
       });
 
       marqueeTween.current.timeScale(1);
@@ -297,29 +288,6 @@ export default function OurWork() {
           >
             <ChevronRight className="w-6 h-6" />
           </button>
-        </div>
-
-        {/* Dots Indicator */}
-        <div className="flex justify-center gap-3 mt-12">
-          {WORK_ITEMS.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => {
-                const step = 1 / WORK_ITEMS.length;
-                gsap.to(marqueeTween.current, {
-                  progress: index * step,
-                  duration: 0.8,
-                  ease: "power2.out",
-                });
-              }}
-              className={`h-1.5 rounded-full transition-all duration-500 ${
-                index === activeIndex
-                  ? "bg-pathfinder-green w-12"
-                  : "bg-white/30 w-12 hover:bg-white/60"
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
         </div>
       </div>
     </section>
