@@ -334,6 +334,14 @@ export default function HowWeWorks() {
                   )}
                 </div>
 
+                {/* Shine Effect Overlay */}
+                <div className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                  <div className="absolute inset-0 bg-linear-to-b from-white/20 to-transparent mix-blend-overlay" />
+                  <div className="absolute inset-0 ring-1 ring-inset ring-white/30 rounded-lg" />
+                  {/* Shine Sheen - Left to Right */}
+                  <div className="absolute top-0 -left-[150%] w-[150%] h-full bg-linear-to-r from-transparent via-pathfinder-green/20 to-transparent transform -skew-x-12 group-hover:left-[100%] transition-all duration-1000 ease-in-out" />
+                </div>
+
                 {/* Card Content Overlay */}
                 <div className="relative z-10 flex flex-col justify-between h-full p-8 md:p-10">
                   <div className="flex justify-between items-start">

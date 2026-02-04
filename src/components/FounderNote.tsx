@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Testimonials } from "./Testimonials";
 
 const SLIDE_CONTENT = [
   {
@@ -31,33 +32,15 @@ const SLIDE_CONTENT = [
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    text: "Pathfinder didn't just design our brand—they helped us find clarity and confidence in how we present ourselves.",
-    author: "Sarah J.",
-    role: "CEO, TechStart",
-  },
-  {
-    text: "The team's dedication to quality and detail is unmatched. They truly cared about our vision from day one.",
-    author: "David M.",
-    role: "Founder, GreenLife",
-  },
-  {
-    text: "Creative, strategic, and remarkably efficient. Working with Pathfinder felt like having an internal partner.",
-    author: "Elena R.",
-    role: "Marketing Director",
-  },
-];
-
 export default function FounderNote() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Auto-slide Timer
+  // Auto-slide Timer (Main Content)
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % SLIDE_CONTENT.length);
-    }, 8000); // Adjusted timing for better pace
+    }, 15000);
     return () => clearInterval(timer);
   }, []);
 
@@ -166,13 +149,13 @@ export default function FounderNote() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-14 mb-32 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-14 mb-4 items-center">
           {/* Left: Content Slider */}
           <div className="order-2 md:order-1 relative min-h-[400px]">
             {SLIDE_CONTENT.map((slide, index) => (
               <div
                 key={index}
-                className={`absolute inset-0 transition-opacity duration-[1000ms] ease-in-out slide-${index} ${
+                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out slide-${index} ${
                   index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
                 }`}
               >
@@ -197,13 +180,20 @@ export default function FounderNote() {
                       <button
                         key={dotIndex}
                         onClick={() => setCurrentSlide(dotIndex)}
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                        className={`h-2 rounded-full overflow-hidden relative transition-all duration-300 ${
                           dotIndex === currentSlide
-                            ? "bg-pathfinder-green w-6"
-                            : "bg-pathfinder-green/30 hover:bg-pathfinder-green/50"
+                            ? "w-8 bg-pathfinder-green/20"
+                            : "w-2 bg-pathfinder-green/20 hover:bg-pathfinder-green/40"
                         }`}
                         aria-label={`Go to slide ${dotIndex + 1}`}
-                      />
+                      >
+                        {dotIndex === currentSlide && (
+                          <div
+                            className="absolute top-0 left-0 h-full bg-pathfinder-green animate-fill-progress rounded-full"
+                            style={{ animationDuration: "15000ms" }}
+                          />
+                        )}
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -252,31 +242,8 @@ export default function FounderNote() {
           </div>
         </div>
 
-        {/* Testimonials Section */}
-        <div className="border-t border-white/10 pt-24 testimonials-grid">
-          <h3 className="text-center text-4xl md:text-5xl font-poppins font-bold text-white mb-20">
-            What our clients say
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-            {TESTIMONIALS.map((t, i) => (
-              <div key={i} className="testimonial-card flex flex-col gap-6">
-                <div className="text-pathfinder-green text-4xl font-serif">
-                  "
-                </div>
-                <p className="text-zinc-300 font-nohemi text-lg leading-relaxed">
-                  {t.text}
-                </p>
-                <div>
-                  <p className="text-white font-bold font-poppins">
-                    {t.author}
-                  </p>
-                  <p className="text-zinc-500 text-sm font-aalto">{t.role}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Testimonials Section (Slider) */}
+        <Testimonials />
       </div>
     </section>
   );

@@ -32,8 +32,8 @@ function Logomarquee({ logos1, logos2 }: any) {
   }) => {
     const numItems = logos.length;
     const speed = "15s";
-    const itemWidth = "100px";
-    const itemGap = "35px";
+    const itemWidth = "140px";
+    const itemGap = "40px";
 
     return (
       <div
@@ -96,7 +96,7 @@ function LogoCard({ logo }: { logo: string }) {
     .replace(/ logo$/i, "");
 
   return (
-    <div className="shrink-0 mx-6 md:mx-8 group cursor-pointer">
+    <div className="shrink-0 group cursor-pointer">
       <div className="relative w-24 h-16 md:w-30 md:h-20 overflow-hidden">
         <div className="w-full h-full flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-full">
           {/* Default Logo */}

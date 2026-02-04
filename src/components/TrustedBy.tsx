@@ -1,13 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Logomarquee from "./Marquee";
 
 // Actual logo filenames from /public/Website logo
 const RAW_LOGOS = [
   "Aaharam logo.png",
   "Book my studio.png",
-  "Final Whole Ragi Design-1.png",
   "Layer 5 log.png",
   "NAJAH.png",
   "adari logo.png",

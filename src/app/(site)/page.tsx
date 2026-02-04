@@ -35,7 +35,9 @@ export default function Home() {
       <Metrics />
 
       {/* 4b. Wave Reveal Transition */}
-      <WaveReveal />
+      <div className="hidden md:block">
+        <WaveReveal />
+      </div>
 
       {/* 4c. 3D Slides Portfolio Showcase */}
       {/* <ThreeDCarousel images={PORTFOLIO_IMAGES} /> */}

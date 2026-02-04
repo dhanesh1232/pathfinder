@@ -106,48 +106,6 @@ export default function Services() {
     return () => ctx.revert();
   }, []);
 
-  useGSAP(
-    () => {
-      // Continuous Float & Shaky Animation for Cards
-      // Randomized start positions and delays for organic feel
-      gsap.utils.toArray<HTMLElement>(".service-card-anim").forEach((card) => {
-        // Vertical Float
-        gsap.to(card, {
-          y: -15,
-          duration: gsap.utils.random(2, 3.5),
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: gsap.utils.random(0, 1.5),
-        });
-
-        // Subtle Shaky/Wobble (Rotation)
-        gsap.to(card, {
-          rotation: gsap.utils.random(-1.5, 1.5),
-          duration: gsap.utils.random(2, 4),
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: gsap.utils.random(0, 2),
-        });
-      });
-
-      // Header Float Animation (Reference from Footer)
-      const headerTitle =
-        containerRef.current?.querySelector(".service-header h2");
-      if (headerTitle) {
-        gsap.to(headerTitle, {
-          y: -10,
-          duration: 3,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-        });
-      }
-    },
-    { scope: containerRef },
-  );
-
   return (
     <section
       id="service"

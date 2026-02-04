@@ -3,79 +3,10 @@
 import { ArrowRight } from "lucide-react";
 import React, { useRef, useEffect, useState } from "react";
 
-const SparkleTrail = ({
-  parentRef,
-}: {
-  parentRef: React.RefObject<HTMLDivElement | null>;
-}) => {
-  const [sparkles, setSparkles] = useState<
-    { id: number; x: number; y: number; age: number }[]
-  >([]);
-
-  useEffect(() => {
-    const el = parentRef.current;
-    if (!el) return;
-
-    let cleanup = false;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (cleanup) return;
-      const target = e.target as HTMLElement;
-      if (target.closest("form")) return;
-
-      const rect = el.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      setSparkles((prev) => [...prev, { id: Math.random(), x, y, age: 0 }]);
-    };
-
-    el.addEventListener("mousemove", handleMouseMove);
-
-    const interval = setInterval(() => {
-      if (cleanup) return;
-      setSparkles((prev) => {
-        const updated = prev
-          .map((p) => ({ ...p, age: p.age + 1 }))
-          .filter((p) => p.age < 20); // Keep max 20 frames
-        return updated;
-      });
-    }, 30);
-
-    return () => {
-      cleanup = true;
-      el.removeEventListener("mousemove", handleMouseMove);
-      clearInterval(interval);
-    };
-  }, [parentRef]);
-
-  return (
-    <div className="absolute inset-0 pointer-events-none z-50 overflow-hidden">
-      {sparkles.map((s) => (
-        <div
-          key={s.id}
-          className="absolute"
-          style={{
-            left: s.x,
-            top: s.y,
-            opacity: 1 - s.age / 20,
-            transform: `translate(-50%, -50%) scale(${1 - s.age / 20})`,
-            transition: "opacity 0.03s linear, transform 0.03s linear",
-          }}
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="#D4AF37">
-            <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
-          </svg>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 export default function ContactForm() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
-  const [isInsideForm, setIsInsideForm] = useState(false);
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -93,9 +24,6 @@ export default function ContactForm() {
       const y = e.clientY - rect.top;
       el.style.setProperty("--x", `${x}px`);
       el.style.setProperty("--y", `${y}px`);
-
-      const target = e.target as HTMLElement;
-      setIsInsideForm(!!target.closest("form"));
     };
 
     const handleMouseEnter = () => setIsHovering(true);
@@ -146,9 +74,6 @@ export default function ContactForm() {
           }
         `}
       </style>
-
-      {/* Sparkle Trail */}
-      <SparkleTrail parentRef={containerRef} />
 
       {/* Background Text Layers (Marquee) */}
       <div className="absolute inset-0 z-0 pointer-events-none flex flex-col justify-center h-full w-full overflow-hidden">
@@ -205,29 +130,6 @@ export default function ContactForm() {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Custom Gold Star Cursor */}
-      <div
-        className={`absolute pointer-events-none z-50 transition-opacity duration-300 ${
-          isHovering && !isInsideForm ? "opacity-100" : "opacity-0"
-        }`}
-        style={{
-          left: "var(--x)",
-          top: "var(--y)",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="#D4AF37"
-          className="drop-shadow-[0_0_10px_rgba(212,175,55,0.8)] animate-spin-slow"
-          style={{ animationDuration: "3s" }}
-        >
-          <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
-        </svg>
       </div>
 
       {/* Form Container */}
@@ -333,9 +235,9 @@ export default function ContactForm() {
             <div className="pt-8 flex items-center gap-4">
               <button
                 type="submit"
-                className="bg-white text-black px-10 py-4 font-bold uppercase text-sm tracking-wider hover:bg-gray-200 transition-colors relative"
+                className="bg-white text-black hover:bg-pathfinder-green transition-all ease-in-out duration-300 hover:text-white px-10 py-4 font-bold uppercase text-sm tracking-wider relative"
                 style={{
-                  clipPath: "polygon(0 0, 100% 0, 90% 100%, 0% 100%)",
+                  clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)",
                 }}
               >
                 Submit

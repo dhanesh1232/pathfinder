@@ -126,7 +126,7 @@ export default function BannerCarousel() {
   return (
     <section
       ref={containerRef}
-      className="w-full h-screen bg-black relative z-10 p-0 m-0 overflow-hidden"
+      className="w-full h-[50svh] md:h-[70svh] lg:h-svh max-w-[5000px] mx-auto bg-black relative z-10 p-0 m-0 overflow-hidden"
     >
       <div className="w-full h-full relative group">
         {/* Main Display Area */}
@@ -143,7 +143,7 @@ export default function BannerCarousel() {
           {/* Navigation Arrows (Visible on Hover/Always on Mobile) */}
           <button
             onClick={prevSlide}
-            className="absolute left-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/20 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0"
+            className="absolute left-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/20 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-100 translate-x-0 md:opacity-0 md:group-hover:opacity-100 md:-translate-x-4 md:group-hover:translate-x-0"
             aria-label="Previous Slide"
           >
             <ChevronLeft className="w-6 h-6" />
@@ -151,7 +151,7 @@ export default function BannerCarousel() {
 
           <button
             onClick={nextSlide}
-            className="absolute right-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/20 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0"
+            className="absolute right-4 cursor-pointer top-1/2 -translate-y-1/2 z-20 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/20 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 opacity-100 translate-x-0 md:opacity-0 md:group-hover:opacity-100 md:translate-x-4 md:group-hover:translate-x-0"
             aria-label="Next Slide"
           >
             <ChevronRight className="w-6 h-6" />

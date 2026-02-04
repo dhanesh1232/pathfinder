@@ -209,13 +209,20 @@ export default function Metrics() {
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
-                className={`transition-all ease-in-out duration-300 rounded-full ${
+                className={`transition-all ease-in-out duration-300 rounded-full overflow-hidden relative h-2 ${
                   currentSlide === index
-                    ? "w-8 h-2 bg-pathfinder-green"
-                    : "w-2 h-2 bg-white/20 cursor-pointer hover:bg-white/40"
+                    ? "w-8 bg-white/20"
+                    : "w-2 bg-white/20 cursor-pointer hover:bg-white/40"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
-              />
+              >
+                {currentSlide === index && (
+                  <div
+                    className="absolute top-0 left-0 h-full bg-pathfinder-green animate-fill-progress rounded-full"
+                    style={{ animationDuration: "5000ms" }}
+                  />
+                )}
+              </button>
             ))}
           </div>
         </div>

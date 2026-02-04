@@ -3,6 +3,7 @@
 import SmoothScroll from "@/components/SmoothScroll";
 import GlobalNav from "@/components/GlobalNav";
 import FloatingControls from "@/components/FloatingControls";
+import CookieDisclaimer from "@/components/CookieDisclaimer";
 
 export default function SiteLayout({
   children,
@@ -25,6 +26,7 @@ export default function SiteLayout({
       </div>
       <SmoothScroll />
       <FloatingControls />
+      <CookieDisclaimer />
     </>
   );
 }

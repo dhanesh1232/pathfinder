@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 
 export default function ContactSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,20 +84,7 @@ export default function ContactSection() {
             Find Your Path
           </span>
           <div className="flex items-center justify-center w-8 h-8 rounded-full bg-black text-white group-hover:bg-white group-hover:text-pathfinder-green transition-all duration-300 relative z-10">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-4 h-4 -rotate-45 group-hover:rotate-0 transition-transform duration-300"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
-              />
-            </svg>
+            <ArrowUpRight className="group-hover:rotate-45 transition-transform duration-300" />
           </div>
         </a>
 

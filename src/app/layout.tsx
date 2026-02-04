@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google"; // Import Poppins
 import { Providers } from "@/app/providers";
+import { UseResizeReload } from "@/components/ResizeReload";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -99,7 +100,10 @@ export default function RootLayout({
           <div className="absolute inset-0 bg-[url(/website-bg.jpeg)] bg-cover bg-center bg-no-repeat" />
         </div>
         <main className="h-full w-full">
-          <Providers>{children}</Providers>
+          <Providers>
+            {children}
+            <UseResizeReload />
+          </Providers>
         </main>
       </body>
     </html>

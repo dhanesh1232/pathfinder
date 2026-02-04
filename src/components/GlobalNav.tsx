@@ -80,12 +80,12 @@ export default function GlobalNav() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 z-50 w-full transition-transform duration-300 ${
-          isVisible ? "translate-y-0" : "-translate-y-full"
-        } ${isScrolled ? "bg-black/30" : ""}`}
+        data-visible={isVisible}
+        data-scrolled={isScrolled}
+        className={`fixed top-0 left-0 z-50 w-full transition-transform duration-300 md:data-[visible=true]:translate-y-0 md:data-[visible=false]:-translate-y-full data-[scrolled=true]:bg-black/20`}
       >
         <div
-          className={`max-w-7xl mx-auto flex items-center justify-between pl-0 pr-4 py-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-0 ring-0 outline-none`}
+          className={`w-full max-w-[5000px] mx-auto flex items-center justify-between px-4 md:px-10 2xl:px-20 py-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-0 ring-0 outline-none`}
         >
           {/* Logo */}
           <Link
@@ -115,7 +115,7 @@ export default function GlobalNav() {
                       : `#${item.toLowerCase().replace(" ", "-")}`
                   }
                   onClick={item === "Home" ? scrollToTop : undefined}
-                  className="relative text-white/80 hover:text-pathfinder-green text-sm font-medium uppercase tracking-widest transition-colors duration-300 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-0.5 after:bg-pathfinder-green after:transition-all after:duration-300 hover:after:w-full"
+                  className="relative text-white/80 hover:text-pathfinder-green text-sm font-medium uppercase tracking-widest transition-colors duration-300 nav-link"
                 >
                   {item}
                 </Link>

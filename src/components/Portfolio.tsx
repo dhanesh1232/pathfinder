@@ -88,9 +88,60 @@ const ALL_PORTFOLIO_ITEMS = [
   { src: "/portfolio one/vity.jpeg", alt: "Vity" },
 ];
 
+const TypingHeading = ({ className }: { className?: string }) => {
+  const container = useRef<HTMLHeadingElement>(null);
+  const text = "Selected Works";
+
+  useEffect(() => {
+    if (!container.current) return;
+
+    const ctx = gsap.context(() => {
+      const scrollerEl = document.getElementById("smooth-wrapper");
+      const scroller = scrollerEl || window;
+
+      // 1. Typing Animation (Triggered by Scroll) - Matches HowWeWorks style
+      gsap.fromTo(
+        ".typing-char",
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.05,
+          stagger: 0.04,
+          ease: "none",
+          scrollTrigger: {
+            trigger: container.current,
+            scroller: scroller,
+            start: "top 60%", // Start when section enters view
+            toggleActions: "play none none reverse",
+          },
+        },
+      );
+    }, container);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <h2
+      ref={container}
+      className={`font-poppins font-black text-5xl md:text-6xl lg:text-8xl tracking-tighter uppercase ${className}`}
+    >
+      {text.split("").map((char, i) => (
+        <span
+          key={i}
+          className="typing-char inline-block text-white"
+          style={{ opacity: 0 }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </span>
+      ))}
+    </h2>
+  );
+}; // End TypingHeading
+
 export default function Portfolio() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const headerTextRef = useRef<HTMLDivElement>(null); // New Ref for floating header
+  const headerTextRef = useRef<HTMLDivElement>(null);
   const [displayedItems, setDisplayedItems] = useState(
     ALL_PORTFOLIO_ITEMS.slice(0, 12),
   );
@@ -201,16 +252,14 @@ export default function Portfolio() {
       <div className="max-w-7xl mx-auto">
         {/* Header (Floating) */}
         <div ref={headerTextRef} className="text-center mb-16">
-          <h2 className="text-white font-poppins font-black text-5xl md:text-6xl lg:text-8xl tracking-tighter uppercase mb-2">
-            Selected Works
-          </h2>
+          <TypingHeading className="mb-2" />
           <p className="text-white/60 font-nohemi text-lg md:text-xl font-light max-w-2xl mx-auto">
             A curation of brands we've helped defined, designed, and elevated.
           </p>
         </div>
 
         {/* Masonry Grid (Fixed Aspect Ratio for Uniform Height) */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {displayedItems.map((item, idx) => (
             <div
               key={idx}

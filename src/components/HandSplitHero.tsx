@@ -51,6 +51,7 @@ export default function HandSplitHero() {
   const rightHandRef = useRef<HTMLImageElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
+  const startLabelRef = useRef<HTMLDivElement>(null);
 
   const [isLoading, setIsLoading] = useState(true);
   const [loadedCount, setLoadedCount] = useState(0);
@@ -88,6 +89,7 @@ export default function HandSplitHero() {
       });
       gsap.set(rightHandRef.current, { xPercent: 150, rotate: 30, opacity: 0 });
       gsap.set(textRef.current, { opacity: 0, y: 20 });
+      gsap.set(startLabelRef.current, { opacity: 0, scale: 0.8 });
 
       const tl = gsap.timeline({
         onComplete: () => {
@@ -103,16 +105,27 @@ export default function HandSplitHero() {
         opacity: 1,
         duration: 1.8,
         ease: "power4.out",
-      }).to(
-        textRef.current,
-        {
-          opacity: 1,
-          y: 10,
-          duration: 1,
-          ease: "power2.out",
-        },
-        "-=1.0",
-      ); // Overlap slightly with hands arrival
+      })
+        .to(
+          textRef.current,
+          {
+            opacity: 1,
+            y: 10,
+            duration: 1,
+            ease: "power2.out",
+          },
+          "-=1.0",
+        )
+        .to(
+          startLabelRef.current,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1,
+            ease: "power2.out",
+          },
+          "<",
+        ); // Sync with text reveal
     }, containerRef);
 
     return () => ctx.revert();
@@ -135,8 +148,9 @@ export default function HandSplitHero() {
         scale: 1,
         filter: "none",
       });
+      gsap.set(startLabelRef.current, { opacity: 1, scale: 1 });
 
-      // Init chars for typing effect logic (ready for scroll)
+      // Init char text visibility logic
       const chars = textRef.current?.querySelectorAll(".char");
       gsap.set(chars!, { opacity: 0 });
 
@@ -183,6 +197,16 @@ export default function HandSplitHero() {
             duration: 1.5,
           },
           "start",
+        )
+        .to(
+          startLabelRef.current,
+          {
+            opacity: 0,
+            scale: 1.5,
+            duration: 0.5,
+            ease: "power1.in",
+          },
+          "start",
         );
 
       // Typing Effect
@@ -210,9 +234,11 @@ export default function HandSplitHero() {
         "exit",
       );
     }, containerRef);
-
     return () => ctx.revert();
   }, [introFinished]);
+
+  const handClass =
+    "w-[180%] md:w-[140%] max-w-[800px] lg:w-[280%] lg:max-w-[1000px] 2xl:w-[160%] 2xl:max-w-none min-[1800px]:w-[180%] min-[2400px]:w-[200%] min-[2800px]:w-[250%] min-[3200px]:w-[280%] min-[3800px]:w-[320%] min-[4400px]:w-[360%] min-[5000px]:w-[400%] h-auto object-contain filter brightness-150 contrast-125";
 
   return (
     <>
@@ -235,7 +261,7 @@ export default function HandSplitHero() {
 
       <section
         ref={containerRef}
-        className={`relative w-full h-[200svh] overflow-hidden bg-inherit flex justify-center transition-opacity duration-700 ${
+        className={`relative w-full max-w-[5000px] mx-auto h-[200svh] overflow-hidden bg-inherit flex justify-center transition-opacity duration-700 ${
           isLoading || !videoFinished ? "opacity-0" : "opacity-100"
         }`}
       >
@@ -243,14 +269,32 @@ export default function HandSplitHero() {
           {/* Headline Text - Now uses SplitText */}
           <AnimationText textRef={textRef} />
 
-          <div className="relative z-20 w-full max-w-full flex items-center justify-center pointer-events-none mt-20">
+          {/* Start Journey Label (Visible initially, fades on split) */}
+          <div
+            ref={startLabelRef}
+            className="absolute z-30 flex flex-col items-center justify-center top-[30%] md:top-[25%] lg:top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none mix-blend-difference gap-8"
+          >
+            <div className="flex flex-col items-center text-center gap-1">
+              <span className="text-white/90 font-poppins text-xl md:text-2xl tracking-[0.6em] uppercase pl-1">
+                Start
+              </span>
+              <span className="text-white/60 font-poppins text-sm md:text-base tracking-[0.6em] uppercase pl-1">
+                The
+              </span>
+              <h1 className="text-white font-aalto italic text-6xl md:text-8xl tracking-wide leading-none">
+                Journey
+              </h1>
+            </div>
+          </div>
+
+          <div className="relative z-20 w-full max-w-[5000px] flex items-center justify-center pointer-events-none mt-20">
             <div className="relative w-1/2 flex justify-end px-4">
               <img
                 ref={leftHandRef}
                 src="/hands/Right-Hand.png"
                 alt="Left Hand"
                 onLoad={handleImageLoad}
-                className="w-[180%] md:w-[140%] max-w-[800px] lg:w-[280%] lg:max-w-[1000px] h-auto object-contain filter brightness-150 contrast-125"
+                className={handClass}
               />
             </div>
 
@@ -260,9 +304,17 @@ export default function HandSplitHero() {
                 src="/hands/Left-Hand.png"
                 alt="Right Hand"
                 onLoad={handleImageLoad}
-                className="w-[180%] md:w-[140%] max-w-[800px] lg:w-[280%] lg:max-w-[1000px] h-auto object-contain filter brightness-150 contrast-125"
+                className={handClass}
               />
             </div>
+          </div>
+
+          {/* Scroll Indicator - Bottom of Section */}
+          <div className="absolute z-40 bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 opacity-80 pointer-events-none">
+            <span className="text-white/70 font-poppins text-[10px] tracking-[0.3em] uppercase animate-pulse">
+              Scroll
+            </span>
+            <div className="w-px h-12 bg-linear-to-b from-transparent via-white to-transparent opacity-60 animate-bounce" />
           </div>
         </div>
       </section>
@@ -280,7 +332,7 @@ function AnimationText({
       ref={textRef as React.RefObject<HTMLDivElement>}
       className="absolute z-10 text-center"
     >
-      <h1 className="text-white font-poppins text-4xl md:text-7xl lg:text-8xl leading-tight font-medium tracking-wide drop-shadow-2xl">
+      <h1 className="text-white font-poppins text-4xl md:text-7xl lg:text-8xl min-[1800px]:text-9xl min-[2500px]:text-[10rem] min-[3500px]:text-[13rem] min-[4500px]:text-[16rem] leading-tight font-medium tracking-wide drop-shadow-2xl">
         <SplitText>The Best Path For</SplitText>
         <br />
         <span className="text-pathfinder-green italic font-semibold font-aalto">

@@ -3,7 +3,11 @@
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Draggable } from "gsap/Draggable";
 import { Play, Pause, ArrowUpRight } from "lucide-react";
+
+// Register generally to capture early
+gsap.registerPlugin(ScrollTrigger, Draggable);
 
 const WORK_ITEMS = [
   {
@@ -125,6 +129,7 @@ const VideoCard = ({
   return (
     <div
       ref={containerRef}
+      id={uniqueId}
       onClick={togglePlay}
       className={`relative group w-[280px] md:w-[320px] aspect-9/16 rounded-2xl overflow-hidden bg-zinc-900 border border-white/5 transition-all duration-500 hover:border-pathfinder-green/50 hover:z-20 cursor-pointer ${
         isPlaying
@@ -184,37 +189,88 @@ const VideoCard = ({
 export default function OurWork() {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const [isHovering, setIsHovering] = useState(false);
+  const marqueeTween = useRef<gsap.core.Tween | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
     // Marquee Effect
     if (scrollerRef.current) {
       const scrollerContent = scrollerRef.current;
 
-      gsap
-        .to(scrollerContent, {
-          xPercent: -50,
-          ease: "none",
-          duration: 40, // Adjust speed
-          repeat: -1,
-        })
-        .timeScale(1); // Normal speed
+      marqueeTween.current = gsap.to(scrollerContent, {
+        xPercent: -50,
+        ease: "none",
+        duration: 40, // Adjust speed
+        repeat: -1,
+      });
+
+      marqueeTween.current.timeScale(1);
+
+      // Drag Implementation
+      const proxy = document.createElement("div");
+      const tracker = Draggable.create(proxy, {
+        trigger: scrollerContent,
+        type: "x",
+        inertia: false, // Standard drag
+        onPress: () => {
+          marqueeTween.current?.pause();
+          setActiveId(null); // Clear active video on interaction
+        },
+        onDrag: function () {
+          const tween = marqueeTween.current;
+          if (!tween) return;
+
+          // The marquee moves 50% of the total width (because of duplicated items)
+          // So one full cycle = scrollWidth / 2
+          const cycleWidth = scrollerContent.scrollWidth / 2;
+
+          // -deltaX because moving mouse LEFT (negative) should advance animation (move content LEFT)
+          const progressChange = -this.deltaX / cycleWidth;
+
+          const newProgress = tween.progress() + progressChange;
+
+          // Wrap between 0 and 1
+          tween.progress(gsap.utils.wrap(0, 1, newProgress));
+        },
+        onRelease: () => {
+          if (!activeId) marqueeTween.current?.play();
+        },
+      })[0];
+
+      return () => {
+        marqueeTween.current?.kill();
+        tracker.kill();
+      };
     }
   }, []);
 
-  // Handle Hover Slowdown
+  // Handle Active Video Centering
   useEffect(() => {
-    const anims = gsap.getTweensOf(scrollerRef.current);
-    if (anims.length > 0) {
-      gsap.to(anims[0], {
-        timeScale: activeId ? 0 : 1, // Stop scroll ONLY if active (playing), not on hover
-        duration: 0.5,
-      });
+    if (activeId) {
+      // Pause Marquee
+      marqueeTween.current?.pause();
+
+      const activeElement = document.getElementById(activeId);
+      if (activeElement && scrollerRef.current) {
+        const rect = activeElement.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportCenter = viewportWidth / 2;
+        const cardCenter = rect.left + rect.width / 2;
+        const distanceToMove = viewportCenter - cardCenter;
+
+        // Animate Container to Center the Card
+        // We use x (pixel offset) on top of the xPercent
+        gsap.to(scrollerRef.current, {
+          x: `+=${distanceToMove}`,
+          duration: 1,
+          ease: "power3.inOut",
+        });
+      }
+    } else {
+      // Resume Marquee from current position (no reset)
+      marqueeTween.current?.play();
     }
-  }, [isHovering, activeId]);
+  }, [activeId]);
 
   return (
     <section
@@ -222,38 +278,33 @@ export default function OurWork() {
       ref={containerRef}
     >
       {/* Background Ambience */}
-      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-zinc-900/40 via-black to-black opacity-50 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-zinc-900/40 via-black to-black opacity-50 pointer-events-none" />
 
       <div className="relative z-10 max-w-full">
         {/* Header */}
-        <div className="px-6 md:px-12 mb-16 flex flex-col md:flex-row items-end justify-between gap-6">
+        <div className="px-6 lg:px-12 mb-16 flex flex-col lg:flex-row items-start justify-between gap-6">
           <div>
-            <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-2">
+            <h2 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-2">
               Visual <span className="text-pathfinder-green">Impact</span>
             </h2>
-            <p className="text-zinc-400 font-nohemi text-lg max-w-xl">
+            <div className="w-full h-px my-2 bg-linear-to-r from-transparent via-pathfinder-green to-transparent" />
+            <p className="text-zinc-400 font-nohemi text-base lg:text-lg max-w-xl">
               Dynamic reels and productions that capture attention.
             </p>
           </div>
 
-          {/* Decoration Line */}
-          <div className="flex-1 h-px bg-white/10 mb-4 hidden md:block mx-12" />
-
           <a
             href="https://www.instagram.com/pathfinder.vizag/"
             target="_blank"
-            className="text-sm font-aalto uppercase tracking-widest text-pathfinder-green hover:text-white transition-colors flex items-center gap-2"
+            className="text-sm font-aalto uppercase tracking-widest self-end text-pathfinder-green hover:text-white transition-colors flex items-center gap-2"
           >
-            View Instagram <ArrowUpRight className="w-4 h-4" />
+            <span className="nav-link">View Instagram</span>
+            <ArrowUpRight className="w-4 h-4" />
           </a>
         </div>
 
         {/* Infinite Scroller */}
-        <div
-          className="flex w-full overflow-hidden"
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-        >
+        <div className="flex w-full overflow-hidden">
           <div ref={scrollerRef} className="flex gap-4 md:gap-8 px-4 w-max">
             {/* Render Double for Loop */}
             {[...WORK_ITEMS, ...WORK_ITEMS].map((item, index) => {
