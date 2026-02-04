@@ -14,7 +14,7 @@ const SLIDES = [
   {
     title: "Why Pathfinder",
     content: [
-      "Pathfinder exists to help brands find clarity, direction, and growth—no matter their size. From early‑stage startups to large‑scale companies, we work closely with businesses at every stage of their journey, offering creative and digital solutions that are impactful and affordable.",
+      "Pathfinder exists to make great branding accessible. We work with startups, growing businesses, and established brands that need clarity, direction, and results—without unnecessary costs. Our approach is simple: understand first, create with purpose, and deliver honestly. We believe strong strategy and meaningful design should fit real budgets, which is why our solutions are flexible, transparent, and value-driven. With Pathfinder, you don’t pay for noise or promises you invest in work that is thoughtful, affordable, and built to grow with your brand.",
     ],
   },
   {
@@ -129,7 +129,6 @@ export default function Metrics() {
           {/* Decorative Line */}
           <div className="w-20 h-0.5 bg-linear-to-r from-transparent via-pathfinder-green to-transparent mx-auto mb-8" />
 
-          {/* Animated Header */}
           {/* Animated Header */}
           <h2 className="why-header relative w-full mb-12 grid grid-rows-1 grid-cols-1 items-center justify-items-center">
             {SLIDES.map((slide, index) => {

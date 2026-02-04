@@ -6,11 +6,14 @@ import Metrics from "@/components/Metrics";
 import Services from "@/components/Services";
 import Portfolio from "@/components/Portfolio";
 import FounderNote from "@/components/FounderNote";
+import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
 import TransformativeSection from "@/components/HowWeWorks";
 import ContactForm from "@/components/ContactForm";
 import WaveReveal from "@/components/WaveReveal";
 import OurWork from "@/components/OurWork";
+import TextMarquee from "@/components/TextMarquee";
+import { Testimonials } from "@/components/Testimonials";
 
 export default function Home() {
   return (
@@ -45,6 +48,9 @@ export default function Home() {
       {/* 5. Services */}
       <Services />
 
+      {/* 5b. Text Marquee Interlude */}
+      <TextMarquee />
+
       {/* 6. How We Works */}
       <TransformativeSection />
 
@@ -57,10 +63,16 @@ export default function Home() {
       {/* 8. Founder Note / Team Philosophy */}
       <FounderNote />
 
-      {/* 9. Contact Form */}
+      {/* 9. Testimonials */}
+      <Testimonials />
+
+      {/* 10. Contact Form */}
       <ContactForm />
 
-      {/* 10. Footer */}
+      {/* 11. CTA (Big Video Bg) */}
+      <CTA />
+
+      {/* 12. Footer (Links) */}
       <Footer />
     </>
   );

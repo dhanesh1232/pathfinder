@@ -1,36 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import ScrollTrigger from "gsap/ScrollTrigger";
 
-export default function ContactSection() {
+gsap.registerPlugin(ScrollTrigger);
+
+export default function Footer() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLAnchorElement>(null);
 
   useGSAP(
     () => {
-      // Gentle floating animation for the large text
-      gsap.to(textRef.current, {
-        y: -10,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
-
-      // Float animation for button
-      gsap.to(buttonRef.current, {
-        y: -10,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
-
       const scrollerEl = document.getElementById("smooth-wrapper");
       const scroller = scrollerEl || window;
 
@@ -46,7 +28,7 @@ export default function ContactSection() {
           scrollTrigger: {
             trigger: containerRef.current,
             scroller: scroller,
-            start: "top 80%",
+            start: "top 95%",
           },
         },
       );
@@ -57,62 +39,40 @@ export default function ContactSection() {
   return (
     <footer
       ref={containerRef}
-      id="contact"
-      className="relative w-full pt-32 z-20 pb-12 px-6 bg-transparent border-t border-white/5 overflow-hidden"
+      className="relative w-full py-12 px-6 bg-black border-t border-white/5 z-20"
     >
-      <div className="max-w-7xl mx-auto flex flex-col items-center justify-center text-center">
-        {/* Main Headline */}
-        <div
-          ref={textRef}
-          className="mb-16 md:mb-24 relative z-10 footer-reveal"
-        >
-          <h2 className="font-poppins font-black text-6xl md:text-8xl lg:text-9xl uppercase leading-[0.9] text-white tracking-tight">
-            FIND THE RIGHT <br />
-            PATH <span className="text-pathfinder-green">FOR YOUR</span> <br />
-            <span className="text-pathfinder-green">BRAND</span>
-          </h2>
-        </div>
-
-        {/* CTA Button */}
-        <a
-          ref={buttonRef}
-          href="https://wa.me/+919676104199"
-          target="_blank"
-          className="footer-reveal group relative inline-flex items-center gap-4 px-12 py-5 bg-white text-black rounded-full overflow-hidden hover:bg-pathfinder-green transition-colors duration-500"
-        >
-          <span className="relative z-10 font-poppins font-medium text-lg tracking-wide group-hover:text-white transition-colors duration-300">
-            Find Your Path
-          </span>
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-black text-white group-hover:bg-white group-hover:text-pathfinder-green transition-all duration-300 relative z-10">
-            <ArrowUpRight className="group-hover:rotate-45 transition-transform duration-300" />
-          </div>
-        </a>
-
-        {/* Footer Bottom Links */}
-        <div className="w-full mt-32 md:mt-48 flex flex-col md:flex-row justify-between items-center text-zinc-500 text-sm font-poppins border-t border-white/10 pt-8 footer-reveal">
+      <div className="max-w-7xl mx-auto">
+        <div className="w-full flex flex-col md:flex-row justify-between items-center text-zinc-500 text-sm font-poppins footer-reveal">
           <div className="mb-4 md:mb-0">
-            © 2026 Pathfinder. All rights reserved.
+            © 2026{" "}
+            <span className="text-pathfinder-green">
+              The{" "}
+              <Link href="/" className="nav-link">
+                Pathfinder
+              </Link>
+            </span>
+            . All rights reserved.
           </div>
 
           <div className="flex gap-8 mb-4 md:mb-0">
-            <a
+            <Link
               href="#"
-              className="hover:text-pathfinder-green transition-colors"
+              className="nav-link hover:text-pathfinder-green transition-colors"
             >
               LinkedIn
-            </a>
-            <a
+            </Link>
+            <Link
               href="#"
-              className="hover:text-pathfinder-green transition-colors"
+              className="nav-link hover:text-pathfinder-green transition-colors"
             >
               Instagram
-            </a>
-            <a
+            </Link>
+            <Link
               href="#"
-              className="hover:text-pathfinder-green transition-colors"
+              className="nav-link hover:text-pathfinder-green transition-colors"
             >
               Twitter
-            </a>
+            </Link>
           </div>
 
           <div className="text-zinc-600">
@@ -120,16 +80,13 @@ export default function ContactSection() {
             <Link
               href="https://services.ecodrix.com"
               target="_blank"
-              className="hover:text-pathfinder-green transition-colors"
+              className="nav-link transition-colors"
             >
               <span className="text-blue-500">ECODrIx</span>
             </Link>
           </div>
         </div>
       </div>
-
-      {/* Background Glow Effect */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[50vh] bg-pathfinder-green/5 blur-[120px] rounded-full pointer-events-none z-0" />
     </footer>
   );
 }

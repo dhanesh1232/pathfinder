@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import GlowLine from "./GlowLine";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -90,6 +91,7 @@ export default function HandSplitHero() {
       gsap.set(rightHandRef.current, { xPercent: 150, rotate: 30, opacity: 0 });
       gsap.set(textRef.current, { opacity: 0, y: 20 });
       gsap.set(startLabelRef.current, { opacity: 0, scale: 0.8 });
+      gsap.set(bgRef.current, { opacity: 0, scale: 0.8 });
 
       const tl = gsap.timeline({
         onComplete: () => {
@@ -106,6 +108,16 @@ export default function HandSplitHero() {
         duration: 1.8,
         ease: "power4.out",
       })
+        .to(
+          bgRef.current,
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1.8,
+            ease: "power4.out",
+          },
+          "<",
+        )
         .to(
           textRef.current,
           {
@@ -149,6 +161,7 @@ export default function HandSplitHero() {
         filter: "none",
       });
       gsap.set(startLabelRef.current, { opacity: 1, scale: 1 });
+      gsap.set(bgRef.current, { opacity: 1, scale: 1 });
 
       // Init char text visibility logic
       const chars = textRef.current?.querySelectorAll(".char");
@@ -191,7 +204,7 @@ export default function HandSplitHero() {
         .to(
           bgRef.current,
           {
-            opacity: 0.5,
+            opacity: 0,
             scale: 1.1,
             ease: "none",
             duration: 1.5,
@@ -282,13 +295,26 @@ export default function HandSplitHero() {
               <span className="text-white/60 font-poppins text-sm md:text-base tracking-[0.6em] uppercase pl-1">
                 The
               </span>
-              <h1 className="text-white font-aalto italic text-6xl md:text-8xl tracking-wide leading-none">
+              <h1 className="text-pathfinder-green font-poppins italic text-6xl md:text-8xl tracking-wide leading-none">
                 Journey
               </h1>
             </div>
           </div>
 
           <div className="relative z-20 w-full max-w-[5000px] flex items-center justify-center pointer-events-none mt-20">
+            {/* Background Image Behind Hands */}
+            <div
+              ref={bgRef}
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full -z-10 pointer-events-none flex items-center justify-center"
+            >
+              <GlowLine
+                variant="curved"
+                orientation="horizontal"
+                color="green"
+                className="w-[80%] h-[50%] md:h-[60%] opacity-80"
+              />
+            </div>
+
             <div className="relative w-1/2 flex justify-end px-4">
               <img
                 ref={leftHandRef}

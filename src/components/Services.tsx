@@ -52,7 +52,7 @@ const SERVICES = [
 ];
 
 const DESCRIPTION_TEXT =
-  "Our holistic creative approach means we navigate without bias, letting the destination dictate the path. This allows us to clear the clutter and solve bigger brand challenges, creating a multiplier effect with our Pathfinder ethos. Strategic creativity helps us ask deeper questions, lead with vision, and discover the most authentic route to growth. Find out more by exploring our services.";
+  "At Pathfinder, we deliver end-to-end creative solutions designed to elevate brand value and drive real impact. From crafting strong content scripts that capture attention instantly, to producing high-quality, trend-aware shoots with a clear visual direction, every detail is planned with intention. We design unique and creative social media content that reflects brand identity, stands out without noise, and stays visually relevant over time. Our work extends to building clean, modern websites and landing pages that communicate clearly, feel premium, and perform seamlessly across devices. Every service we offer is guided by strategy, executed with precision, and delivered with consistency ensuring brands don’t just look good, but move forward with clarity, confidence, and measurable growth";
 
 export default function Services() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -110,7 +110,7 @@ export default function Services() {
     <section
       id="service"
       ref={containerRef}
-      className="relative w-full py-24 lg:py-32 flex flex-col items-center justify-center px-6 md:px-8 z-10 overflow-hidden"
+      className="relative w-full pt-24 pb-12 lg:pb-16 lg:pt-32 flex flex-col items-center justify-center px-6 md:px-8 z-10 overflow-hidden"
     >
       <div className="max-w-7xl w-full mx-auto">
         {/* Section Header */}

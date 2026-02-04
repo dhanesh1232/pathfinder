@@ -241,12 +241,13 @@ export default function WaveReveal() {
             className="font-poppins font-black text-6xl md:text-8xl lg:text-9xl tracking-tighter uppercase leading-none mb-4"
             style={{ filter: "url(#wave-filter)" }}
           >
-            Digital <span className="font-nohemi font-light italic">made</span>
+            The Right{" "}
+            <span className="font-nohemi font-light italic">Path</span>
             <br />
-            Soulful
+            For Brands
           </h2>
           <p className="font-nohemi text-xl md:text-2xl text-current max-w-lg mx-auto mt-6 opacity-80">
-            Crafting digital experiences that resonate on a deeper level.
+            Building brand experiences guided by clarity and purpose.
           </p>
         </div>
       </div>

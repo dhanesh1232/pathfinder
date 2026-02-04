@@ -3,26 +3,24 @@
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Testimonials } from "./Testimonials";
 
 const SLIDE_CONTENT = [
   {
     title: "One team. One vision. One Pathfinder Built with belief.",
     highlight: "Driven by purpose.",
-    p1: "I started Pathfinder with a simple belief—great brands shouldn't be limited to big budgets. In a space where creativity is often rushed or overpriced, we chose a different path.",
-    p2: "We focus on clarity, quality, and honest delivery, helping brands grow with confidence. Every project we take is personal, and every solution is built with intention, capability, and respect for the client's vision.",
+    p1: "I started Pathfinder with a simple belief — great brands shouldn’t be limited to big budgets. Too many startups struggle not because of lack of ideas, but because quality branding and strategy feel out of reach.",
+    p2: `In a space where creativity is often rushed, overpriced, or copied, I chose a different path. Pathfinder was built to offer thoughtful design, clear strategy, and honest execution — solutions that are affordable, purposeful, and built to grow with the brand.`,
+    p3: ` Every project we take is personal. Every decision is intentional. Because when brands are guided with clarity and care, growth becomes natural.`,
   },
   {
     title: "A Collective of Creators. United by Passion.",
     highlight: "Defined by Excellence.",
-    p1: "Our team is a diverse blend of strategists, designers, and developers who share a common goal: to build brands that matter. We don't just work for you; we work with you.",
-    p2: "We believe in the power of collaboration. By bringing together different perspectives and skills, we create holistic solutions that are as functional as they are beautiful.",
+    p1: "built to guide brands forward Pathfinder is powered by a team that believes in doing meaningful work together. Designers, strategists, editors, and creators working as one—guided by the same vision and values. Every member brings dedication, responsibility, and care to the process, ensuring that each project is handled with intention and clarity. We don’t work in silos, and we don’t chase trends blindly. We collaborate, think deeply, and move in the same direction—because Pathfinder isn’t one person, it’s a team united by purpose.",
   },
   {
-    title: "About Us. More Than Just an Agency.",
+    title: "Built to Think Before We Create.",
     highlight: "Partners in Growth.",
-    p1: "Pathfinder isn't just a creative agency; we are your partners in growth. We understand the challenges of modern business and provide the strategic edge you need to stand out.",
-    p2: "From the first spark of an idea to the final launch, we are there every step of the way. Our mission is to empower your brand to reach its full potential and beyond.",
+    p1: "At Pathfinder, every idea begins with understanding. We slow down to ask the right questions, challenge assumptions, and define direction before design ever begins. This approach helps us create work that is clear, relevant, and effective—saving time, cost, and confusion while delivering outcomes that actually matter.",
   },
   {
     title: "About Us. More Than Just an Agency.",
@@ -34,6 +32,8 @@ const SLIDE_CONTENT = [
 
 export default function FounderNote() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [height, setHeight] = useState<number | "auto">("auto");
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Auto-slide Timer (Main Content)
@@ -100,7 +100,7 @@ export default function FounderNote() {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Animate content of the new active slide
+    // 1. Animate content
     const activeElements = containerRef.current.querySelectorAll(
       `.slide-${currentSlide} .animate-item`,
     );
@@ -116,20 +116,38 @@ export default function FounderNote() {
           duration: 1,
           stagger: 0.1,
           ease: "power3.out",
-          overwrite: true, // Ensure we override any ongoing logic
+          overwrite: true,
         },
       );
     }
+
+    // 2. Adjust Height
+    const activeEl = contentRefs.current[currentSlide];
+    if (activeEl) {
+      setHeight(activeEl.offsetHeight);
+    }
+  }, [currentSlide]);
+
+  // Handle window resize to recalculate height
+  useEffect(() => {
+    const handleResize = () => {
+      const activeEl = contentRefs.current[currentSlide];
+      if (activeEl) {
+        setHeight(activeEl.offsetHeight);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [currentSlide]);
 
   return (
     <section
       ref={containerRef}
-      className="relative w-full py-24 md:py-40 px-6 bg-transparent z-10"
+      className="relative w-full pt-16 pb-10 lg:pt-24 lg:pb-16 px-6 bg-transparent z-10"
     >
       <div className="max-w-7xl mx-auto">
         {/* Top Header */}
-        <div className="text-center mb-4 md:mb-8 founder-reveal">
+        <div className="text-left md:text-center mb-4 md:mb-8 founder-reveal">
           <h2 className="text-4xl md:text-5xl lg:text-7xl font-poppins font-bold text-white leading-[1.1] uppercase tracking-tight">
             {/* Text Split for Animation */}
             <div className="inline-block whitespace-nowrap">
@@ -151,11 +169,17 @@ export default function FounderNote() {
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-14 mb-4 items-center">
           {/* Left: Content Slider */}
-          <div className="order-2 md:order-1 relative min-h-[400px]">
+          <div
+            className="order-2 md:order-1 relative transition-[height] duration-500 ease-out will-change-[height]"
+            style={{ height: height === "auto" ? "auto" : `${height}px` }}
+          >
             {SLIDE_CONTENT.map((slide, index) => (
               <div
+                ref={(el) => {
+                  contentRefs.current[index] = el;
+                }}
                 key={index}
-                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out slide-${index} ${
+                className={`absolute top-0 left-0 w-full transition-opacity duration-1000 ease-in-out slide-${index} ${
                   index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
                 }`}
               >
@@ -170,9 +194,16 @@ export default function FounderNote() {
                   <p className="animate-item text-base md:text-lg text-zinc-300 font-light leading-relaxed font-nohemi">
                     {slide.p1}
                   </p>
-                  <p className="animate-item text-base md:text-lg text-zinc-300 font-light leading-relaxed font-nohemi">
-                    {slide.p2}
-                  </p>
+                  {slide.p2 && (
+                    <p className="animate-item text-base md:text-lg text-zinc-300 font-light leading-relaxed font-nohemi">
+                      {slide.p2}
+                    </p>
+                  )}
+                  {slide.p3 && (
+                    <p className="animate-item text-base md:text-lg text-zinc-300 font-light leading-relaxed font-nohemi">
+                      {slide.p3}
+                    </p>
+                  )}
 
                   {/* Dots Decoration / Indicators */}
                   <div className="flex gap-3 mt-8">
@@ -241,9 +272,6 @@ export default function FounderNote() {
             </div>
           </div>
         </div>
-
-        {/* Testimonials Section (Slider) */}
-        <Testimonials />
       </div>
     </section>
   );

@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import LiquidHeading from "./ui/liquid-text";
 
 // Register generally to capture early
 gsap.registerPlugin(ScrollTrigger, Draggable);
@@ -219,9 +220,15 @@ export default function OurWork() {
         {/* Header */}
         <div className="px-6 lg:px-12 mb-16 flex flex-col lg:flex-row items-start justify-between gap-6">
           <div>
-            <h2 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-2">
+            {/* <h2 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-2">
               Visual <span className="text-pathfinder-green">Impact</span>
-            </h2>
+            </h2> */}
+            <div className="w-full h-max flex items-center justify-center pointer-events-none select-none">
+              <LiquidHeading
+                text="VISUAL IMPACT"
+                videoSrc="https://cdn.pixabay.com/video/2024/05/25/213616_large.mp4"
+              />
+            </div>
             <div className="w-full h-px my-2 bg-linear-to-r from-transparent via-pathfinder-green to-transparent" />
             <p className="text-zinc-400 font-nohemi text-base lg:text-lg max-w-xl">
               Dynamic reels and productions that capture attention.
