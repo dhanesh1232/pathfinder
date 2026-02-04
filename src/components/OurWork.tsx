@@ -85,13 +85,16 @@ const VideoCard = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isInView, setIsInView] = useState(false);
 
-  // Optimize: Only play when in viewport
+  // Optimize: Play when in/near viewport with margin
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsInView(entry.isIntersecting);
       },
-      { threshold: 0.2 }, // 20% visible to start/stop
+      {
+        threshold: 0.1, // Lower threshold
+        rootMargin: "200px", // Preload/Play before entering screen to prevent pausing
+      },
     );
 
     if (containerRef.current) {
@@ -126,7 +129,7 @@ const VideoCard = ({
         muted
         loop
         playsInline
-        preload="none" // Prevent eager loading
+        preload="metadata" // Changed to metadata for smoother start
         className="w-full h-full object-cover transition-all duration-500 opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0"
       />
 
