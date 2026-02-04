@@ -249,6 +249,7 @@ export default function HandSplitHero() {
             autoPlay
             muted
             playsInline
+            preload="auto"
             className="w-full h-full object-cover"
             src="https://ik.imagekit.io/gclqlaadh/pathfinder/PathFinder%20Logo%20animation%20Video_OA2IyTipo.mp4"
             onEnded={() => setVideoFinished(true)}

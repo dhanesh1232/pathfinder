@@ -144,6 +144,7 @@ const VideoCard = ({
         muted={!isPlaying}
         loop
         playsInline
+        preload="none" // Prevent eager loading
         // autoPlay removed, controlled by effect
         className={`w-full h-full object-cover transition-all duration-500 ${
           isPlaying

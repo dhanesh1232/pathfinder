@@ -114,18 +114,18 @@ function VideoItem({ src, className }: { src: string; className?: string }) {
     const video = videoRef.current;
     if (!video) return;
 
-    // Force load immediately
-    video.load();
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const playPromise = video.play();
-            if (playPromise !== undefined) {
-              playPromise.catch(() => {
-                // Auto-play was prevented
-              });
+            // Only play if it's not already playing to avoid interruption logic issues
+            if (video.paused) {
+              const playPromise = video.play();
+              if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                  // Auto-play was prevented
+                });
+              }
             }
           } else {
             video.pause();
@@ -140,7 +140,7 @@ function VideoItem({ src, className }: { src: string; className?: string }) {
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, []); // Src is static constant from parent, so [] is safe and fixes HMR error
+  }, []); // Src is static constant from parent, so [] is safe
 
   return (
     <video
@@ -149,7 +149,7 @@ function VideoItem({ src, className }: { src: string; className?: string }) {
       loop
       muted
       playsInline
-      preload="auto" // Critical: Load the video file immediately
+      preload="none" // Optimization: Only load when requested or played
       className={className}
     />
   );

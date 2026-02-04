@@ -58,6 +58,7 @@ const SlideItem = ({
           muted
           loop
           playsInline
+          preload="none"
         />
       ) : (
         <img
