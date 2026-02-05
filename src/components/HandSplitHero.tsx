@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import GlowLine from "./GlowLine";
+import Image from "next/image";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -234,6 +236,18 @@ export default function HandSplitHero() {
         ">",
       );
 
+      // Reveal CTAs
+      tl.to(
+        ".cta-buttons",
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power2.out",
+        },
+        "-=0.5",
+      );
+
       // Hold & Exit
       tl.to({}, { duration: 0.5 });
       tl.to(
@@ -257,7 +271,7 @@ export default function HandSplitHero() {
     <>
       {/* Video Intro Overlay */}
       {!videoFinished && (
-        <div className="fixed inset-0 z-60 bg-inherit flex items-center justify-center">
+        <div className="fixed inset-0 z-60 bg-black flex items-center justify-center">
           <video
             autoPlay
             muted
@@ -275,11 +289,31 @@ export default function HandSplitHero() {
 
       <section
         ref={containerRef}
-        className={`relative w-full max-w-[5000px] mx-auto h-[200svh] overflow-hidden bg-inherit flex justify-center transition-opacity duration-700 ${
+        className={`relative w-full max-w-[5000px] mx-auto h-[200svh] overflow-hidden bg-black flex justify-center transition-opacity duration-700 ${
           isLoading || !videoFinished ? "opacity-0" : "opacity-100"
         }`}
       >
-        <div className="relative z-10 flex flex-col items-center justify-center w-full h-screen">
+        <div className="relative z-10 flex flex-col items-center justify-center w-full h-screen overflow-hidden">
+          {/* Enhanced Full Screen Background */}
+          <div
+            ref={bgRef}
+            className="absolute inset-0 w-full h-full -z-10 pointer-events-none"
+          >
+            <Image
+              src="/back 1.png"
+              alt="Background"
+              fill
+              priority
+              quality={100}
+              sizes="100vw"
+              className="object-cover"
+            />
+            {/* Premium Overlays */}
+            <div className="absolute inset-0 bg-black/30" />
+            <div className="absolute inset-0 bg-linear-to-b from-black/70 via-transparent to-black/70 opacity-60" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)]" />
+          </div>
+
           {/* Headline Text - Now uses SplitText */}
           <AnimationText textRef={textRef} />
 
@@ -288,33 +322,20 @@ export default function HandSplitHero() {
             ref={startLabelRef}
             className="absolute z-30 flex flex-col items-center justify-center top-[30%] md:top-[25%] lg:top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none mix-blend-difference gap-8"
           >
-            <div className="flex flex-col items-center text-center gap-1">
-              <span className="text-white/90 font-poppins text-xl md:text-2xl tracking-[0.6em] uppercase pl-1">
+            <div className="flex flex-col items-center text-center">
+              <span className="text-white/90 font-poppins text-center text-lg md:text-xl tracking-[0.6em] uppercase pl-1">
                 Start
               </span>
-              <span className="text-white/60 font-poppins text-sm md:text-base tracking-[0.6em] uppercase pl-1">
+              <span className="text-white/60 font-poppins text-center text-sm md:text-base tracking-[0.6em] uppercase pl-1">
                 The
               </span>
-              <h1 className="text-pathfinder-green font-poppins italic text-6xl md:text-8xl tracking-wide leading-none">
+              <h1 className="text-pathfinder-green font-poppins text-center font-extrabold text-6xl md:text-7xl tracking-wide leading-none md:-mt-3">
                 Journey
               </h1>
             </div>
           </div>
 
           <div className="relative z-20 w-full max-w-[5000px] flex items-center justify-center pointer-events-none mt-20">
-            {/* Background Image Behind Hands */}
-            <div
-              ref={bgRef}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full -z-10 pointer-events-none flex items-center justify-center"
-            >
-              <GlowLine
-                variant="curved"
-                orientation="horizontal"
-                color="green"
-                className="w-[80%] h-[50%] md:h-[60%] opacity-80"
-              />
-            </div>
-
             <div className="relative w-1/2 flex justify-end px-4">
               <img
                 ref={leftHandRef}
@@ -357,15 +378,41 @@ function AnimationText({
   return (
     <div
       ref={textRef as React.RefObject<HTMLDivElement>}
-      className="absolute z-10 text-center"
+      className="absolute z-10 text-center flex flex-col items-center gap-10 md:gap-8"
     >
       <h1 className="text-white font-poppins text-4xl md:text-7xl lg:text-8xl min-[1800px]:text-9xl min-[2500px]:text-[10rem] min-[3500px]:text-[13rem] min-[4500px]:text-[16rem] leading-tight font-medium tracking-wide drop-shadow-2xl">
         <SplitText>The Best Path For</SplitText>
         <br />
-        <span className="text-pathfinder-green italic font-semibold font-aalto">
+        <span className="text-pathfinder-green italic font-extrabold font-aalto">
           <SplitText>Your Brand</SplitText>
         </span>
       </h1>
+
+      <div className="cta-buttons opacity-0 translate-y-8 flex items-center gap-2 md:gap-4 pointer-events-auto">
+        <Link
+          href="https://wa.me/919676104199"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative px-6 py-2 md:px-12 md:py-4 bg-white/5 backdrop-blur-md border border-white/10 overflow-hidden transition-all duration-500 hover:border-pathfinder-green/50"
+          style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
+        >
+          <div className="absolute inset-0 bg-white translate-y-full transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) group-hover:translate-y-0" />
+          <span className="relative z-10 text-white group-hover:text-black font-poppins font-bold uppercase text-xs md:text-sm tracking-[0.3em] transition-colors duration-500">
+            Chat With Us
+          </span>
+        </Link>
+
+        <Link
+          href="#contact"
+          className="group relative px-6 py-2 md:px-12 md:py-4 bg-pathfinder-green overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(46,204,113,0.3)]"
+          style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
+        >
+          <div className="absolute inset-0 bg-white -translate-x-full transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) group-hover:translate-x-0" />
+          <span className="relative z-10 text-black font-poppins font-bold uppercase text-xs md:text-sm tracking-[0.3em] transition-colors duration-500">
+            Journey with us
+          </span>
+        </Link>
+      </div>
     </div>
   );
 }

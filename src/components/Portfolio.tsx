@@ -5,6 +5,7 @@ import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
+import LiquidHeading from "./ui/liquid-text";
 
 const ALL_PORTFOLIO_ITEMS = [
   {
@@ -252,7 +253,12 @@ export default function Portfolio() {
       <div className="max-w-7xl mx-auto">
         {/* Header (Floating) */}
         <div ref={headerTextRef} className="text-center mb-16">
-          <TypingHeading className="mb-2" />
+          <div className="w-full h-max flex items-center justify-center pointer-events-none select-none">
+            <LiquidHeading
+              text="SELECTED WORKS"
+              videoSrc="https://cdn.pixabay.com/video/2024/05/25/213616_large.mp4"
+            />
+          </div>
           <p className="text-white/60 font-nohemi text-lg md:text-xl font-light max-w-2xl mx-auto">
             A curation of brands we've helped defined, designed, and elevated.
           </p>

@@ -3,6 +3,12 @@
 import { ArrowRight } from "lucide-react";
 import React, { useRef, useEffect, useState } from "react";
 
+const MARQUEE_LINES = [
+  "At Pathfinder, we deliver end-to-end creative solutions designed to elevate brand value and drive real impact. From crafting strong content scripts that capture attention instantly, to producing high-quality, trend-aware shoots with a clear visual direction, every detail is planned with intention.",
+  "We design unique and creative social media content that reflects brand identity, stands out without noise, and stays visually relevant over time. Our work extends to building clean, modern websites and landing pages that communicate clearly, feel premium, and perform seamlessly across devices.",
+  "Every service we offer is guided by strategy, executed with precision, and delivered with consistency ensuring brands don’t just look good, but move forward with clarity, confidence, and measurable growth",
+];
+
 export default function ContactForm() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
@@ -43,6 +49,7 @@ export default function ContactForm() {
 
   return (
     <section
+      id="contact"
       ref={containerRef}
       className="relative w-full min-h-screen bg-black flex items-center justify-center overflow-hidden py-20"
       style={{ "--x": "50%", "--y": "50%" } as React.CSSProperties}
@@ -79,18 +86,16 @@ export default function ContactForm() {
       <div className="absolute inset-0 z-0 pointer-events-none flex flex-col justify-center h-full w-full overflow-hidden">
         {/* Layer 1: Hidden Text (Base Layout - Black/Invisible) */}
         <div className="absolute inset-0 flex flex-col justify-center gap-10 md:gap-20 select-none w-full opacity-0">
-          {[0, 1, 2].map((i) => (
+          {MARQUEE_LINES.map((line, i) => (
             <div
               key={i}
               className="flex gap-16 animate-marquee whitespace-nowrap w-[200%]"
             >
-              <h2 className="text-[12vw] md:text-[10vw] font-normal leading-none text-black handwritten tracking-wide shrink-0">
-                Let's Create A Bigger Story Together — Let's Create A Bigger
-                Story Together —
+              <h2 className="text-[6vw] md:text-[5vw] font-normal leading-none text-black handwritten tracking-wide shrink-0">
+                {line} — {line} —
               </h2>
-              <h2 className="text-[12vw] md:text-[10vw] font-normal leading-none text-black handwritten tracking-wide shrink-0">
-                Let's Create A Bigger Story Together — Let's Create A Bigger
-                Story Together —
+              <h2 className="text-[6vw] md:text-[5vw] font-normal leading-none text-black handwritten tracking-wide shrink-0">
+                {line} — {line} —
               </h2>
             </div>
           ))}
@@ -114,18 +119,16 @@ export default function ContactForm() {
                 } at var(--x) var(--y), black 10%, transparent 70%)`,
           }}
         >
-          {[0, 1, 2].map((i) => (
+          {MARQUEE_LINES.map((line, i) => (
             <div
               key={i}
               className="flex gap-16 animate-marquee whitespace-nowrap w-[200%]"
             >
-              <h2 className="text-[12vw] md:text-[10vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(255,235,191,0.2)] shrink-0">
-                Let's Create A Bigger Story Together — Let's Create A Bigger
-                Story Together —
+              <h2 className="text-[6vw] md:text-[5vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(255,235,191,0.2)] shrink-0">
+                {line} — {line} —
               </h2>
-              <h2 className="text-[12vw] md:text-[10vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(255,235,191,0.2)] shrink-0">
-                Let's Create A Bigger Story Together — Let's Create A Bigger
-                Story Together —
+              <h2 className="text-[6vw] md:text-[5vw] font-normal leading-none handwritten tracking-wide gold-sparkle-text drop-shadow-[0_0_15px_rgba(255,235,191,0.2)] shrink-0">
+                {line} — {line} —
               </h2>
             </div>
           ))}
