@@ -117,7 +117,7 @@ export default function CTA() {
         className="w-full h-full lg:w-[800px] lg:h-[600px] object-cover"
       >
         <source
-          src="https://res.cloudinary.com/dhzw6k0vc/video/upload/v1770228531/IMG_0271_mjkjdq.mp4"
+          src="https://pub-236715f1b7584858b15e16f74eeaacb8.r2.dev/IMG_0271.MP4"
           type="video/mp4"
         />
       </video>

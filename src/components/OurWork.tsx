@@ -12,6 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import LiquidHeading from "./ui/liquid-text";
+import Link from "next/link";
 
 // Register generally to capture early
 gsap.registerPlugin(ScrollTrigger, Draggable);
@@ -227,6 +228,8 @@ export default function OurWork() {
               <LiquidHeading
                 text="VISUAL IMPACT"
                 videoSrc="https://cdn.pixabay.com/video/2024/05/25/213616_large.mp4"
+                size="120"
+                weight="700"
               />
             </div>
             <div className="w-full h-px my-2 bg-linear-to-r from-transparent via-pathfinder-green to-transparent" />
@@ -235,14 +238,16 @@ export default function OurWork() {
             </p>
           </div>
 
-          <a
-            href="https://www.instagram.com/pathfinder.vizag/"
+          <Link
+            href="https://www.instagram.com/thepathfinder.agency?igsh=cm1tcmVpbzRwZm53&utm_source=qr"
             target="_blank"
-            className="text-sm font-aalto uppercase tracking-widest self-end text-pathfinder-green hover:text-white transition-colors flex items-center gap-2"
+            className="group relative inline-flex items-center self-end gap-3 px-6 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full backdrop-blur-md transition-all duration-300"
           >
-            <span className="nav-link">View Instagram</span>
-            <ArrowUpRight className="w-4 h-4" />
-          </a>
+            <span className="text-white text-sm font-medium tracking-wide uppercase">
+              View Instagram
+            </span>
+            <span className="w-2 h-2 rounded-full bg-pathfinder-green shadow-[0_0_10px_rgba(46,204,113,0.8)] group-hover:scale-125 transition-transform duration-300" />
+          </Link>
         </div>
 
         {/* Infinite Scroller */}

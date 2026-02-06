@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import LiquidHeading from "./ui/liquid-text";
+import { Loader2 } from "lucide-react";
 
 const ALL_PORTFOLIO_ITEMS = [
   {
@@ -147,6 +148,8 @@ export default function Portfolio() {
     ALL_PORTFOLIO_ITEMS.slice(0, 12),
   );
   const [isShuffleActive, setIsShuffleActive] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // Shuffle Logic
   useEffect(() => {
@@ -245,6 +248,38 @@ export default function Portfolio() {
     return () => ctx.revert();
   }, []);
 
+  const handleDownload = async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+
+    const url =
+      "https://pub-236715f1b7584858b15e16f74eeaacb8.r2.dev/PathFinder%20Portfolio%20New.pdf";
+    const filename = "The_Pathfinders_Portfolio.pdf";
+
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+
+      // Success animation trigger
+      setIsSuccess(true);
+      setTimeout(() => setIsSuccess(false), 3000); // Revert after 3s
+    } catch (error) {
+      console.error("Download failed:", error);
+      // Fallback: open in new tab if fetch fails (e.g. CORS issues)
+      window.open(url, "_blank");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <section
       ref={containerRef}
@@ -253,10 +288,12 @@ export default function Portfolio() {
       <div className="max-w-7xl mx-auto">
         {/* Header (Floating) */}
         <div ref={headerTextRef} className="text-center mb-16">
-          <div className="w-full h-max flex items-center justify-center pointer-events-none select-none">
+          <div className="w-full max-w-lg mx-auto h-max flex items-center justify-center pointer-events-none select-none">
             <LiquidHeading
               text="SELECTED WORKS"
               videoSrc="https://cdn.pixabay.com/video/2024/05/25/213616_large.mp4"
+              size="120"
+              weight="700"
             />
           </div>
           <p className="text-white/60 font-nohemi text-lg md:text-xl font-light max-w-2xl mx-auto">
@@ -289,30 +326,101 @@ export default function Portfolio() {
           ))}
         </div>
 
-        {/* Minimal Luxury Download CTA */}
         <div className="mt-12 flex flex-col items-center justify-center">
-          <a
-            href="/portfolio.pdf"
-            download="The_Pathfinders_Portfolio.pdf"
-            className="group cursor-pointer"
+          <style jsx global>{`
+            @keyframes arrow-drop {
+              0% {
+                transform: translateY(-15px);
+                opacity: 0;
+              }
+              30% {
+                opacity: 1;
+              }
+              60% {
+                opacity: 1;
+              }
+              100% {
+                transform: translateY(15px);
+                opacity: 0;
+              }
+            }
+            .animate-arrow-drop {
+              animation: arrow-drop 0.8s infinite linear;
+            }
+            @keyframes check-draw {
+              from {
+                stroke-dashoffset: 30;
+              }
+              to {
+                stroke-dashoffset: 0;
+              }
+            }
+            .animate-check-draw {
+              stroke-dasharray: 30;
+              stroke-dashoffset: 30;
+              animation: check-draw 0.4s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+              animation-delay: 0.1s;
+            }
+            .tray-bounce {
+              transition: transform 0.2s ease;
+            }
+            .fetching .tray-bounce {
+              transform: translateY(2px);
+            }
+          `}</style>
+          <button
+            onClick={handleDownload}
+            disabled={isDownloading || isSuccess}
+            className={`group cursor-pointer bg-transparent border-none p-0 transition-all ${
+              isDownloading ? "opacity-70 cursor-wait fetching" : ""
+            } ${isSuccess ? "cursor-default" : ""}`}
           >
             <ShimmerButton>
-              <div className="flex items-center gap-4 font-aalto font-light uppercase tracking-[0.2em] text-sm">
-                Portfolio
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                  className="w-5 h-5 text-gray-900 group-hover:text-white transition-colors"
-                >
-                  <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
-                  <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
-                </svg>
+              <div className="flex items-center gap-4 font-aalto font-light uppercase tracking-[0.2em] text-sm text-gray-900 group-hover:text-white transition-colors">
+                {isDownloading
+                  ? "Downloading..."
+                  : isSuccess
+                    ? "Downloaded"
+                    : "Portfolio"}
+
+                <div className="relative w-6 h-6 flex items-center justify-center overflow-hidden">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-full h-full"
+                  >
+                    {!isSuccess && (
+                      <>
+                        {/* The Bottom Line/Tray */}
+                        <path d="M4 20h16" className="tray-bounce opacity-50" />
+
+                        {/* The Arrow */}
+                        <g
+                          className={isDownloading ? "animate-arrow-drop" : ""}
+                        >
+                          <path d="M12 3v13" />
+                          <path d="m7 11 5 5 5-5" />
+                        </g>
+                      </>
+                    )}
+
+                    {isSuccess && (
+                      <path
+                        d="m5 12 5 5L20 7"
+                        className="animate-check-draw text-white"
+                      />
+                    )}
+                  </svg>
+                </div>
               </div>
             </ShimmerButton>
-          </a>
+          </button>
         </div>
       </div>
     </section>

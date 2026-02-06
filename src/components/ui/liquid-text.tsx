@@ -1,20 +1,27 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useId } from "react";
 import gsap from "gsap";
 
 interface LiquidHeadingProps {
   text?: string;
   videoSrc?: string;
   className?: string;
+  size?: string | number;
+  weight?: string | number;
 }
 
 export default function LiquidHeading({
   text = "VISUAL IMPACT",
   videoSrc = "https://cdn.pixabay.com/video/2024/05/25/213616_large.mp4",
   className = "",
+  size = "120",
+  weight = "700",
 }: LiquidHeadingProps) {
   const turbulence = useRef<SVGFETurbulenceElement>(null);
+  const id = useId();
+  const filterId = `liquid-filter-${id.replace(/:/g, "")}`;
+  const maskId = `text-mask-${id.replace(/:/g, "")}`;
 
   useEffect(() => {
     if (!turbulence.current) return;
@@ -42,7 +49,7 @@ export default function LiquidHeading({
       >
         <defs>
           {/* Liquid Distortion Filter */}
-          <filter id="liquid-filter">
+          <filter id={filterId}>
             <feTurbulence
               ref={turbulence}
               type="fractalNoise"
@@ -61,17 +68,17 @@ export default function LiquidHeading({
           </filter>
 
           {/* Mask: Text with Liquid Filter applied */}
-          <mask id="text-mask">
+          <mask id={maskId}>
             <rect x="0" y="0" width="100%" height="100%" fill="black" />
             <text
               x="50%"
               y="50%"
               dominantBaseline="middle"
               textAnchor="middle"
-              fontSize="120"
-              fontWeight="700"
+              fontSize={size.toString()}
+              fontWeight={weight.toString()}
               fill="white"
-              filter="url(#liquid-filter)"
+              filter={`url(#${filterId})`}
               style={{ fontFamily: "'Poppins', sans-serif" }} // Ensure font matches
             >
               {text}
@@ -85,8 +92,11 @@ export default function LiquidHeading({
           y="0"
           width="1000"
           height="200"
-          mask="url(#text-mask)"
-          style={{ mask: "url(#text-mask)", WebkitMask: "url(#text-mask)" }} // Webkit support
+          mask={`url(#${maskId})`}
+          style={{
+            mask: `url(#${maskId})`,
+            WebkitMask: `url(#${maskId})`,
+          }} // Webkit support
         >
           <div className="w-full h-full">
             <video

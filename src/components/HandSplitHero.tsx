@@ -383,7 +383,7 @@ function AnimationText({
       <h1 className="text-white font-poppins text-4xl md:text-7xl lg:text-8xl min-[1800px]:text-9xl min-[2500px]:text-[10rem] min-[3500px]:text-[13rem] min-[4500px]:text-[16rem] leading-tight font-medium tracking-wide drop-shadow-2xl">
         <SplitText>The Best Path For</SplitText>
         <br />
-        <span className="text-pathfinder-green italic font-extrabold font-aalto">
+        <span className="text-pathfinder-green font-extrabold font-poppins">
           <SplitText>Your Brand</SplitText>
         </span>
       </h1>
