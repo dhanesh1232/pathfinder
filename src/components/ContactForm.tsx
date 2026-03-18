@@ -1,7 +1,10 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2, Sparkles, CheckCircle2 } from "lucide-react";
 import React, { useRef, useEffect, useState } from "react";
+import { submitContactForm } from "@/app/actions/contact";
+import toast from "react-hot-toast";
+import { motion, AnimatePresence } from "framer-motion";
 
 const MARQUEE_LINES = [
   "At Pathfinder, we deliver end-to-end creative solutions designed to elevate brand value and drive real impact. From crafting strong content scripts that capture attention instantly, to producing high-quality, trend-aware shoots with a clear visual direction, every detail is planned with intention.",
@@ -12,14 +15,15 @@ const MARQUEE_LINES = [
 export default function ContactForm() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
-
+  const [isPending, setIsPending] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [messageLength, setMessageLength] = useState(0);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    // Mobile Check
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -46,6 +50,27 @@ export default function ContactForm() {
       el.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
+
+  const handleSubmit = async (formData: FormData) => {
+    setIsPending(true);
+    const res = await submitContactForm(formData);
+
+    // Artificial delay for animation feel
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    setIsPending(false);
+    if (res.error) {
+      toast.error(res.error);
+    } else {
+      setIsSuccess(true);
+      toast.success(res.message || "Message sent!");
+      (document.getElementById("contact-form") as HTMLFormElement)?.reset();
+      setMessageLength(0);
+
+      // Reset success state after 5 seconds
+      setTimeout(() => setIsSuccess(false), 5000);
+    }
+  };
 
   return (
     <section
@@ -79,12 +104,16 @@ export default function ContactForm() {
           .animate-marquee {
             animation: marquee 30s linear infinite;
           }
+          select option {
+            background-color: #000;
+            color: #fff;
+            padding: 10px;
+          }
         `}
       </style>
 
       {/* Background Text Layers (Marquee) */}
       <div className="absolute inset-0 z-0 pointer-events-none flex flex-col justify-center h-full w-full overflow-hidden">
-        {/* Layer 1: Hidden Text (Base Layout - Black/Invisible) */}
         <div className="absolute inset-0 flex flex-col justify-center gap-10 md:gap-20 select-none w-full opacity-0">
           {MARQUEE_LINES.map((line, i) => (
             <div
@@ -101,7 +130,6 @@ export default function ContactForm() {
           ))}
         </div>
 
-        {/* Layer 2: Reveal Text (Gradient) - Soft Mask Reveal */}
         <div
           className={`absolute inset-0 flex flex-col justify-center gap-10 md:gap-20 select-none h-full w-full pointer-events-none transition-opacity duration-300 ${
             isMobile ? "opacity-30" : ""
@@ -160,12 +188,30 @@ export default function ContactForm() {
 
         {/* Form Box */}
         <div className="border border-white/10 p-8 md:p-12 backdrop-blur-md bg-black/60 shadow-2xl">
-          <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+          <form
+            className="space-y-8"
+            action={async (formData) => {
+              setIsPending(true);
+              const res = await submitContactForm(formData);
+              setIsPending(false);
+              if (res.error) {
+                toast.error(res.error);
+              } else {
+                toast.success(res.message || "Message sent!");
+                (
+                  document.getElementById("contact-form") as HTMLFormElement
+                )?.reset();
+              }
+            }}
+            id="contact-form"
+          >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Name */}
               <div className="space-y-2 group">
                 <input
                   type="text"
+                  name="name"
+                  required
                   placeholder="Name"
                   className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
                 />
@@ -174,6 +220,8 @@ export default function ContactForm() {
               <div className="space-y-2 group">
                 <input
                   type="email"
+                  name="email"
+                  required
                   placeholder="Email"
                   className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
                 />
@@ -182,6 +230,8 @@ export default function ContactForm() {
               <div className="space-y-2 group">
                 <input
                   type="tel"
+                  name="phone"
+                  required
                   placeholder="Phone"
                   className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
                 />
@@ -192,12 +242,22 @@ export default function ContactForm() {
               {/* How did you find us */}
               <div className="space-y-2 relative group">
                 <div className="relative">
-                  <select className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none appearance-none transition-colors text-lg">
-                    <option className="bg-black">How did you find us?</option>
-                    <option className="bg-black text-white">
+                  <select
+                    name="source"
+                    className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none appearance-none transition-colors text-lg"
+                  >
+                    <option className="bg-black" value="">
+                      How did you find us?
+                    </option>
+                    <option
+                      className="bg-black text-white"
+                      value="Social Media"
+                    >
                       Social Media
                     </option>
-                    <option className="bg-black text-white">Referral</option>
+                    <option className="bg-black text-white" value="Referral">
+                      Referral
+                    </option>
                   </select>
                   <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-[#D4AF37]">
                     <svg
@@ -219,6 +279,7 @@ export default function ContactForm() {
               <div className="space-y-2 group">
                 <input
                   type="text"
+                  name="website"
                   placeholder="What's your website?"
                   className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none transition-colors placeholder:text-zinc-500 text-lg"
                 />
@@ -228,6 +289,8 @@ export default function ContactForm() {
             {/* Message */}
             <div className="space-y-2 group">
               <textarea
+                name="message"
+                required
                 rows={1}
                 placeholder="How can we help?"
                 className="w-full bg-transparent border-b border-white/20 px-0 py-4 text-white focus:border-pathfinder-green focus:outline-none transition-colors resize-none placeholder:text-zinc-500 text-lg min-h-[60px]"
@@ -238,12 +301,20 @@ export default function ContactForm() {
             <div className="pt-8 flex items-center gap-4">
               <button
                 type="submit"
-                className="bg-white text-black hover:bg-pathfinder-green transition-all ease-in-out duration-300 hover:text-white px-10 py-4 font-bold uppercase text-sm tracking-wider relative"
+                disabled={isPending}
+                className="bg-white text-black hover:bg-pathfinder-green transition-all ease-in-out duration-300 hover:text-white px-10 py-4 font-bold uppercase text-sm tracking-wider relative disabled:opacity-50 disabled:cursor-not-allowed min-w-[160px]"
                 style={{
                   clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)",
                 }}
               >
-                Submit
+                {isPending ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Sending...
+                  </span>
+                ) : (
+                  "Submit"
+                )}
               </button>
               <button
                 type="button"

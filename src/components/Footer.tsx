@@ -57,18 +57,21 @@ export default function Footer() {
           <div className="flex gap-8 mb-4 md:mb-0">
             <Link
               href="#"
+              aria-label="Follow The Pathfinders on LinkedIn"
               className="nav-link hover:text-pathfinder-green transition-colors"
             >
               LinkedIn
             </Link>
             <Link
               href="#"
+              aria-label="Follow The Pathfinders on Instagram"
               className="nav-link hover:text-pathfinder-green transition-colors"
             >
               Instagram
             </Link>
             <Link
               href="#"
+              aria-label="Follow The Pathfinders on Twitter"
               className="nav-link hover:text-pathfinder-green transition-colors"
             >
               Twitter
@@ -78,7 +81,7 @@ export default function Footer() {
           <div className="text-zinc-600">
             Developed by{" "}
             <Link
-              href="https://services.ecodrix.com"
+              href="https://ecodrix.com"
               target="_blank"
               className="nav-link transition-colors"
             >

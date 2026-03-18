@@ -13,7 +13,9 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { Quote } from "lucide-react";
+import { getTestimonials } from "@/app/actions/content";
 
+// --- Fallback Testimonials ---
 const TESTIMONIALS_DATA = [
   {
     text: "Pathfinder didn't just design our brand—they helped us find clarity and confidence in how we present ourselves.",
@@ -54,6 +56,19 @@ export function Testimonials() {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const dbItems = await getTestimonials();
+      if (dbItems && dbItems.length > 0) {
+        setTestimonials(dbItems);
+      } else {
+        setTestimonials(TESTIMONIALS_DATA);
+      }
+    };
+    fetchItems();
+  }, []);
 
   useEffect(() => {
     // Scroll Reveal Animation (Targeting the container itself)
@@ -175,7 +190,7 @@ export function Testimonials() {
                 style={{ height: height === "auto" ? "auto" : `${height}px` }}
               >
                 <CarouselContent className="-ml-4 items-start">
-                  {TESTIMONIALS_DATA.map((t, i) => (
+                  {testimonials.map((t, i) => (
                     <CarouselItem
                       key={i}
                       className="pl-4 basis-full md:basis-1/2 lg:basis-1/3 min-w-[1500px]:basis-1/4"

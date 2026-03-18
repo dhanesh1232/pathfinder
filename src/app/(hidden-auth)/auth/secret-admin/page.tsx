@@ -1,15 +1,17 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { login } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Icons } from "@/components/icons/icons";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [state, action, isPending] = useActionState(login, undefined);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-zinc-950 font-sans selection:bg-emerald-500/30">
@@ -72,11 +74,22 @@ export default function LoginPage() {
                 <Input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   required
-                  className="h-11 border-zinc-800 bg-black/40 pl-4 text-zinc-300 transition-all focus:border-emerald-500/50 focus:bg-zinc-900 focus:ring-emerald-500/20"
+                  className="h-11 border-zinc-800 bg-black/40 pl-4 pr-10 text-zinc-300 transition-all focus:border-emerald-500/50 focus:bg-zinc-900 focus:ring-emerald-500/20"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors"
+                >
+                  {showPassword ? (
+                    <Icons.eyeOff className="h-4 w-4" />
+                  ) : (
+                    <Icons.eye className="h-4 w-4" />
+                  )}
+                </button>
               </div>
             </div>
 
@@ -101,8 +114,12 @@ export default function LoginPage() {
               {isPending ? "Authenticating..." : "Sign In"}
             </Button>
           </form>
-
-          <div className="mt-6 flex items-center justify-center gap-2 text-xs text-zinc-600">
+          <span className="text-center w-full flex justify-center mt-4">
+            <Link href="/auth/none-register" className="hover:text-emerald-500">
+              Register
+            </Link>
+          </span>
+          <div className="mt-2 flex items-center justify-center gap-2 text-xs text-zinc-600">
             <Icons.lock className="h-3 w-3" />
             <span>256-bit Secure Session</span>
           </div>

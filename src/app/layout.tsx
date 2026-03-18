@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google"; // Import Poppins
 import { Providers } from "@/app/providers";
 import { UseResizeReload } from "@/components/ResizeReload";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -102,6 +103,14 @@ export default function RootLayout({
         <main className="h-full w-full">
           <Providers>
             {children}
+            <Toaster position="bottom-right" toastOptions={{
+              style: {
+                background: '#18181b',
+                color: '#fff',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '12px'
+              }
+            }} />
             <UseResizeReload />
           </Providers>
         </main>

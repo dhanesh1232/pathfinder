@@ -3,7 +3,8 @@ import {
   Lock,
   ShieldCheck,
   UserPlus,
-  // Add others as needed
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 export const Icons = {
@@ -11,4 +12,6 @@ export const Icons = {
   lock: Lock,
   shieldCheck: ShieldCheck,
   userPlus: UserPlus,
+  eye: Eye,
+  eyeOff: EyeOff,
 };

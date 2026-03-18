@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -135,7 +133,6 @@ body::-webkit-scrollbar-thumb:hover,
   --sidebar-ring: oklch(1 0 0);
 }
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -190,4 +187,22 @@ body::-webkit-scrollbar-thumb:hover,
   /* Overridden inline */
   width: 0;
   /* ensure start at 0 */
+}
+
+@layer base {
+  .font-poppins {
+    font-family: var(--font-poppins), sans-serif;
+  }
+
+  .font-aalto {
+    font-family: "Aalto", sans-serif;
+  }
+
+  /* Admin Header Font Overrides */
+  .admin-panel h1,
+  .admin-panel h2,
+  .admin-panel h3,
+  .admin-panel .font-display {
+    font-family: "Aalto", sans-serif;
+  }
 }

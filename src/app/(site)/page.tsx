@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import HandSplitHero from "@/components/HandSplitHero";
 import ParallaxTeam from "@/components/ParallaxTeam";
 import TrustedBy from "@/components/TrustedBy";
@@ -14,6 +15,20 @@ import WaveReveal from "@/components/WaveReveal";
 import OurWork from "@/components/OurWork";
 import TextMarquee from "@/components/TextMarquee";
 import { Testimonials } from "@/components/Testimonials";
+
+export const metadata: Metadata = {
+  title: "The Pathfinders | Elite Creative Agency & Branding Studio",
+  description:
+    "Transform your brand with The Pathfinders. We specialize in high-impact branding, digital experiences, and strategic growth for forward-thinking companies.",
+  keywords: [
+    "creative agency",
+    "branding agency",
+    "digital strategy",
+    "web design",
+    "pathfinders",
+    "marketing studio",
+  ],
+};
 
 export default function Home() {
   return (

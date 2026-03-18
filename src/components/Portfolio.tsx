@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import LiquidHeading from "./ui/liquid-text";
 import { Loader2 } from "lucide-react";
+import { getPortfolioItems } from "@/app/actions/content";
 
 const ALL_PORTFOLIO_ITEMS = [
   {
@@ -144,12 +145,28 @@ const TypingHeading = ({ className }: { className?: string }) => {
 export default function Portfolio() {
   const containerRef = useRef<HTMLDivElement>(null);
   const headerTextRef = useRef<HTMLDivElement>(null);
-  const [displayedItems, setDisplayedItems] = useState(
-    ALL_PORTFOLIO_ITEMS.slice(0, 12),
-  );
+  const [displayedItems, setDisplayedItems] = useState<any[]>([]);
+  const [allPortfolioItems, setAllPortfolioItems] = useState(ALL_PORTFOLIO_ITEMS);
   const [isShuffleActive, setIsShuffleActive] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const dbItems = await getPortfolioItems();
+      if (dbItems && dbItems.length > 0) {
+        const formatted = dbItems.map((item: any) => ({
+          src: item.imageUrl,
+          alt: item.title,
+        }));
+        setAllPortfolioItems(formatted);
+        setDisplayedItems(formatted.slice(0, 12));
+      } else {
+        setDisplayedItems(ALL_PORTFOLIO_ITEMS.slice(0, 12));
+      }
+    };
+    fetchItems();
+  }, []);
 
   // Shuffle Logic
   useEffect(() => {
@@ -173,8 +190,8 @@ export default function Portfolio() {
             const newItems = [...prev];
             // Pick a random image from ALL items
             let newItem =
-              ALL_PORTFOLIO_ITEMS[
-                Math.floor(Math.random() * ALL_PORTFOLIO_ITEMS.length)
+              allPortfolioItems[
+                Math.floor(Math.random() * allPortfolioItems.length)
               ];
             newItems[indexToSwap] = newItem;
             return newItems;

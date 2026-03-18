@@ -37,7 +37,7 @@ export async function register(prevState: any, formData: FormData) {
     console.error("Registration error:", error);
     return { error: "Something went wrong during registration." };
   }
-  redirect("/auth/auth/secret-admin");
+  redirect("/auth/secret-admin");
 }
 
 export async function login(prevState: any, formData: FormData) {

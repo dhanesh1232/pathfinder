@@ -1,6 +1,8 @@
 "use client";
 
 import Logomarquee from "./Marquee";
+import { useEffect, useState } from "react";
+import { getLogos } from "@/app/actions/content";
 
 // Actual logo filenames from /public/Website logo
 const RAW_LOGOS = [
@@ -44,9 +46,24 @@ const RAW_LOGOS = [
 ];
 
 // Duplicate logos to create a seamless infinite loop with enough items
-const LOGOS = [...RAW_LOGOS, ...RAW_LOGOS, ...RAW_LOGOS];
+const DEFAULT_LOGOS = [...RAW_LOGOS, ...RAW_LOGOS, ...RAW_LOGOS];
 
 export default function TrustedBy() {
+  const [logos, setLogos] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchLogos = async () => {
+      const dbLogos = await getLogos();
+      if (dbLogos && dbLogos.length > 0) {
+        const urls = dbLogos.map((l: any) => l.imageUrl);
+        setLogos([...urls, ...urls, ...urls]);
+      } else {
+        setLogos(DEFAULT_LOGOS);
+      }
+    };
+    fetchLogos();
+  }, []);
+
   return (
     <section className="w-full py-24 bg-black overflow-hidden">
       <h1 className="text-white text-center text-2xl md:text-3xl mb-14 font-poppins">
@@ -57,7 +74,7 @@ export default function TrustedBy() {
         {/* Gradient Overlays */}
         <div className="absolute left-0 top-0 bottom-0 w-32 md:w-72 bg-linear-to-r from-black via-black/80 to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-32 md:w-72 bg-linear-to-l from-black via-black/80 to-transparent z-10 pointer-events-none" />
-        <Logomarquee logos2={LOGOS} logos1={LOGOS} />
+        <Logomarquee logos2={logos} logos1={logos} />
       </div>
     </section>
   );

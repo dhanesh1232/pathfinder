@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import LiquidHeading from "./ui/liquid-text";
 import Link from "next/link";
+import { getOurWorkItems } from "@/app/actions/content";
 
 // Register generally to capture early
 gsap.registerPlugin(ScrollTrigger, Draggable);
@@ -153,9 +154,29 @@ export default function OurWork() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const marqueeTween = useRef<gsap.core.Tween | null>(null);
 
+  const [workItems, setWorkItems] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const dbItems = await getOurWorkItems();
+      if (dbItems && dbItems.length > 0) {
+        const formatted = dbItems.map((item: any) => ({
+          id: item._id,
+          src: item.videoUrl,
+          title: item.title,
+          category: item.category || "Reel",
+        }));
+        setWorkItems(formatted);
+      } else {
+        setWorkItems(WORK_ITEMS);
+      }
+    };
+    fetchItems();
+  }, []);
+
   useEffect(() => {
     // Marquee Effect
-    if (scrollerRef.current) {
+    if (scrollerRef.current && workItems.length > 0) {
       const scrollerContent = scrollerRef.current;
 
       marqueeTween.current = gsap.to(scrollerContent, {
@@ -254,7 +275,7 @@ export default function OurWork() {
         <div className="flex w-full overflow-hidden relative">
           <div ref={scrollerRef} className="flex gap-4 md:gap-8 px-4 w-max">
             {/* Render Double for Loop */}
-            {[...WORK_ITEMS, ...WORK_ITEMS].map((item, index) => {
+            {[...workItems, ...workItems].map((item, index) => {
               const uniqueId = `${item.id}-${index}`;
               return (
                 <VideoCard
