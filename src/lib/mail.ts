@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 const smtpConfig = {
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT || "587"),
+  secure: process.env.SMTP_PORT === "465", // Use SSL for 465, STARTTLS for 587
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
@@ -13,7 +14,7 @@ const transporter = nodemailer.createTransport(smtpConfig);
 
 export const sendThankYouEmail = async (to: string, name: string) => {
   const mailOptions = {
-    from: `${process.env.SMTP_FROM} <${process.env.SMTP_USER}>`,
+    from: `${process.env.SMTP_FROM}`,
     to,
     subject: "Thank You for Reaching Out to Pathfinders",
     html: `

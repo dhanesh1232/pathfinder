@@ -33,8 +33,8 @@ export async function submitContactForm(formData: FormData) {
       budget,
     });
 
-    // Send thank you email asynchronously
-    sendThankYouEmail(email, name);
+    // Send thank you email
+    await sendThankYouEmail(email, name);
 
     revalidatePath("/admin/contacts");
 
