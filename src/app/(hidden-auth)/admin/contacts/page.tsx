@@ -8,6 +8,7 @@ import {
   updateSubmissionStatus,
   updateSubmissionPriority,
   createManualLead,
+  bulkDeleteSubmissions,
 } from "@/app/actions/contact";
 import {
   Trash2,
@@ -27,6 +28,7 @@ import {
   ChevronRight,
   Filter,
   MoreVertical,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -93,6 +95,7 @@ export default function ContactsPage() {
     status: "In Progress",
     priority: "Medium",
   });
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   const fetchSubmissions = async () => {
     setLoading(true);
@@ -134,8 +137,44 @@ export default function ContactsPage() {
     if (res.success) {
       toast.success("Record purged");
       setSelectedInquiry(null);
+      setSelectedIds((prev) => prev.filter((item) => item !== id));
       fetchSubmissions();
     }
+  };
+
+  const handleBulkDelete = async () => {
+    if (
+      !confirm(
+        `Are you sure you want to purge ${selectedIds.length} records? This cannot be undone.`,
+      )
+    )
+      return;
+    const res = await bulkDeleteSubmissions(selectedIds);
+    if (res.success) {
+      toast.success(`${selectedIds.length} records purged`);
+      setSelectedIds([]);
+      if (selectedInquiry && selectedIds.includes(selectedInquiry._id)) {
+        setSelectedInquiry(null);
+      }
+      fetchSubmissions();
+    } else {
+      toast.error(res.error || "Bulk delete failed");
+    }
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === filteredSubmissions.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredSubmissions.map((s) => s._id));
+    }
+  };
+
+  const toggleSelect = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
   };
 
   const handleCreateLead = async (e: React.FormEvent) => {
@@ -383,14 +422,36 @@ export default function ContactsPage() {
         </AdminPageHeader>
 
         <div className="py-2 flex items-center justify-between gap-4 bg-zinc-950/20">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-600" />
-            <Input
-              placeholder="Search by name, email or message..."
-              className="bg-zinc-900/30 border-zinc-800 rounded-lg pl-10 h-10 text-sm focus:ring-pathfinder-green/20"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+          <div className="flex items-center gap-3">
+            <div
+              onClick={toggleSelectAll}
+              className={`w-5 h-5 rounded border flex items-center justify-center cursor-pointer transition-all ${
+                selectedIds.length > 0 &&
+                selectedIds.length === filteredSubmissions.length
+                  ? "bg-pathfinder-green border-pathfinder-green"
+                  : selectedIds.length > 0
+                    ? "bg-pathfinder-green/20 border-pathfinder-green/50"
+                    : "border-zinc-800 hover:border-zinc-700"
+              }`}
+            >
+              {selectedIds.length > 0 &&
+                selectedIds.length === filteredSubmissions.length && (
+                  <div className="w-1.5 h-1.5 rounded-full bg-black" />
+                )}
+              {selectedIds.length > 0 &&
+                selectedIds.length < filteredSubmissions.length && (
+                  <div className="w-2 h-0.5 rounded-full bg-pathfinder-green" />
+                )}
+            </div>
+            <div className="relative flex-1 min-w-[300px] max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-600" />
+              <Input
+                placeholder="Search by name, email or message..."
+                className="bg-zinc-900/30 border-zinc-800 rounded-lg pl-10 h-10 text-sm focus:ring-pathfinder-green/20"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
@@ -452,7 +513,20 @@ export default function ContactsPage() {
                     : "bg-zinc-900/10 border-zinc-800/30 hover:bg-zinc-800/20 hover:border-zinc-800"
                 }`}
               >
-                <div className="shrink-0">
+                <div
+                  onClick={(e) => toggleSelect(e, sub._id)}
+                  className={`shrink-0 w-5 h-5 rounded border flex items-center justify-center transition-all ${
+                    selectedIds.includes(sub._id)
+                      ? "bg-pathfinder-green border-pathfinder-green"
+                      : "border-zinc-800 group-hover:border-zinc-700"
+                  }`}
+                >
+                  {selectedIds.includes(sub._id) && (
+                    <div className="w-1.5 h-1.5 rounded-full bg-black" />
+                  )}
+                </div>
+
+                <div className="shrink-0 ml-2">
                   <Avatar className="h-10 w-10 border border-zinc-900">
                     <AvatarFallback className="bg-zinc-900 text-zinc-500 font-bold text-xs uppercase">
                       {sub.name[0]}
@@ -472,6 +546,17 @@ export default function ContactsPage() {
                   <p className="text-[10px] text-zinc-500 font-medium truncate">
                     {sub.email}
                   </p>
+                </div>
+
+                {/* Email Status Indicator */}
+                <div className="shrink-0 flex items-center justify-center w-8">
+                  {sub.emailSent ? (
+                    <Mail className="h-3 w-3 text-pathfinder-green" />
+                  ) : sub.emailError ? (
+                    <AlertTriangle className="h-3 w-3 text-red-500" />
+                  ) : (
+                    <Mail className="h-3 w-3 text-zinc-800 opacity-20" />
+                  )}
                 </div>
 
                 <div className="hidden md:flex flex-col items-end gap-1.5">
@@ -500,6 +585,46 @@ export default function ContactsPage() {
             </div>
           )}
         </div>
+
+        {/* Bulk Action Bar */}
+        <AnimatePresence>
+          {selectedIds.length > 0 && (
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 20, opacity: 0 }}
+              className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-zinc-900 border border-zinc-800 rounded-full shadow-2xl flex items-center gap-6"
+            >
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-pathfinder-green text-black flex items-center justify-center text-[10px] font-bold">
+                  {selectedIds.length}
+                </span>
+                <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                  Selected
+                </span>
+              </div>
+              <Separator orientation="vertical" className="h-4 bg-zinc-800" />
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedIds([])}
+                  className="h-8 text-[10px] uppercase font-bold tracking-widest text-zinc-500 hover:text-white"
+                >
+                  Deselect
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleBulkDelete}
+                  className="h-8 text-[10px] uppercase font-bold tracking-widest text-red-500 hover:bg-red-500/10"
+                >
+                  <Trash2 className="w-3.5 h-3.5 mr-2" /> Delete Selected
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Detail Sidebar */}
@@ -717,6 +842,45 @@ export default function ContactsPage() {
                   <p className="text-sm text-zinc-400 leading-relaxed italic">
                     "{selectedInquiry.message}"
                   </p>
+                </div>
+              </div>
+
+              {/* Email Protocol Status */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-pathfinder-green opacity-40" />
+                  <h4 className="text-[10px] font-bold text-zinc-700 uppercase tracking-[0.3em]">
+                    Greeting Protocol
+                  </h4>
+                </div>
+                <div
+                  className={`p-4 rounded-lg border flex flex-col gap-2 ${selectedInquiry.emailSent ? "bg-emerald-500/5 border-emerald-500/10" : selectedInquiry.emailError ? "bg-red-500/5 border-red-500/10" : "bg-zinc-900/20 border-zinc-800/50"}`}
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">
+                      Transmission Status
+                    </p>
+                    <Badge
+                      variant="outline"
+                      className={`text-[8px] font-bold uppercase tracking-widest px-2 py-0 ${selectedInquiry.emailSent ? "text-emerald-500 border-emerald-500/20" : selectedInquiry.emailError ? "text-red-500 border-red-500/20" : "text-zinc-500 border-zinc-800"}`}
+                    >
+                      {selectedInquiry.emailSent
+                        ? "Confirmed"
+                        : selectedInquiry.emailError
+                          ? "Failed"
+                          : "Pending / Manual"}
+                    </Badge>
+                  </div>
+                  {selectedInquiry.emailError && (
+                    <div className="pt-2 border-t border-red-500/10">
+                      <p className="text-[8px] font-bold text-red-500/50 uppercase tracking-widest mb-1">
+                        Error Response
+                      </p>
+                      <p className="text-[10px] text-red-400 font-medium leading-relaxed italic">
+                        {selectedInquiry.emailError}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
 

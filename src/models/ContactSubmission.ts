@@ -12,6 +12,8 @@ export interface IContactSubmission extends Document {
   status: "New" | "In Progress" | "Closed" | "Junk";
   priority: "Low" | "Medium" | "High";
   isRead: boolean;
+  emailSent: boolean;
+  emailError?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -69,6 +71,14 @@ const contactSubmissionSchema = new mongoose.Schema<IContactSubmission>(
     isRead: {
       type: Boolean,
       default: false,
+    },
+    emailSent: {
+      type: Boolean,
+      default: false,
+    },
+    emailError: {
+      type: String,
+      trim: true,
     },
   },
   {

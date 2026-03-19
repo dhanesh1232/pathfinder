@@ -14,7 +14,10 @@ const transporter = nodemailer.createTransport(smtpConfig);
 
 export const sendThankYouEmail = async (to: string, name: string) => {
   const mailOptions = {
-    from: `${process.env.SMTP_FROM}`,
+    from: {
+      name: "The Pathfinders Agency",
+      address: process.env.SMTP_USER || "support@ecodrix.com",
+    },
     to,
     subject: "Thank You for Reaching Out to Pathfinders",
     html: `
@@ -78,10 +81,19 @@ export const sendThankYouEmail = async (to: string, name: string) => {
   };
 
   try {
-    await transporter.sendMail(mailOptions);
-    console.log(`Thank you email sent to ${to}`);
-  } catch (error) {
-    console.error("Error sending email:", error);
-    // Don't throw, we don't want to break the submission flow if email fails
+    const info = await transporter.sendMail(mailOptions);
+    console.log(
+      `Thank you email sent successfully to ${to}: ${info.messageId}`,
+    );
+    return info;
+  } catch (error: any) {
+    console.error("Detailed SMTP Error:", {
+      message: error.message,
+      code: error.code,
+      response: error.response,
+      responseCode: error.responseCode,
+      command: error.command,
+    });
+    throw error; // Rethrow to let the API caller (route.ts) catch it and update the DB
   }
 };

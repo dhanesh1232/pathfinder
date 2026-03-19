@@ -154,38 +154,41 @@ export default function GlobalNav() {
           {/* Hamburger (Mobile) */}
           <button
             onClick={toggleMenu}
-            className="flex flex-col gap-1.5 md:hidden z-50 group cursor-pointer focus-visible:outline-none focus-visible:ring-0 ring-0 outline-none"
+            className="md:hidden relative w-[22px] h-[22px] z-50 group cursor-pointer focus-visible:outline-none focus-visible:ring-0 ring-0 outline-none"
             aria-label="Toggle Menu"
           >
-            {[1, 2, 3].map((_, i) => {
-              const rotate = isMobileMenuOpen
-                ? i == 0
-                  ? "rotate-45"
-                  : i == 2
-                    ? "-rotate-45"
-                    : ""
-                : "";
-              const translate = isMobileMenuOpen
-                ? i == 0
-                  ? "translate-y-2"
-                  : i == 2
-                    ? "-translate-y-2"
-                    : i == 1
-                      ? "translate-x-100"
-                      : ""
-                : "";
-              const opacity = isMobileMenuOpen
-                ? i == 1
-                  ? "opacity-0"
-                  : ""
-                : "";
-              return (
-                <span
-                  key={i}
-                  className={`w-8 h-0.5 bg-linear-to-r from-[#B801B8] to-[#6A0D6B] transition-transform duration-300 ${rotate} ${opacity} ${translate}`}
-                ></span>
-              );
-            })}
+            {/* Top Left -> Bottom Right */}
+            <div
+              className={`absolute top-0 left-0 w-1.5 h-1.5 rounded-full transition-all duration-500 ease-in-out ${
+                isMobileMenuOpen 
+                  ? "translate-x-2 translate-y-2 bg-pathfinder-green" 
+                  : "bg-white"
+              }`}
+            />
+            {/* Top Right -> Bottom Left */}
+            <div
+              className={`absolute top-0 right-0 w-1.5 h-1.5 rounded-full transition-all duration-500 ease-in-out ${
+                isMobileMenuOpen 
+                  ? "-translate-x-2 translate-y-2 bg-pathfinder-green" 
+                  : "bg-white"
+              }`}
+            />
+            {/* Bottom Left -> Top Right */}
+            <div
+              className={`absolute bottom-0 left-0 w-1.5 h-1.5 rounded-full transition-all duration-500 ease-in-out ${
+                isMobileMenuOpen 
+                  ? "translate-x-2 -translate-y-2 bg-pathfinder-green" 
+                  : "bg-white"
+              }`}
+            />
+            {/* Bottom Right -> Top Left */}
+            <div
+              className={`absolute bottom-0 right-0 w-1.5 h-1.5 rounded-full transition-all duration-500 ease-in-out ${
+                isMobileMenuOpen 
+                  ? "-translate-x-2 -translate-y-2 bg-pathfinder-green" 
+                  : "bg-white"
+              }`}
+            />
           </button>
         </div>
       </header>

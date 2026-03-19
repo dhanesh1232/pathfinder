@@ -2,7 +2,7 @@
 
 import { ArrowRight, Loader2, Sparkles, CheckCircle2 } from "lucide-react";
 import React, { useRef, useEffect, useState } from "react";
-import { submitContactForm } from "@/app/actions/contact";
+
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -50,27 +50,6 @@ export default function ContactForm() {
       el.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
-
-  const handleSubmit = async (formData: FormData) => {
-    setIsPending(true);
-    const res = await submitContactForm(formData);
-
-    // Artificial delay for animation feel
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    setIsPending(false);
-    if (res.error) {
-      toast.error(res.error);
-    } else {
-      setIsSuccess(true);
-      toast.success(res.message || "Message sent!");
-      (document.getElementById("contact-form") as HTMLFormElement)?.reset();
-      setMessageLength(0);
-
-      // Reset success state after 5 seconds
-      setTimeout(() => setIsSuccess(false), 5000);
-    }
-  };
 
   return (
     <section
@@ -192,15 +171,27 @@ export default function ContactForm() {
             className="space-y-8"
             action={async (formData) => {
               setIsPending(true);
-              const res = await submitContactForm(formData);
-              setIsPending(false);
-              if (res.error) {
-                toast.error(res.error);
-              } else {
-                toast.success(res.message || "Message sent!");
-                (
-                  document.getElementById("contact-form") as HTMLFormElement
-                )?.reset();
+              try {
+                const data = Object.fromEntries(formData.entries());
+                const response = await fetch("/api/contact", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(data),
+                });
+                const res = await response.json();
+
+                setIsPending(false);
+                if (res.error) {
+                  toast.error(res.error);
+                } else {
+                  toast.success(res.message || "Message sent!");
+                  (
+                    document.getElementById("contact-form") as HTMLFormElement
+                  )?.reset();
+                }
+              } catch (error) {
+                setIsPending(false);
+                toast.error("Something went wrong. Please try again later.");
               }
             }}
             id="contact-form"

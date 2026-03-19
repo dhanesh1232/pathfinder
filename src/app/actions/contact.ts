@@ -125,3 +125,15 @@ export async function createManualLead(data: {
     return { error: "Failed to create lead." };
   }
 }
+
+export async function bulkDeleteSubmissions(ids: string[]) {
+  try {
+    await connectDB();
+    await ContactSubmission.deleteMany({ _id: { $in: ids } });
+    revalidatePath("/admin/contacts");
+    return { success: true };
+  } catch (error) {
+    console.error("Error in bulk delete:", error);
+    return { error: "Failed to delete submissions." };
+  }
+}
