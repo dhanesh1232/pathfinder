@@ -6,7 +6,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import LiquidHeading from "./ui/liquid-text";
-import { Loader2 } from "lucide-react";
 import { getPortfolioItems } from "@/app/actions/content";
 
 const ALL_PORTFOLIO_ITEMS = [
@@ -146,7 +145,8 @@ export default function Portfolio() {
   const containerRef = useRef<HTMLDivElement>(null);
   const headerTextRef = useRef<HTMLDivElement>(null);
   const [displayedItems, setDisplayedItems] = useState<any[]>([]);
-  const [allPortfolioItems, setAllPortfolioItems] = useState(ALL_PORTFOLIO_ITEMS);
+  const [allPortfolioItems, setAllPortfolioItems] =
+    useState(ALL_PORTFOLIO_ITEMS);
   const [isShuffleActive, setIsShuffleActive] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);

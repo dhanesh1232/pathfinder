@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport(smtpConfig);
 
 export const sendThankYouEmail = async (to: string, name: string) => {
   const mailOptions = {
-    from: `"Pathfinders Agency" <${process.env.SMTP_FROM}>`,
+    from: `${process.env.SMTP_FROM} <${process.env.SMTP_USER}>`,
     to,
     subject: "Thank You for Reaching Out to Pathfinders",
     html: `
@@ -33,7 +33,7 @@ export const sendThankYouEmail = async (to: string, name: string) => {
             .footer { padding: 30px 20px; text-align: center; background-color: #000000; border-top: 1px solid #1a1a1a; }
             .slogan { font-size: 14px; font-style: italic; color: #71717a; margin-bottom: 20px; }
             .social-links { margin-bottom: 20px; }
-            .social-link { display: inline-block; margin: 0 10px; color: #2ecc71; text-decoration: none; font-size: 13px; font-weight: 600; }
+            .social-link { display: inline-block; margin: 0 12px; vertical-align: middle; }
             .address { font-size: 12px; color: #52525b; line-height: 1.5; }
             .brand-name { color: #2ecc71; font-weight: bold; margin-top: 10px; }
           </style>
@@ -54,9 +54,15 @@ export const sendThankYouEmail = async (to: string, name: string) => {
             <div class="footer">
               <div class="slogan">"Where brands find their path."</div>
               <div class="social-links">
-                <a href="#" class="social-link">INSTAGRAM</a>
-                <a href="#" class="social-link">LINKEDIN</a>
-                <a href="#" class="social-link">WEBSITE</a>
+                <a href="${process.env.INSTAGRAM_URL || "#"}" class="social-link">
+                  <img src="https://img.icons8.com/ios-filled/32/2ecc71/instagram-new.png" width="24" height="24" alt="Instagram" style="display: inline-block;">
+                </a>
+                <a href="${process.env.LINKEDIN_URL || "#"}" class="social-link">
+                  <img src="https://img.icons8.com/ios-filled/32/2ecc71/linkedin.png" width="24" height="24" alt="LinkedIn" style="display: inline-block;">
+                </a>
+                <a href="${process.env.WEBSITE_URL || "#"}" class="social-link">
+                  <img src="https://img.icons8.com/ios-filled/32/2ecc71/globe.png" width="24" height="24" alt="Website" style="display: inline-block;">
+                </a>
               </div>
               <div class="address">
                 &copy; ${new Date().getFullYear()} Pathfinders Agency. All rights reserved.<br>

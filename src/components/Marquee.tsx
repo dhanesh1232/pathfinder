@@ -95,6 +95,8 @@ function LogoCard({ logo }: { logo: string }) {
     .replace(/\.(png|jpg|jpeg|svg)$/i, "")
     .replace(/ logo$/i, "");
 
+  const logoUrl = (logo: string) =>
+    logo.startsWith("http") ? logo : `/Website logo/${logo}`;
   return (
     <div className="shrink-0 group cursor-pointer">
       <div className="relative w-24 h-16 md:w-30 md:h-20 overflow-hidden">
@@ -102,7 +104,7 @@ function LogoCard({ logo }: { logo: string }) {
           {/* Default Logo */}
           <div className="shrink-0 w-full h-full flex items-center justify-center">
             <Image
-              src={`/Website logo/${logo}`}
+              src={logoUrl(logo)}
               alt={`${name} logo`}
               width={160}
               height={96}
@@ -112,7 +114,7 @@ function LogoCard({ logo }: { logo: string }) {
           {/* Hover Logo (Slides in from bottom) */}
           <div className="shrink-0 w-full h-full flex items-center justify-center">
             <Image
-              src={`/Website logo/${logo}`}
+              src={logoUrl(logo)}
               alt={`${name} logo active`}
               width={160}
               height={96}
