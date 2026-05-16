@@ -83,7 +83,18 @@ export default function ContactsPage() {
   const [filterStatus, setFilterStatus] = useState("All");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    message: string;
+    source: string;
+    website: string;
+    service: string;
+    budget: string;
+    status: "New" | "In Progress" | "Closed" | "Junk";
+    priority: "Low" | "Medium" | "High";
+  }>({
     name: "",
     email: "",
     phone: "",
@@ -109,7 +120,7 @@ export default function ContactsPage() {
     document.title = "CRM | Admin | Pathfinder";
   }, []);
 
-  const handleUpdateStatus = async (id: string, status: string) => {
+  const handleUpdateStatus = async (id: string, status: "New" | "In Progress" | "Closed" | "Junk") => {
     const res = await updateSubmissionStatus(id, status);
     if (res.success) {
       toast.success(`Status set to ${status}`);
@@ -120,7 +131,7 @@ export default function ContactsPage() {
     }
   };
 
-  const handleUpdatePriority = async (id: string, priority: string) => {
+  const handleUpdatePriority = async (id: string, priority: "Low" | "Medium" | "High") => {
     const res = await updateSubmissionPriority(id, priority);
     if (res.success) {
       toast.success(`Priority set to ${priority}`);
@@ -345,7 +356,7 @@ export default function ContactsPage() {
                     <Select
                       value={formData.status}
                       onValueChange={(val) =>
-                        setFormData({ ...formData, status: val })
+                        setFormData({ ...formData, status: val as "New" | "In Progress" | "Closed" | "Junk" })
                       }
                     >
                       <SelectTrigger className="bg-zinc-900/50 border-zinc-800 rounded-lg h-10">
@@ -384,7 +395,7 @@ export default function ContactsPage() {
                     <Select
                       value={formData.priority}
                       onValueChange={(val) =>
-                        setFormData({ ...formData, priority: val })
+                        setFormData({ ...formData, priority: val as "Low" | "Medium" | "High" })
                       }
                     >
                       <SelectTrigger className="bg-zinc-900/50 border-zinc-800 rounded-lg h-10">
@@ -905,7 +916,7 @@ export default function ContactsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="bg-zinc-900 border-zinc-800 text-white rounded-lg w-40">
-                        {["New", "In Progress", "Closed", "Junk"].map((s) => (
+                        {(["New", "In Progress", "Closed", "Junk"] as const).map((s) => (
                           <DropdownMenuItem
                             key={s}
                             onClick={() =>
@@ -933,7 +944,7 @@ export default function ContactsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="bg-zinc-900 border-zinc-800 text-white rounded-lg w-40">
-                        {["Low", "Medium", "High"].map((p) => (
+                        {(["Low", "Medium", "High"] as const).map((p) => (
                           <DropdownMenuItem
                             key={p}
                             onClick={() =>

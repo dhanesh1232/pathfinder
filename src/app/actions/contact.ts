@@ -89,7 +89,7 @@ export async function updateSubmissionStatus(id: string, status: "New" | "In Pro
   }
 }
 
-export async function updateSubmissionPriority(id: string, priority: string) {
+export async function updateSubmissionPriority(id: string, priority: "Low" | "Medium" | "High") {
   try {
     await connectDB();
     await ContactSubmission.findByIdAndUpdate(id, { priority });
@@ -110,7 +110,7 @@ export async function createManualLead(data: {
   service?: string;
   budget?: string;
   status: "New" | "In Progress" | "Closed" | "Junk";
-  priority: string;
+  priority: "Low" | "Medium" | "High";
 }) {
   try {
     await connectDB();
