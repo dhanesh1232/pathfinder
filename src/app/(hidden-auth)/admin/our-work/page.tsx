@@ -143,17 +143,17 @@ export default function OurWorkPage() {
               <Plus className="h-4 w-4" /> Provision Reel
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-zinc-950 border-zinc-900 text-white rounded-lg p-8 max-w-lg shadow-none">
+          <DialogContent className="bg-[#0A0A10] border-white/10 text-white rounded-2xl p-8 max-w-lg shadow-2xl">
             <form onSubmit={handleSubmit}>
               <DialogHeader className="space-y-4">
-                <div className="w-12 h-12 rounded-md bg-pathfinder-green/10 flex items-center justify-center">
-                  <Video className="h-6 w-6 text-pathfinder-green" />
+                <div className="w-12 h-12 rounded-xl bg-linear-to-r from-[#7C6EFA]/10 to-[#22D3EE]/10 flex items-center justify-center border border-white/5">
+                  <Video className="h-6 w-6 text-[#22D3EE]" />
                 </div>
                 <div>
-                  <DialogTitle className="text-xl font-bold uppercase tracking-tight italic">
+                  <DialogTitle className="text-2xl font-black uppercase tracking-tighter text-white">
                     {editingId ? "Update Reel Registry" : "Provision New Reel"}
                   </DialogTitle>
-                  <DialogDescription className="text-zinc-500 text-sm font-medium">
+                  <DialogDescription className="text-[#64647A] text-sm font-medium mt-1">
                     Configure the cinematic parameters for this production
                     asset.
                   </DialogDescription>
@@ -163,7 +163,7 @@ export default function OurWorkPage() {
                 <div className="grid gap-2 md:col-span-2">
                   <Label
                     htmlFor="title"
-                    className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 pl-1"
+                    className="text-[10px] font-bold uppercase tracking-widest text-[#64647A] pl-1"
                   >
                     Project Identity
                   </Label>
@@ -174,7 +174,7 @@ export default function OurWorkPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, title: e.target.value })
                     }
-                    className="bg-zinc-900/50 border-zinc-800 focus:ring-pathfinder-green/20 rounded-lg h-12"
+                    className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-12 text-white placeholder:text-[#64647A]"
                     placeholder="Project Name"
                   />
                 </div>
@@ -182,7 +182,7 @@ export default function OurWorkPage() {
                   <div className="grid gap-2">
                     <Label
                       htmlFor="category"
-                      className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 pl-1"
+                      className="text-[10px] font-bold uppercase tracking-widest text-[#64647A] pl-1"
                     >
                       Visual Type
                     </Label>
@@ -193,14 +193,14 @@ export default function OurWorkPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, category: e.target.value })
                       }
-                      className="bg-zinc-900/50 border-zinc-800 focus:ring-pathfinder-green/20 rounded-lg h-12"
+                      className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-12 text-white placeholder:text-[#64647A]"
                       placeholder="e.g. Commercial"
                     />
                   </div>
                   <div className="grid gap-2">
                     <Label
                       htmlFor="order"
-                      className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 pl-1"
+                      className="text-[10px] font-bold uppercase tracking-widest text-[#64647A] pl-1"
                     >
                       Priority Index
                     </Label>
@@ -214,20 +214,20 @@ export default function OurWorkPage() {
                           order: parseInt(e.target.value) || 0,
                         })
                       }
-                      className="bg-zinc-900/50 border-zinc-800 focus:ring-pathfinder-green/20 rounded-lg h-12"
+                      className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-12 text-white placeholder:text-[#64647A]"
                     />
                   </div>
                 </div>
                 <div className="grid gap-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 pl-1">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64647A] pl-1">
                     Transmission Buffer (Video URL)
                   </Label>
                   <div className="flex items-center gap-6">
                     {formData.videoUrl ? (
-                      <div className="relative group w-24 h-40 rounded-lg overflow-hidden border border-zinc-800 bg-zinc-950 flex items-center justify-center">
+                      <div className="relative group w-24 h-40 rounded-xl overflow-hidden border border-white/10 bg-[#060608] flex items-center justify-center">
                         <video
                           src={formData.videoUrl}
-                          className="w-full h-full object-cover opacity-60"
+                          className="w-full h-full object-cover opacity-80"
                           muted
                         />
                         <button
@@ -241,7 +241,7 @@ export default function OurWorkPage() {
                         </button>
                       </div>
                     ) : (
-                      <div className="w-24 h-40 rounded-lg border border-dashed border-zinc-800 flex items-center justify-center text-zinc-800 bg-zinc-900/10">
+                      <div className="w-24 h-40 rounded-xl border border-dashed border-white/20 flex items-center justify-center text-[#64647A] bg-[#060608]">
                         <Video className="h-8 w-8" />
                       </div>
                     )}
@@ -264,7 +264,7 @@ export default function OurWorkPage() {
                         clientCode={process.env.NEXT_PUBLIC_ERIX_CLIENT_CODE}
                         trigger
                       />
-                      <p className="text-[9px] text-zinc-600 font-medium italic leading-relaxed">
+                      <p className="text-[9px] text-[#64647A] font-medium italic leading-relaxed">
                         Deploy vertical MP4 assets for high-impact cinematic
                         rendering.
                       </p>
@@ -277,15 +277,14 @@ export default function OurWorkPage() {
                   type="button"
                   variant="ghost"
                   onClick={resetForm}
-                  className="rounded-lg text-zinc-600 hover:text-white uppercase tracking-widest text-[10px] font-bold h-12 px-6"
+                  className="rounded-xl text-[#64647A] hover:text-white uppercase tracking-widest text-[10px] font-bold h-12 px-6 hover:bg-white/5"
                 >
                   Abort
                 </Button>
                 <Button
                   type="submit"
                   disabled={isSaving}
-                  variant="polygon"
-                  className="h-12 px-10 uppercase tracking-widest text-xs min-w-[140px]"
+                  className="h-12 px-10 uppercase tracking-widest text-xs min-w-[140px] bg-linear-to-r from-[#7C6EFA] to-[#22D3EE] text-black font-bold rounded-xl hover:shadow-[0_0_40px_rgba(124,110,250,0.35)] transition-all"
                 >
                   {isSaving ? (
                     <>

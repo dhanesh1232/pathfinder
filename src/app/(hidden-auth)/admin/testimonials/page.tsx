@@ -160,17 +160,17 @@ export default function TestimonialsPage() {
               <Plus className="h-4 w-4" /> Provision Voice
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-zinc-950 border-zinc-900 text-white rounded-lg p-8 max-w-lg shadow-none">
+          <DialogContent className="bg-[#0A0A10] border-white/10 text-white rounded-2xl p-8 max-w-lg shadow-2xl">
             <form onSubmit={handleSubmit}>
               <DialogHeader className="space-y-4">
-                <div className="w-12 h-12 rounded-md bg-pathfinder-green/10 flex items-center justify-center">
-                  <Quote className="h-6 w-6 text-pathfinder-green" />
+                <div className="w-12 h-12 rounded-xl bg-linear-to-r from-[#7C6EFA]/10 to-[#22D3EE]/10 flex items-center justify-center border border-white/5">
+                  <Quote className="h-6 w-6 text-[#22D3EE]" />
                 </div>
                 <div>
-                  <DialogTitle className="text-xl font-bold uppercase tracking-tight italic">
+                  <DialogTitle className="text-2xl font-black uppercase tracking-tighter text-white">
                     {editingId ? "Refine Endorsement" : "New Client Narrative"}
                   </DialogTitle>
-                  <DialogDescription className="text-zinc-500 text-sm font-medium">
+                  <DialogDescription className="text-[#64647A] text-sm font-medium mt-1">
                     Capture the cinematic feedback from project stakeholders.
                   </DialogDescription>
                 </div>
@@ -180,7 +180,7 @@ export default function TestimonialsPage() {
                   <div className="grid gap-2">
                     <Label
                       htmlFor="author"
-                      className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 pl-1"
+                      className="text-[10px] font-bold uppercase tracking-widest text-[#64647A] pl-1"
                     >
                       Stakeholder Identity
                     </Label>
@@ -191,14 +191,14 @@ export default function TestimonialsPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, author: e.target.value })
                       }
-                      className="bg-zinc-900/50 border-zinc-800 focus:ring-pathfinder-green/20 rounded-lg h-12"
+                      className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-12 text-white placeholder:text-[#64647A]"
                       placeholder="e.g. Marcus Thorne"
                     />
                   </div>
                   <div className="grid gap-2">
                     <Label
                       htmlFor="role"
-                      className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 pl-1"
+                      className="text-[10px] font-bold uppercase tracking-widest text-[#64647A] pl-1"
                     >
                       Operational Title
                     </Label>
@@ -209,7 +209,7 @@ export default function TestimonialsPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, role: e.target.value })
                       }
-                      className="bg-zinc-900/50 border-zinc-800 focus:ring-pathfinder-green/20 rounded-lg h-12"
+                      className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-12 text-white placeholder:text-[#64647A]"
                       placeholder="CEO, Tech Vision"
                     />
                   </div>
@@ -217,7 +217,7 @@ export default function TestimonialsPage() {
                 <div className="grid gap-2">
                   <Label
                     htmlFor="text"
-                    className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 pl-1"
+                    className="text-[10px] font-bold uppercase tracking-widest text-[#64647A] pl-1"
                   >
                     Narrative Content
                   </Label>
@@ -228,22 +228,22 @@ export default function TestimonialsPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, text: e.target.value })
                     }
-                    className="bg-zinc-900/50 border-zinc-800 focus:ring-pathfinder-green/20 rounded-lg min-h-[120px] resize-none leading-relaxed"
+                    className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl min-h-[120px] resize-none leading-relaxed text-white placeholder:text-[#64647A]"
                     placeholder="Their feedback archive..."
                   />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="grid gap-2">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 pl-1">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64647A] pl-1">
                       Visual Ident (Avatar)
                     </Label>
                     <div className="flex items-center gap-4">
                       {formData.imageUrl ? (
-                        <div className="relative group w-14 h-14 rounded-full overflow-hidden border border-zinc-800 bg-zinc-950 flex items-center justify-center">
+                        <div className="relative group w-14 h-14 rounded-full overflow-hidden border border-white/10 bg-[#060608] flex items-center justify-center">
                           <img
                             src={formData.imageUrl}
                             alt="Preview"
-                            className="w-full h-full object-cover opacity-60 transition-transform duration-500 group-hover:scale-110"
+                            className="w-full h-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-110"
                           />
                           <button
                             type="button"
@@ -256,7 +256,7 @@ export default function TestimonialsPage() {
                           </button>
                         </div>
                       ) : (
-                        <div className="w-14 h-14 rounded-full border border-dashed border-zinc-800 flex items-center justify-center text-zinc-800 bg-zinc-900/10">
+                        <div className="w-14 h-14 rounded-full border border-dashed border-white/20 flex items-center justify-center text-[#64647A] bg-[#060608]">
                           <User className="h-6 w-6" />
                         </div>
                       )}
@@ -285,7 +285,7 @@ export default function TestimonialsPage() {
                   <div className="grid gap-2">
                     <Label
                       htmlFor="rating"
-                      className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 pl-1"
+                      className="text-[10px] font-bold uppercase tracking-widest text-[#64647A] pl-1"
                     >
                       Impact Metric (1-5)
                     </Label>
@@ -301,7 +301,7 @@ export default function TestimonialsPage() {
                           rating: parseInt(e.target.value) || 5,
                         })
                       }
-                      className="bg-zinc-900/50 border-zinc-800 focus:ring-pathfinder-green/20 rounded-lg h-12"
+                      className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-12 text-white"
                     />
                   </div>
                 </div>
@@ -311,15 +311,14 @@ export default function TestimonialsPage() {
                   type="button"
                   variant="ghost"
                   onClick={resetForm}
-                  className="rounded-lg text-zinc-600 hover:text-white uppercase tracking-widest text-[10px] font-bold h-12 px-6"
+                  className="rounded-xl text-[#64647A] hover:text-white uppercase tracking-widest text-[10px] font-bold h-12 px-6 hover:bg-white/5"
                 >
                   Abort
                 </Button>
                 <Button
                   type="submit"
                   disabled={isSaving}
-                  variant="polygon"
-                  className="h-12 px-10 uppercase tracking-widest text-xs min-w-[140px]"
+                  className="h-12 px-10 uppercase tracking-widest text-xs min-w-[140px] bg-linear-to-r from-[#7C6EFA] to-[#22D3EE] text-black font-bold rounded-xl hover:shadow-[0_0_40px_rgba(124,110,250,0.35)] transition-all"
                 >
                   {isSaving ? (
                     <>

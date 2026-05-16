@@ -261,22 +261,27 @@ export default function ContactsClient({
                 </span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-zinc-950 border-zinc-800 text-white max-w-2xl rounded-md shadow-none">
-              <DialogHeader>
-                <DialogTitle className="text-lg font-bold uppercase tracking-tight italic">
-                  Provision New Lead
-                </DialogTitle>
+            <DialogContent className="bg-[#0A0A10] border-white/10 text-white max-w-2xl rounded-2xl shadow-2xl p-8">
+              <DialogHeader className="space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-linear-to-r from-[#7C6EFA]/10 to-[#22D3EE]/10 flex items-center justify-center border border-white/5">
+                  <Plus className="h-6 w-6 text-[#22D3EE]" />
+                </div>
+                <div>
+                  <DialogTitle className="text-2xl font-black uppercase tracking-tighter text-white">
+                    Provision New Lead
+                  </DialogTitle>
+                </div>
               </DialogHeader>
-              <form onSubmit={handleCreateLead} className="space-y-2 pt-4">
+              <form onSubmit={handleCreateLead} className="space-y-5 pt-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64647A]">
                       Contact Name
                     </Label>
                     <Input
                       required
                       placeholder="e.g. David Chen"
-                      className="bg-zinc-900/50 border-zinc-800 rounded-lg h-10"
+                      className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-11 text-white placeholder:text-[#64647A]"
                       value={formData.name}
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
@@ -284,14 +289,14 @@ export default function ContactsClient({
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64647A]">
                       Email Address
                     </Label>
                     <Input
                       required
                       type="email"
                       placeholder="david@pathfinders.com"
-                      className="bg-zinc-900/50 border-zinc-800 rounded-lg h-10"
+                      className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-11 text-white placeholder:text-[#64647A]"
                       value={formData.email}
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
@@ -302,13 +307,13 @@ export default function ContactsClient({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64647A]">
                       Voice Line (Phone)
                     </Label>
                     <Input
                       required
                       placeholder="+91 99999 99999"
-                      className="bg-zinc-900/50 border-zinc-800 rounded-lg h-10"
+                      className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-11 text-white placeholder:text-[#64647A]"
                       value={formData.phone}
                       onChange={(e) =>
                         setFormData({ ...formData, phone: e.target.value })
@@ -316,12 +321,12 @@ export default function ContactsClient({
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64647A]">
                       Company Website
                     </Label>
                     <Input
                       placeholder="https://example.com"
-                      className="bg-zinc-900/50 border-zinc-800 rounded-lg h-10"
+                      className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-11 text-white placeholder:text-[#64647A]"
                       value={formData.website}
                       onChange={(e) =>
                         setFormData({ ...formData, website: e.target.value })
@@ -332,7 +337,7 @@ export default function ContactsClient({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64647A]">
                       Service Category
                     </Label>
                     <Select
@@ -341,10 +346,10 @@ export default function ContactsClient({
                         setFormData({ ...formData, service: val })
                       }
                     >
-                      <SelectTrigger className="bg-zinc-900/50 border-zinc-800 rounded-lg h-10">
+                      <SelectTrigger className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-11 text-white">
                         <SelectValue placeholder="Select Service" />
                       </SelectTrigger>
-                      <SelectContent className="bg-zinc-900 border-zinc-800 text-white rounded-lg">
+                      <SelectContent className="bg-[#0A0A10] border-white/10 text-white rounded-xl">
                         <SelectItem value="Film Production">
                           Film Production
                         </SelectItem>
@@ -362,7 +367,7 @@ export default function ContactsClient({
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64647A]">
                       Status Protocol
                     </Label>
                     <Select
@@ -378,10 +383,10 @@ export default function ContactsClient({
                         })
                       }
                     >
-                      <SelectTrigger className="bg-zinc-900/50 border-zinc-800 rounded-lg h-10">
+                      <SelectTrigger className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-11 text-white">
                         <SelectValue placeholder="Select Status" />
                       </SelectTrigger>
-                      <SelectContent className="bg-zinc-900 border-zinc-800 text-white rounded-lg">
+                      <SelectContent className="bg-[#0A0A10] border-white/10 text-white rounded-xl">
                         <SelectItem value="New">New</SelectItem>
                         <SelectItem value="In Progress">In Progress</SelectItem>
                         <SelectItem value="Closed">Closed</SelectItem>
@@ -392,13 +397,13 @@ export default function ContactsClient({
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                  <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64647A]">
                     Project Description / Message
                   </Label>
                   <Textarea
                     required
                     placeholder="Describe the lead's requirements or initial inquiry..."
-                    className="bg-zinc-900/50 border-zinc-800 rounded-lg min-h-[100px]"
+                    className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl min-h-[100px] text-white placeholder:text-[#64647A]"
                     value={formData.message}
                     onChange={(e) =>
                       setFormData({ ...formData, message: e.target.value })
@@ -408,7 +413,7 @@ export default function ContactsClient({
 
                 <div className="flex items-center gap-4">
                   <div className="flex-1 space-y-2">
-                    <Label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <Label className="text-[10px] font-bold uppercase tracking-widest text-[#64647A]">
                       Priority Level
                     </Label>
                     <Select
@@ -420,10 +425,10 @@ export default function ContactsClient({
                         })
                       }
                     >
-                      <SelectTrigger className="bg-zinc-900/50 border-zinc-800 rounded-lg h-10">
+                      <SelectTrigger className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-11 text-white">
                         <SelectValue placeholder="Select Priority" />
                       </SelectTrigger>
-                      <SelectContent className="bg-zinc-900 border-zinc-800 text-white rounded-lg">
+                      <SelectContent className="bg-[#0A0A10] border-white/10 text-white rounded-xl">
                         <SelectItem value="Low">Low</SelectItem>
                         <SelectItem value="Medium">Medium</SelectItem>
                         <SelectItem value="High">High</SelectItem>
@@ -432,19 +437,19 @@ export default function ContactsClient({
                   </div>
                 </div>
 
-                <DialogFooter className="pt-4 border-t border-zinc-800/50">
+                <DialogFooter className="pt-4 border-t border-white/5 gap-3">
                   <Button
                     type="button"
                     variant="ghost"
                     onClick={() => setIsCreateDialogOpen(false)}
-                    className="rounded-lg text-zinc-500 hover:text-white"
+                    className="rounded-xl text-[#64647A] hover:text-white uppercase tracking-widest text-[10px] font-bold h-11 px-6 hover:bg-white/5"
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="bg-pathfinder-green text-black hover:bg-pathfinder-green/90 font-bold rounded-lg px-8"
+                    className="h-11 px-10 uppercase tracking-widest text-xs min-w-[160px] bg-linear-to-r from-[#7C6EFA] to-[#22D3EE] text-black font-bold rounded-xl hover:shadow-[0_0_40px_rgba(124,110,250,0.35)] transition-all"
                   >
                     {isSubmitting ? "Provisioning..." : "Create Lead"}
                   </Button>

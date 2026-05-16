@@ -134,22 +134,27 @@ export default function LogosPage() {
               Add Logo
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-zinc-950 border-zinc-900 text-white rounded-2xl max-w-lg">
+          <DialogContent className="bg-[#0A0A10] border-white/10 text-white rounded-2xl p-8 max-w-lg shadow-2xl">
             <form onSubmit={handleSubmit}>
-              <DialogHeader>
-                <DialogTitle className="text-xl font-bold tracking-tight">
-                  {editingId ? "Edit Brand" : "New Affiliate"}
-                </DialogTitle>
-                <DialogDescription className="text-zinc-500">
-                  Update the visual representation for this partner.
-                </DialogDescription>
+              <DialogHeader className="space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-linear-to-r from-[#7C6EFA]/10 to-[#22D3EE]/10 flex items-center justify-center border border-white/5">
+                  <Building2 className="h-6 w-6 text-[#22D3EE]" />
+                </div>
+                <div>
+                  <DialogTitle className="text-2xl font-black uppercase tracking-tighter text-white">
+                    {editingId ? "Edit Brand" : "New Affiliate"}
+                  </DialogTitle>
+                  <DialogDescription className="text-[#64647A] text-sm font-medium mt-1">
+                    Update the visual representation for this partner.
+                  </DialogDescription>
+                </div>
               </DialogHeader>
               <div className="grid gap-5 py-6">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div className="grid gap-1.5 md:col-span-3">
                     <Label
                       htmlFor="title"
-                      className="text-[10px] font-bold uppercase tracking-wider text-zinc-500"
+                      className="text-[10px] font-bold uppercase tracking-wider text-[#64647A]"
                     >
                       Company Name
                     </Label>
@@ -160,14 +165,14 @@ export default function LogosPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
                       }
-                      className="bg-zinc-900 border-zinc-800 focus:ring-pathfinder-green rounded-lg h-11"
+                      className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-11 text-white placeholder:text-[#64647A]"
                       placeholder="e.g. Acme Corporation"
                     />
                   </div>
                   <div className="grid gap-1.5">
                     <Label
                       htmlFor="order"
-                      className="text-[10px] font-bold uppercase tracking-wider text-zinc-500"
+                      className="text-[10px] font-bold uppercase tracking-wider text-[#64647A]"
                     >
                       Rank
                     </Label>
@@ -181,34 +186,34 @@ export default function LogosPage() {
                           order: parseInt(e.target.value) || 0,
                         })
                       }
-                      className="bg-zinc-900 border-zinc-800 focus:ring-pathfinder-green rounded-lg h-11"
+                      className="bg-[#060608] border-white/10 focus:border-[#7C6EFA] focus:ring-1 focus:ring-[#7C6EFA]/30 rounded-xl h-11 text-white placeholder:text-[#64647A]"
                     />
                   </div>
                 </div>
                 <div className="grid gap-1.5">
-                  <Label className="text-[10px] font-bold uppercase tracking-wider text-zinc-500">
+                  <Label className="text-[10px] font-bold uppercase tracking-wider text-[#64647A]">
                     Partner Logo Asset
                   </Label>
                   <div className="flex items-center gap-4">
                     {formData.imageUrl ? (
-                      <div className="relative group w-24 h-24 rounded-lg overflow-hidden border border-zinc-800 bg-zinc-900 flex items-center justify-center p-2">
+                      <div className="relative group w-24 h-24 rounded-xl overflow-hidden border border-white/10 bg-[#060608] flex items-center justify-center p-2">
                         <img
                           src={formData.imageUrl}
                           alt="Preview"
-                          className="max-w-full max-h-full object-contain filter grayscale invert opacity-60"
+                          className="max-w-full max-h-full object-contain filter grayscale invert opacity-80"
                         />
                         <button
                           type="button"
                           onClick={() =>
                             setFormData({ ...formData, imageUrl: "" })
                           }
-                          className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute inset-0 bg-black/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           <Trash2 className="h-4 w-4 text-white" />
                         </button>
                       </div>
                     ) : (
-                      <div className="w-24 h-24 rounded-lg border-2 border-dashed border-zinc-800 flex items-center justify-center text-zinc-700">
+                      <div className="w-24 h-24 rounded-xl border border-dashed border-white/20 flex items-center justify-center text-[#64647A] bg-[#060608]">
                         <ImageIcon className="h-6 w-6" />
                       </div>
                     )}
@@ -231,7 +236,7 @@ export default function LogosPage() {
                         clientCode={process.env.NEXT_PUBLIC_ERIX_CLIENT_CODE}
                         trigger
                       />
-                      <p className="text-[10px] text-zinc-500 mt-2">
+                      <p className="text-[10px] text-[#64647A] mt-2 italic">
                         Upload or select a PNG/SVG logo. Minimal styling
                         preferred.
                       </p>
@@ -239,20 +244,19 @@ export default function LogosPage() {
                   </div>
                 </div>
               </div>
-              <DialogFooter>
+              <DialogFooter className="gap-3">
                 <Button
                   type="button"
                   variant="ghost"
                   onClick={resetForm}
-                  className="rounded-lg text-zinc-500"
+                  className="rounded-xl text-[#64647A] hover:text-white uppercase tracking-widest text-[10px] font-bold h-11 px-6 hover:bg-white/5"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   disabled={isSaving}
-                  variant="polygon"
-                  className="px-10"
+                  className="h-11 px-10 uppercase tracking-widest text-xs min-w-[140px] bg-linear-to-r from-[#7C6EFA] to-[#22D3EE] text-black font-bold rounded-xl hover:shadow-[0_0_40px_rgba(124,110,250,0.35)] transition-all"
                 >
                   {isSaving ? (
                     <>
