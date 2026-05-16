@@ -48,7 +48,10 @@ export async function submitContactForm(formData: FormData) {
 export async function getContactSubmissions() {
   try {
     await connectDB();
-    const submissions = await ContactSubmission.find().sort({ createdAt: -1 });
+    const submissions = await ContactSubmission.find()
+      .sort({ createdAt: -1 })
+      .limit(200)
+      .lean();
     return JSON.parse(JSON.stringify(submissions));
   } catch (error) {
     console.error("Error fetching submissions:", error);

@@ -1,20 +1,33 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import HandSplitHero from "@/components/HandSplitHero";
 import ParallaxTeam from "@/components/ParallaxTeam";
 import TrustedBy from "@/components/TrustedBy";
 import BannerCarousel from "@/components/BannerCarousel";
 import Metrics from "@/components/Metrics";
-import Services from "@/components/Services";
-import Portfolio from "@/components/Portfolio";
-import FounderNote from "@/components/FounderNote";
-import CTA from "@/components/CTA";
 import Footer from "@/components/Footer";
-import TransformativeSection from "@/components/HowWeWorks";
-import ContactForm from "@/components/ContactForm";
-import WaveReveal from "@/components/WaveReveal";
-import OurWork from "@/components/OurWork";
-import TextMarquee from "@/components/TextMarquee";
-import { Testimonials } from "@/components/Testimonials";
+import {
+  getLogos,
+  getPortfolioItems,
+  getOurWorkItems,
+  getTestimonials,
+} from "@/app/actions/content";
+
+// Dynamically import heavy below-the-fold components
+const Services = dynamic(() => import("@/components/Services"));
+const Portfolio = dynamic(() => import("@/components/Portfolio"));
+const FounderNote = dynamic(() => import("@/components/FounderNote"));
+const CTA = dynamic(() => import("@/components/CTA"));
+const TransformativeSection = dynamic(
+  () => import("@/components/HowWeWorks")
+);
+const ContactForm = dynamic(() => import("@/components/ContactForm"));
+const WaveReveal = dynamic(() => import("@/components/WaveReveal"));
+const OurWork = dynamic(() => import("@/components/OurWork"));
+const TextMarquee = dynamic(() => import("@/components/TextMarquee"));
+const Testimonials = dynamic(
+  () => import("@/components/Testimonials").then((mod) => ({ default: mod.Testimonials }))
+);
 
 export const metadata: Metadata = {
   title: "The Pathfinders | Elite Creative Agency & Branding Studio",
@@ -30,7 +43,15 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function Home() {
+export default async function Home() {
+  // Fetch all data in parallel on the server
+  const [logos, portfolioItems, ourWorkItems, testimonials] = await Promise.all([
+    getLogos().catch(() => []),
+    getPortfolioItems().catch(() => []),
+    getOurWorkItems().catch(() => []),
+    getTestimonials().catch(() => []),
+  ]);
+
   return (
     <>
       {/* 1. Hero: Hand Split Reveal (Pinned Cinema) */}
@@ -41,7 +62,7 @@ export default function Home() {
 
       {/* 3. Trusted By / Logos */}
       <div data-lenis-speed="0.8" className="relative z-10">
-        <TrustedBy />
+        <TrustedBy initialLogos={logos} />
       </div>
 
       {/* 3b. Banner Carousel */}
@@ -57,9 +78,6 @@ export default function Home() {
         <WaveReveal />
       </div>
 
-      {/* 4c. 3D Slides Portfolio Showcase */}
-      {/* <ThreeDCarousel images={PORTFOLIO_IMAGES} /> */}
-
       {/* 5. Services */}
       <Services />
 
@@ -70,16 +88,16 @@ export default function Home() {
       <TransformativeSection />
 
       {/* 7. Portfolio */}
-      <Portfolio />
+      <Portfolio initialItems={portfolioItems} />
 
       {/* 7b. Our Work / Reels Showcase */}
-      <OurWork />
+      <OurWork initialItems={ourWorkItems} />
 
       {/* 8. Founder Note / Team Philosophy */}
       <FounderNote />
 
       {/* 9. Testimonials */}
-      <Testimonials />
+      <Testimonials initialTestimonials={testimonials} />
 
       {/* 10. Contact Form */}
       <ContactForm />

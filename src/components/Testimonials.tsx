@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Autoplay from "embla-carousel-autoplay";
@@ -13,7 +13,6 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { Quote } from "lucide-react";
-import { getTestimonials } from "@/app/actions/content";
 
 // --- Fallback Testimonials ---
 const TESTIMONIALS_DATA = [
@@ -49,26 +48,20 @@ const TESTIMONIALS_DATA = [
   },
 ];
 
-export function Testimonials() {
+export function Testimonials({ initialTestimonials = [] }: { initialTestimonials?: any[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const testimonialRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number | "auto">("auto");
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
-  const [testimonials, setTestimonials] = useState<any[]>([]);
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      const dbItems = await getTestimonials();
-      if (dbItems && dbItems.length > 0) {
-        setTestimonials(dbItems);
-      } else {
-        setTestimonials(TESTIMONIALS_DATA);
-      }
-    };
-    fetchItems();
-  }, []);
+  const testimonials = useMemo(() => {
+    if (initialTestimonials && initialTestimonials.length > 0) {
+      return initialTestimonials;
+    }
+    return TESTIMONIALS_DATA;
+  }, [initialTestimonials]);
 
   useEffect(() => {
     // Scroll Reveal Animation (Targeting the container itself)

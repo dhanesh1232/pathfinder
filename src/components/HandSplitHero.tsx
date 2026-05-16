@@ -61,6 +61,15 @@ export default function HandSplitHero() {
   const [videoFinished, setVideoFinished] = useState(false);
   const [introFinished, setIntroFinished] = useState(false);
 
+  // Auto-skip video after 5 seconds if it hasn't ended (slow connection fallback)
+  useEffect(() => {
+    if (videoFinished) return;
+    const timeout = setTimeout(() => {
+      setVideoFinished(true);
+    }, 5000);
+    return () => clearTimeout(timeout);
+  }, [videoFinished]);
+
   const handleImageLoad = () => {
     setLoadedCount((prev) => prev + 1);
   };
@@ -280,7 +289,14 @@ export default function HandSplitHero() {
             className="w-full h-full object-cover"
             src="https://ik.imagekit.io/gclqlaadh/pathfinder/PathFinder%20Logo%20animation%20Video_OA2IyTipo.mp4"
             onEnded={() => setVideoFinished(true)}
+            onError={() => setVideoFinished(true)}
           />
+          <button
+            onClick={() => setVideoFinished(true)}
+            className="absolute bottom-8 right-8 text-white/60 hover:text-white text-sm font-poppins uppercase tracking-widest transition-colors duration-300 z-10"
+          >
+            Skip
+          </button>
         </div>
       )}
 

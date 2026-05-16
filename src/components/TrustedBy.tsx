@@ -1,8 +1,7 @@
 "use client";
 
 import Logomarquee from "./Marquee";
-import { useEffect, useState } from "react";
-import { getLogos } from "@/app/actions/content";
+import { useMemo } from "react";
 
 // Actual logo filenames from /public/Website logo
 const RAW_LOGOS = [
@@ -48,21 +47,14 @@ const RAW_LOGOS = [
 // Duplicate logos to create a seamless infinite loop with enough items
 const DEFAULT_LOGOS = [...RAW_LOGOS, ...RAW_LOGOS, ...RAW_LOGOS];
 
-export default function TrustedBy() {
-  const [logos, setLogos] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchLogos = async () => {
-      const dbLogos = await getLogos();
-      if (dbLogos && dbLogos.length > 0) {
-        const urls = dbLogos.map((l: any) => l.imageUrl);
-        setLogos([...urls, ...urls, ...urls]);
-      } else {
-        setLogos(DEFAULT_LOGOS);
-      }
-    };
-    fetchLogos();
-  }, []);
+export default function TrustedBy({ initialLogos = [] }: { initialLogos?: any[] }) {
+  const logos = useMemo(() => {
+    if (initialLogos && initialLogos.length > 0) {
+      const urls = initialLogos.map((l: any) => l.imageUrl);
+      return [...urls, ...urls, ...urls];
+    }
+    return DEFAULT_LOGOS;
+  }, [initialLogos]);
 
   return (
     <section className="w-full py-24 bg-black overflow-hidden">

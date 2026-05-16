@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
   images: {
     remotePatterns: [
@@ -21,6 +20,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "*.r2.dev",
       },
+    ],
+  },
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "react-icons",
+      "framer-motion",
+      "gsap",
     ],
   },
 };

@@ -86,6 +86,10 @@ const contactSubmissionSchema = new mongoose.Schema<IContactSubmission>(
   },
 );
 
+// Indexes for common query patterns
+contactSubmissionSchema.index({ createdAt: -1 });                  // default sort
+contactSubmissionSchema.index({ status: 1, createdAt: -1 });       // status filter + sort
+
 const ContactSubmission: Model<IContactSubmission> =
   mongoose.models.ContactSubmission ||
   mongoose.model<IContactSubmission>(

@@ -6,7 +6,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import LiquidHeading from "./ui/liquid-text";
-import { getPortfolioItems } from "@/app/actions/content";
 
 const ALL_PORTFOLIO_ITEMS = [
   {
@@ -141,7 +140,7 @@ const TypingHeading = ({ className }: { className?: string }) => {
   );
 }; // End TypingHeading
 
-export default function Portfolio() {
+export default function Portfolio({ initialItems = [] }: { initialItems?: any[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const headerTextRef = useRef<HTMLDivElement>(null);
   const [displayedItems, setDisplayedItems] = useState<any[]>([]);
@@ -152,21 +151,17 @@ export default function Portfolio() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
-    const fetchItems = async () => {
-      const dbItems = await getPortfolioItems();
-      if (dbItems && dbItems.length > 0) {
-        const formatted = dbItems.map((item: any) => ({
-          src: item.imageUrl,
-          alt: item.title,
-        }));
-        setAllPortfolioItems(formatted);
-        setDisplayedItems(formatted.slice(0, 12));
-      } else {
-        setDisplayedItems(ALL_PORTFOLIO_ITEMS.slice(0, 12));
-      }
-    };
-    fetchItems();
-  }, []);
+    if (initialItems && initialItems.length > 0) {
+      const formatted = initialItems.map((item: any) => ({
+        src: item.imageUrl,
+        alt: item.title,
+      }));
+      setAllPortfolioItems(formatted);
+      setDisplayedItems(formatted.slice(0, 12));
+    } else {
+      setDisplayedItems(ALL_PORTFOLIO_ITEMS.slice(0, 12));
+    }
+  }, [initialItems]);
 
   // Shuffle Logic
   useEffect(() => {
@@ -385,12 +380,11 @@ export default function Portfolio() {
               transform: translateY(2px);
             }
           `}</style>
-          <button
+          <div
             onClick={handleDownload}
-            disabled={isDownloading || isSuccess}
             className={`group cursor-pointer bg-transparent border-none p-0 transition-all ${
-              isDownloading ? "opacity-70 cursor-wait fetching" : ""
-            } ${isSuccess ? "cursor-default" : ""}`}
+              isDownloading ? "opacity-70 cursor-wait fetching pointer-events-none" : ""
+            } ${isSuccess ? "cursor-default pointer-events-none" : ""}`}
           >
             <ShimmerButton>
               <div className="flex items-center gap-4 font-aalto font-light uppercase tracking-[0.2em] text-sm text-gray-900 group-hover:text-white transition-colors">
@@ -437,7 +431,7 @@ export default function Portfolio() {
                 </div>
               </div>
             </ShimmerButton>
-          </button>
+          </div>
         </div>
       </div>
     </section>

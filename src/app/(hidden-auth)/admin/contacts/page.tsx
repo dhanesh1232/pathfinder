@@ -75,9 +75,13 @@ const PRIORITY_COLORS: Record<string, string> = {
   Low: "bg-blue-500 text-white",
 };
 
-export default function ContactsPage() {
-  const [submissions, setSubmissions] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function ContactsClient({
+  initialSubmissions = [],
+}: {
+  initialSubmissions?: any[];
+}) {
+  const [submissions, setSubmissions] = useState<any[]>(initialSubmissions);
+  const [loading, setLoading] = useState(initialSubmissions.length === 0);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedInquiry, setSelectedInquiry] = useState<any>(null);
   const [filterStatus, setFilterStatus] = useState("All");
@@ -116,11 +120,16 @@ export default function ContactsPage() {
   };
 
   useEffect(() => {
-    fetchSubmissions();
-    document.title = "CRM | Admin | Pathfinder";
+    if (initialSubmissions.length === 0) {
+      fetchSubmissions();
+    }
+    document.title = "Contacts | Admin | Pathfinder";
   }, []);
 
-  const handleUpdateStatus = async (id: string, status: "New" | "In Progress" | "Closed" | "Junk") => {
+  const handleUpdateStatus = async (
+    id: string,
+    status: "New" | "In Progress" | "Closed" | "Junk",
+  ) => {
     const res = await updateSubmissionStatus(id, status);
     if (res.success) {
       toast.success(`Status set to ${status}`);
@@ -131,7 +140,10 @@ export default function ContactsPage() {
     }
   };
 
-  const handleUpdatePriority = async (id: string, priority: "Low" | "Medium" | "High") => {
+  const handleUpdatePriority = async (
+    id: string,
+    priority: "Low" | "Medium" | "High",
+  ) => {
     const res = await updateSubmissionPriority(id, priority);
     if (res.success) {
       toast.success(`Priority set to ${priority}`);
@@ -356,7 +368,14 @@ export default function ContactsPage() {
                     <Select
                       value={formData.status}
                       onValueChange={(val) =>
-                        setFormData({ ...formData, status: val as "New" | "In Progress" | "Closed" | "Junk" })
+                        setFormData({
+                          ...formData,
+                          status: val as
+                            | "New"
+                            | "In Progress"
+                            | "Closed"
+                            | "Junk",
+                        })
                       }
                     >
                       <SelectTrigger className="bg-zinc-900/50 border-zinc-800 rounded-lg h-10">
@@ -395,7 +414,10 @@ export default function ContactsPage() {
                     <Select
                       value={formData.priority}
                       onValueChange={(val) =>
-                        setFormData({ ...formData, priority: val as "Low" | "Medium" | "High" })
+                        setFormData({
+                          ...formData,
+                          priority: val as "Low" | "Medium" | "High",
+                        })
                       }
                     >
                       <SelectTrigger className="bg-zinc-900/50 border-zinc-800 rounded-lg h-10">
@@ -916,7 +938,9 @@ export default function ContactsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="bg-zinc-900 border-zinc-800 text-white rounded-lg w-40">
-                        {(["New", "In Progress", "Closed", "Junk"] as const).map((s) => (
+                        {(
+                          ["New", "In Progress", "Closed", "Junk"] as const
+                        ).map((s) => (
                           <DropdownMenuItem
                             key={s}
                             onClick={() =>

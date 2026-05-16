@@ -1,22 +1,9 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Draggable } from "gsap/Draggable";
-import {
-  Play,
-  Pause,
-  ArrowUpRight,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import LiquidHeading from "./ui/liquid-text";
 import Link from "next/link";
-import { getOurWorkItems } from "@/app/actions/content";
-
-// Register generally to capture early
-gsap.registerPlugin(ScrollTrigger, Draggable);
 
 const WORK_ITEMS = [
   {
@@ -75,6 +62,8 @@ const WORK_ITEMS = [
   },
 ];
 
+// ─── Video Card ────────────────────────────────────────────────────────────────
+
 const VideoCard = ({
   item,
   onHoverStart,
@@ -88,29 +77,17 @@ const VideoCard = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isInView, setIsInView] = useState(false);
 
-  // Optimize: Play when in/near viewport with margin
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      {
-        threshold: 0.1, // Lower threshold
-        rootMargin: "200px", // Preload/Play before entering screen to prevent pausing
-      },
+      ([entry]) => setIsInView(entry.isIntersecting),
+      { threshold: 0.1, rootMargin: "200px" },
     );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
+    if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // Sync Video State with Viewport
   useEffect(() => {
     if (!videoRef.current) return;
-
     if (isInView) {
       videoRef.current.play().catch(() => {});
     } else {
@@ -123,20 +100,17 @@ const VideoCard = ({
       ref={containerRef}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
-      className="relative group w-[280px] md:w-[320px] aspect-9/16 rounded-2xl overflow-hidden bg-zinc-900 border border-white/5 transition-all duration-500 hover:border-pathfinder-green/50 hover:z-20 cursor-pointer"
+      className="relative group flex-shrink-0 w-[280px] md:w-[320px] aspect-9/16 rounded-2xl overflow-hidden bg-zinc-900 border border-white/5 transition-all duration-500 hover:border-pathfinder-green/50 hover:z-20 cursor-pointer"
     >
-      {/* Video */}
       <video
         ref={videoRef}
         src={item.src}
         muted
         loop
         playsInline
-        preload="metadata" // Changed to metadata for smoother start
+        preload="metadata"
         className="w-full h-full object-cover transition-all duration-500 opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0"
       />
-
-      {/* Overlay Content */}
       <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent transition-opacity duration-300 flex flex-col justify-end p-6 pointer-events-none opacity-0 group-hover:opacity-100">
         <span className="text-pathfinder-green text-xs font-bold uppercase tracking-widest mb-1 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
           {item.category}
@@ -149,92 +123,117 @@ const VideoCard = ({
   );
 };
 
-export default function OurWork() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const marqueeTween = useRef<gsap.core.Tween | null>(null);
+// ─── Main Section ──────────────────────────────────────────────────────────────
 
-  const [workItems, setWorkItems] = useState<any[]>([]);
+const CARD_WIDTH_PX = 320 + 32; // card + gap (md breakpoint)
+const SPEED = 0.6; // px per frame
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      const dbItems = await getOurWorkItems();
-      if (dbItems && dbItems.length > 0) {
-        const formatted = dbItems.map((item: any) => ({
-          id: item._id,
-          src: item.videoUrl,
-          title: item.title,
-          category: item.category || "Reel",
-        }));
-        setWorkItems(formatted);
-      } else {
-        setWorkItems(WORK_ITEMS);
-      }
-    };
-    fetchItems();
-  }, []);
+export default function OurWork({ initialItems = [] }: { initialItems?: any[] }) {
+  const trackRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // Marquee Effect
-    if (scrollerRef.current && workItems.length > 0) {
-      const scrollerContent = scrollerRef.current;
+  // Shared mutable state via refs — no re-renders
+  const xRef = useRef(0);
+  const isPaused = useRef(false);
+  const isDragging = useRef(false);
+  const dragStartClientX = useRef(0);
+  const dragStartX = useRef(0);
+  const rafRef = useRef<number | null>(null);
 
-      marqueeTween.current = gsap.to(scrollerContent, {
-        xPercent: -50,
-        ease: "none",
-        duration: 40, // Adjust speed
-        repeat: -1,
-      });
-
-      marqueeTween.current.timeScale(1);
-
-      // Drag Implementation
-      const proxy = document.createElement("div");
-      const tracker = Draggable.create(proxy, {
-        trigger: scrollerContent,
-        type: "x",
-        inertia: false, // Standard drag
-        onPress: () => {
-          marqueeTween.current?.pause();
-        },
-        onDrag: function () {
-          const tween = marqueeTween.current;
-          if (!tween) return;
-
-          // The marquee moves 50% of the total width (because of duplicated items)
-          // So one full cycle = scrollWidth / 2
-          const cycleWidth = scrollerContent.scrollWidth / 2;
-
-          // -deltaX because moving mouse LEFT (negative) should advance animation (move content LEFT)
-          const progressChange = -this.deltaX / cycleWidth;
-
-          const newProgress = tween.progress() + progressChange;
-
-          // Wrap between 0 and 1
-          tween.progress(gsap.utils.wrap(0, 1, newProgress));
-        },
-        onRelease: () => {
-          // We'll let the hover handlers control play/pause primarily,
-          // but we should ensure it plays if we dragged out and released outside
-          marqueeTween.current?.play();
-        },
-      })[0];
-
-      return () => {
-        marqueeTween.current?.kill();
-        tracker.kill();
-      };
+  const [workItems] = useState<any[]>(() => {
+    if (initialItems && initialItems.length > 0) {
+      return initialItems.map((item: any) => ({
+        id: item._id,
+        src: item.videoUrl,
+        title: item.title,
+        category: item.category || "Reel",
+      }));
     }
+    return WORK_ITEMS;
+  });
+
+  // ── RAF auto-scroll ──────────────────────────────────────────────────────────
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    // Wait one frame for layout so scrollWidth is accurate
+    const startRaf = requestAnimationFrame(() => {
+      const totalWidth = track.scrollWidth / 2;
+
+      const tick = () => {
+        if (!isPaused.current && !isDragging.current) {
+          xRef.current -= SPEED;
+          // Seamless loop: when we've scrolled one full set, reset
+          if (xRef.current <= -totalWidth) {
+            xRef.current += totalWidth;
+          }
+        }
+        track.style.transform = `translateX(${xRef.current}px)`;
+        rafRef.current = requestAnimationFrame(tick);
+      };
+
+      rafRef.current = requestAnimationFrame(tick);
+    });
+
+    return () => {
+      cancelAnimationFrame(startRaf);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
   }, []);
 
-  const pauseMarquee = () => marqueeTween.current?.pause();
-  const playMarquee = () => marqueeTween.current?.play();
+  // ── Nav helpers ──────────────────────────────────────────────────────────────
+  const wrap = (x: number) => {
+    const track = trackRef.current;
+    if (!track) return x;
+    const totalWidth = track.scrollWidth / 2;
+    // Keep x in range (-totalWidth, 0]
+    while (x <= -totalWidth) x += totalWidth;
+    while (x > 0) x -= totalWidth;
+    return x;
+  };
+
+  const goNext = () => {
+    xRef.current = wrap(xRef.current - CARD_WIDTH_PX);
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(${xRef.current}px)`;
+    }
+  };
+
+  const goPrev = () => {
+    xRef.current = wrap(xRef.current + CARD_WIDTH_PX);
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(${xRef.current}px)`;
+    }
+  };
+
+  // ── Drag / pointer events ───────────────────────────────────────────────────
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    isDragging.current = true;
+    isPaused.current = true;
+    dragStartClientX.current = e.clientX;
+    dragStartX.current = xRef.current;
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging.current) return;
+    const dx = e.clientX - dragStartClientX.current;
+    xRef.current = wrap(dragStartX.current + dx);
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(${xRef.current}px)`;
+    }
+  };
+
+  const onPointerUp = () => {
+    isDragging.current = false;
+    isPaused.current = false;
+  };
+
+  const pauseMarquee = () => { isPaused.current = true; };
+  const playMarquee = () => { isPaused.current = false; };
 
   return (
-    <section
-      className="relative w-full py-24 bg-black overflow-hidden"
-      ref={containerRef}
-    >
+    <section className="relative w-full py-24 bg-black overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-zinc-900/40 via-black to-black opacity-50 pointer-events-none" />
 
@@ -242,9 +241,6 @@ export default function OurWork() {
         {/* Header */}
         <div className="px-6 lg:px-12 mb-16 flex flex-col lg:flex-row items-start justify-between gap-6">
           <div>
-            {/* <h2 className="text-4xl lg:text-5xl font-black text-white uppercase tracking-tighter mb-2">
-              Visual <span className="text-pathfinder-green">Impact</span>
-            </h2> */}
             <div className="w-full h-max flex items-center justify-center pointer-events-none select-none">
               <LiquidHeading
                 text="VISUAL IMPACT"
@@ -272,55 +268,43 @@ export default function OurWork() {
         </div>
 
         {/* Infinite Scroller */}
-        <div className="flex w-full overflow-hidden relative">
-          <div ref={scrollerRef} className="flex gap-4 md:gap-8 px-4 w-max">
-            {/* Render Double for Loop */}
-            {[...workItems, ...workItems].map((item, index) => {
-              const uniqueId = `${item.id}-${index}`;
-              return (
-                <VideoCard
-                  key={uniqueId}
-                  item={item}
-                  onHoverStart={pauseMarquee}
-                  onHoverEnd={playMarquee}
-                />
-              );
-            })}
+        <div
+          className="relative flex w-full overflow-hidden select-none"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+          style={{ cursor: "grab" }}
+        >
+          {/* Track — doubled for seamless loop */}
+          <div
+            ref={trackRef}
+            className="flex gap-4 md:gap-8 px-4 w-max will-change-transform"
+          >
+            {[...workItems, ...workItems].map((item, index) => (
+              <VideoCard
+                key={`${item.id}-${index}`}
+                item={item}
+                onHoverStart={pauseMarquee}
+                onHoverEnd={playMarquee}
+              />
+            ))}
           </div>
 
-          {/* Navigation Controls - Visible on Hover/Always on Mobile */}
+          {/* Prev Arrow */}
           <button
-            onClick={() => {
-              const total = WORK_ITEMS.length;
-              const currentProgress = marqueeTween.current?.progress() || 0;
-              const step = 1 / total;
-              const target = Math.round(currentProgress * total - 1) * step;
-              gsap.to(marqueeTween.current, {
-                progress: target,
-                duration: 0.5,
-                ease: "power2.out",
-              });
-            }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-black/20 backdrop-blur-md rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 pointer-events-auto"
-            aria-label="Previous Slide"
+            onClick={goPrev}
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-black/40 backdrop-blur-md rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300"
+            aria-label="Previous"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
 
+          {/* Next Arrow */}
           <button
-            onClick={() => {
-              const total = WORK_ITEMS.length;
-              const currentProgress = marqueeTween.current?.progress() || 0;
-              const step = 1 / total;
-              const target = Math.round(currentProgress * total + 1) * step;
-              gsap.to(marqueeTween.current, {
-                progress: target,
-                duration: 0.5,
-                ease: "power2.out",
-              });
-            }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-black/20 backdrop-blur-md rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300 pointer-events-auto"
-            aria-label="Next Slide"
+            onClick={goNext}
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-black/40 backdrop-blur-md rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-pathfinder-green hover:text-black transition-all duration-300"
+            aria-label="Next"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
