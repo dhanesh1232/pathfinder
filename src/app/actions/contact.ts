@@ -78,7 +78,7 @@ export async function deleteSubmission(id: string) {
   }
 }
 
-export async function updateSubmissionStatus(id: string, status: string) {
+export async function updateSubmissionStatus(id: string, status: "New" | "In Progress" | "Closed" | "Junk") {
   try {
     await connectDB();
     await ContactSubmission.findByIdAndUpdate(id, { status });
@@ -109,7 +109,7 @@ export async function createManualLead(data: {
   website?: string;
   service?: string;
   budget?: string;
-  status: string;
+  status: "New" | "In Progress" | "Closed" | "Junk";
   priority: string;
 }) {
   try {
