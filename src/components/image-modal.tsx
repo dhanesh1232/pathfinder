@@ -397,6 +397,140 @@ export const ImageModal: React.FC<ImageModalProps> = ({
     }
   };
 
+  // ─── Upload helpers ────────────────────────────────────────────────────────
+
+  /** Threshold (bytes). Files larger than this bypass the proxy and go directly to R2. */
+  const PRESIGNED_THRESHOLD = 25 * 1024 * 1024; // 25 MB
+
+  /**
+   * Proxy upload via POST /api/saas/images.
+   * Supports server-side image compression (75% quality) and returns MediaMeta.
+   * Uses XMLHttpRequest for real progress tracking.
+   */
+  const uploadViaProxy = (formData: FormData): Promise<ImageFormat[]> =>
+    new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", `${apiUrl}/api/saas/images`);
+      xhr.setRequestHeader("x-api-key", apiKey!);
+      xhr.setRequestHeader("x-client-code", clientCode!);
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          setUploadProgress(Math.round((e.loaded / e.total) * 95));
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const json = JSON.parse(xhr.responseText);
+            const items: ImageFormat[] = Array.isArray(json.data)
+              ? json.data
+              : [json.data];
+            resolve(items);
+          } catch {
+            reject(new Error("Invalid server response"));
+          }
+        } else {
+          try {
+            const err = JSON.parse(xhr.responseText);
+            reject(new Error(err.error || `Upload failed (${xhr.status})`));
+          } catch {
+            reject(new Error(`Upload failed (${xhr.status})`));
+          }
+        }
+      };
+
+      xhr.onerror = () => reject(new Error("Network error during upload"));
+      xhr.send(formData);
+    });
+
+  /**
+   * Presigned upload for large files (bypasses Cloud Run body-size limit):
+   *   1. POST /api/saas/storage/upload-url → { uploadUrl, key }
+   *   2. PUT directly to R2 via XHR (real progress)
+   *   3. POST /api/saas/storage/confirm-upload → MediaMeta
+   */
+  const uploadViaPresigned = async (
+    file: File,
+    fileIndex: number,
+    totalFiles: number,
+  ): Promise<ImageFormat> => {
+    const headers = {
+      "x-api-key": apiKey!,
+      "x-client-code": clientCode!,
+      "Content-Type": "application/json",
+    };
+
+    // Step 1: Get presigned upload URL
+    const urlRes = await fetch(`${apiUrl}/api/saas/storage/upload-url`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        folder,
+        filename: file.name,
+        contentType: file.type || "application/octet-stream",
+      }),
+    });
+    if (!urlRes.ok) {
+      const err = await urlRes.json().catch(() => ({}));
+      throw new Error(err.error || "Failed to get upload URL");
+    }
+    const { data: urlData } = await urlRes.json();
+
+    // Step 2: PUT directly to R2 — real progress via XHR
+    await new Promise<void>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", urlData.uploadUrl);
+      xhr.setRequestHeader(
+        "Content-Type",
+        file.type || "application/octet-stream",
+      );
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const fileProgress = (e.loaded / e.total) * 90; // 0-90 for PUT
+          const base = (fileIndex / totalFiles) * 100;
+          const ceiling = ((fileIndex + 1) / totalFiles) * 100;
+          const overall = base + (fileProgress / 100) * (ceiling - base);
+          setUploadProgress(Math.round(overall));
+        }
+      };
+
+      xhr.onload = () =>
+        xhr.status >= 200 && xhr.status < 300
+          ? resolve()
+          : reject(new Error(`R2 upload failed (${xhr.status})`));
+      xhr.onerror = () => reject(new Error("Network error during R2 upload"));
+      xhr.send(file);
+    });
+
+    // Step 3: Confirm upload with backend (quota tracking, audit log)
+    const confirmRes = await fetch(
+      `${apiUrl}/api/saas/storage/confirm-upload`,
+      {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ key: urlData.key, sizeBytes: file.size }),
+      },
+    );
+    if (!confirmRes.ok) {
+      const err = await confirmRes.json().catch(() => ({}));
+      throw new Error(err.error || "Upload confirmation failed");
+    }
+    const { data: confirmData } = await confirmRes.json();
+
+    return {
+      url: confirmData.url,
+      type: confirmData.type,
+      variants: confirmData.variants,
+      name: file.name,
+      fileName: file.name,
+      key: urlData.key,
+      size: file.size,
+    };
+  };
+
   // Upload
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -407,7 +541,7 @@ export const ImageModal: React.FC<ImageModalProps> = ({
         alert(`${file.name} exceeds the ${maxSize}MB limit.`);
         return false;
       }
-      const ok = ["image/", "video/", "application/pdf"].some((t) =>
+      const ok = ["image/", "video/", "application/pdf", "audio/"].some((t) =>
         file.type.startsWith(t),
       );
       if (!ok) {
@@ -422,39 +556,43 @@ export const ImageModal: React.FC<ImageModalProps> = ({
     setUploadingCount(validFiles.length);
     setIsUploading(true);
     setUploadStatus("uploading");
-    setUploadProgress(10);
+    setUploadProgress(0);
 
     try {
-      const formData = new FormData();
-      validFiles.forEach((file) => formData.append("file", file));
-      formData.append("folder", folder);
+      // Split by size: small → proxy (server compresses), large → presigned (direct R2)
+      const smallFiles = validFiles.filter(
+        (f) => f.size <= PRESIGNED_THRESHOLD,
+      );
+      const largeFiles = validFiles.filter((f) => f.size > PRESIGNED_THRESHOLD);
 
-      const res = await fetch(`${apiUrl}/api/saas/images`, {
-        method: "POST",
-        body: formData,
-        headers: {
-          "x-api-key": apiKey!,
-          "x-client-code": clientCode!,
-        },
-      });
+      const newlyUploaded: ImageFormat[] = [];
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "Upload failed");
+      // 1. Batch proxy upload for small files (server-side compression at 75%)
+      if (smallFiles.length > 0) {
+        const formData = new FormData();
+        smallFiles.forEach((file) => formData.append("file", file));
+        formData.append("folder", folder);
+        const proxyResults = await uploadViaProxy(formData);
+        newlyUploaded.push(...proxyResults);
+      }
+
+      // 2. Sequential presigned upload for large files (no body-size limit)
+      for (let i = 0; i < largeFiles.length; i++) {
+        const result = await uploadViaPresigned(
+          largeFiles[i],
+          smallFiles.length > 0 ? i + 1 : i,
+          largeFiles.length + (smallFiles.length > 0 ? 1 : 0),
+        );
+        newlyUploaded.push(result);
       }
 
       setUploadProgress(100);
       setUploadStatus("success");
-      const json = await res.json();
-      const newlyUploaded: ImageFormat[] = Array.isArray(json.data)
-        ? json.data
-        : [json.data];
-
       setImages((prev) => [...newlyUploaded, ...prev]);
 
       if (multiple) {
         setSelectedImage((prev) => [...(prev || []), ...newlyUploaded]);
-      } else {
+      } else if (newlyUploaded.length > 0) {
         setSelectedImage([newlyUploaded[0]]);
       }
     } catch (err: unknown) {
@@ -747,13 +885,13 @@ export const ImageModal: React.FC<ImageModalProps> = ({
                       </span>
                     </p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Images, Videos, PDFs
-                      {maxSize ? ` — up to ${maxSize} MB each` : ""}
+                      Images, Videos, Audio, PDFs
+                      {maxSize ? ` — up to ${maxSize} MB each` : " — any size"}
                     </p>
                   </div>
                   <input
                     type="file"
-                    accept="image/*,video/*,application/pdf"
+                    accept="image/*,video/*,audio/*,application/pdf"
                     multiple
                     onChange={handleUpload}
                     className="absolute inset-0 cursor-pointer opacity-0"
