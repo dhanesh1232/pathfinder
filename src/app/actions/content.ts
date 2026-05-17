@@ -9,7 +9,18 @@ import ContactSubmission from "@/models/ContactSubmission";
 import { revalidatePath } from "next/cache";
 
 // --- Logos ---
+// Public: active only, newest first
 export async function getLogos() {
+  await connectDB();
+  return JSON.parse(
+    JSON.stringify(
+      await Logo.find({ isActive: true }).sort({ createdAt: -1 })
+    )
+  );
+}
+
+// Admin: all logos, ordered for management
+export async function getAllLogos() {
   await connectDB();
   return JSON.parse(JSON.stringify(await Logo.find().sort({ order: 1 })));
 }
@@ -36,7 +47,18 @@ export async function deleteLogo(id: string) {
 }
 
 // --- Portfolio ---
+// Public: active only, newest first
 export async function getPortfolioItems() {
+  await connectDB();
+  return JSON.parse(
+    JSON.stringify(
+      await Portfolio.find({ isActive: true }).sort({ createdAt: -1 })
+    )
+  );
+}
+
+// Admin: all items, ordered for management
+export async function getAllPortfolioItems() {
   await connectDB();
   return JSON.parse(JSON.stringify(await Portfolio.find().sort({ order: 1 })));
 }
@@ -63,7 +85,18 @@ export async function deletePortfolio(id: string) {
 }
 
 // --- Our Work (Reels) ---
+// Public: active only, newest first
 export async function getOurWorkItems() {
+  await connectDB();
+  return JSON.parse(
+    JSON.stringify(
+      await OurWork.find({ isActive: true }).sort({ createdAt: -1 })
+    )
+  );
+}
+
+// Admin: all items, ordered for management
+export async function getAllOurWorkItems() {
   await connectDB();
   return JSON.parse(JSON.stringify(await OurWork.find().sort({ order: 1 })));
 }
@@ -90,9 +123,22 @@ export async function deleteOurWork(id: string) {
 }
 
 // --- Testimonials ---
+// Public: active only, newest first
 export async function getTestimonials() {
   await connectDB();
-  return JSON.parse(JSON.stringify(await Testimonial.find().sort({ order: 1 })));
+  return JSON.parse(
+    JSON.stringify(
+      await Testimonial.find({ isActive: true }).sort({ createdAt: -1 })
+    )
+  );
+}
+
+// Admin: all items, ordered for management
+export async function getAllTestimonials() {
+  await connectDB();
+  return JSON.parse(
+    JSON.stringify(await Testimonial.find().sort({ order: 1 }))
+  );
 }
 
 export async function upsertTestimonial(data: any) {

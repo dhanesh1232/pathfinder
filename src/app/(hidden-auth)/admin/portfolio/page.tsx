@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import {
-  getPortfolioItems,
+  getAllPortfolioItems,
   upsertPortfolio,
   deletePortfolio,
 } from "@/app/actions/content";
@@ -53,7 +53,7 @@ export default function PortfolioPage() {
 
   const fetchItems = async () => {
     setLoading(true);
-    const data = await getPortfolioItems();
+    const data = await getAllPortfolioItems();
     setItems(data || []);
     setLoading(false);
   };

@@ -3,8 +3,8 @@
 import Logomarquee from "./Marquee";
 import { useMemo } from "react";
 
-// Actual logo filenames from /public/Website logo
-const RAW_LOGOS = [
+// Actual logo filenames from /public/Website logo (fallback when no DB logos)
+const FALLBACK_LOGOS = [
   "Aaharam logo.png",
   "Book my studio.png",
   "Layer 5 log.png",
@@ -44,22 +44,28 @@ const RAW_LOGOS = [
   "vysya logo.png",
 ];
 
-// Duplicate logos to create a seamless infinite loop with enough items
-const DEFAULT_LOGOS = [...RAW_LOGOS, ...RAW_LOGOS, ...RAW_LOGOS];
-
-export default function TrustedBy({ initialLogos = [] }: { initialLogos?: any[] }) {
+export default function TrustedBy({
+  initialLogos,
+}: {
+  initialLogos?: any[];
+}) {
   const logos = useMemo(() => {
+    // Use DB logos if available and non-empty, filtering only active ones
     if (initialLogos && initialLogos.length > 0) {
-      const urls = initialLogos.map((l: any) => l.imageUrl);
-      return [...urls, ...urls, ...urls];
+      const activeLogos = initialLogos.filter(
+        (l: any) => l.isActive !== false
+      );
+      // Map to imageUrl strings — the Marquee component handles duplication internally
+      return activeLogos.map((l: any) => l.imageUrl);
     }
-    return DEFAULT_LOGOS;
+    // Fallback to static logos
+    return FALLBACK_LOGOS;
   }, [initialLogos]);
 
   return (
     <section className="w-full py-24 bg-black overflow-hidden">
       <h1 className="text-white text-center text-2xl md:text-3xl mb-14 font-poppins">
-        <span className="text-pathfinder-green">We're trusted</span> by
+        <span className="text-pathfinder-green">We&apos;re trusted</span> by
         companies like
       </h1>
       <div className="relative max-w-full mx-auto">

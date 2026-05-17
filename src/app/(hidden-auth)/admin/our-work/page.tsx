@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import {
-  getOurWorkItems,
+  getAllOurWorkItems,
   upsertOurWork,
   deleteOurWork,
 } from "@/app/actions/content";
@@ -55,7 +55,7 @@ export default function OurWorkPage() {
 
   const fetchItems = async () => {
     setLoading(true);
-    const data = await getOurWorkItems();
+    const data = await getAllOurWorkItems();
     setItems(data || []);
     setLoading(false);
   };

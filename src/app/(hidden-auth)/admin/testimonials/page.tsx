@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import {
-  getTestimonials,
+  getAllTestimonials,
   upsertTestimonial,
   deleteTestimonial,
 } from "@/app/actions/content";
@@ -58,7 +58,7 @@ export default function TestimonialsPage() {
 
   const fetchItems = async () => {
     setLoading(true);
-    const data = await getTestimonials();
+    const data = await getAllTestimonials();
     setItems(data);
     setLoading(false);
   };

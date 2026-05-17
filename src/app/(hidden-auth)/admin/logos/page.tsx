@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getLogos, upsertLogo, deleteLogo } from "@/app/actions/content";
+import { getAllLogos, upsertLogo, deleteLogo } from "@/app/actions/content";
 import {
   Plus,
   Trash2,
@@ -48,7 +48,7 @@ export default function LogosPage() {
 
   const fetchItems = async () => {
     setLoading(true);
-    const data = await getLogos();
+    const data = await getAllLogos();
     setItems(data || []);
     setLoading(false);
   };
