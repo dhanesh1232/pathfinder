@@ -30,6 +30,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { AdminPageHeader } from "@/components/admin/page-header";
 import { ImageModal } from "@/components/image-modal";
+import { MediaRenderer } from "@/components/media-renderer";
 
 export default function LogosPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -197,10 +198,11 @@ export default function LogosPage() {
                   <div className="flex items-center gap-4">
                     {formData.imageUrl ? (
                       <div className="relative group w-24 h-24 rounded-xl overflow-hidden border border-white/10 bg-[#060608] flex items-center justify-center p-2">
-                        <img
+                        <MediaRenderer
                           src={formData.imageUrl}
                           alt="Preview"
                           className="max-w-full max-h-full object-contain filter grayscale invert opacity-80"
+                          hoverPlay={false}
                         />
                         <button
                           type="button"
@@ -309,10 +311,11 @@ export default function LogosPage() {
                 className="group relative aspect-square bg-zinc-900/40 border border-zinc-800 rounded-md overflow-hidden hover:border-zinc-700 transition-colors p-0"
               >
                 <div className="absolute inset-1 flex items-center justify-center">
-                  <img
+                  <MediaRenderer
                     src={logo.imageUrl}
                     alt={logo.name}
                     className="max-w-full max-h-full object-contain filter grayscale invert group-hover:grayscale-0 group-hover:invert-0 group-hover:scale-105 transition-all duration-300"
+                    hoverPlay={false}
                   />
                 </div>
 

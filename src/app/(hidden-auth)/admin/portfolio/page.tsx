@@ -34,6 +34,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { AdminPageHeader } from "@/components/admin/page-header";
 import { ImageModal } from "@/components/image-modal";
+import { MediaRenderer } from "@/components/media-renderer";
 
 export default function PortfolioPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -227,18 +228,12 @@ export default function PortfolioPage() {
                   <div className="flex items-center gap-6">
                     {formData.imageUrl ? (
                       <div className="relative group w-24 h-32 rounded-xl overflow-hidden border border-white/10 bg-[#060608] flex items-center justify-center">
-                        {formData.imageUrl.match(/\.(mp4|webm|ogg|mov)$/) ? (
-                          <video
-                            src={formData.imageUrl}
-                            className="w-full h-full object-cover opacity-80"
-                          />
-                        ) : (
-                          <img
-                            src={formData.imageUrl}
-                            alt="Preview"
-                            className="w-full h-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-110"
-                          />
-                        )}
+                        <MediaRenderer
+                          src={formData.imageUrl}
+                          alt="Preview"
+                          className="w-full h-full opacity-80 transition-transform duration-500 group-hover:scale-110"
+                          hoverPlay={false}
+                        />
                         <button
                           type="button"
                           onClick={() =>
@@ -357,10 +352,11 @@ export default function PortfolioPage() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="group relative aspect-[3/4] bg-zinc-900/20 border border-zinc-800 rounded-lg overflow-hidden hover:border-pathfinder-green/30 transition-all duration-500 shadow-none"
               >
-                <img
+                <MediaRenderer
                   src={item.imageUrl}
                   alt={item.title}
-                  className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out"
+                  className="w-full h-full opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out"
+                  showPlayIcon
                 />
 
                 <div className="absolute inset-x-0 bottom-0 p-5 bg-linear-to-t from-black via-black/40 to-transparent flex flex-col justify-end">

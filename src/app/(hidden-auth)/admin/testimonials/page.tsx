@@ -33,12 +33,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AdminPageHeader } from "@/components/admin/page-header";
 import { ImageModal } from "@/components/image-modal";
+import { MediaRenderer } from "@/components/media-renderer";
 
 export default function TestimonialsPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -240,10 +239,11 @@ export default function TestimonialsPage() {
                     <div className="flex items-center gap-4">
                       {formData.imageUrl ? (
                         <div className="relative group w-14 h-14 rounded-full overflow-hidden border border-white/10 bg-[#060608] flex items-center justify-center">
-                          <img
+                          <MediaRenderer
                             src={formData.imageUrl}
                             alt="Preview"
-                            className="w-full h-full object-cover opacity-80 transition-transform duration-500 group-hover:scale-110"
+                            className="w-full h-full opacity-80 transition-transform duration-500 group-hover:scale-110"
+                            hoverPlay={false}
                           />
                           <button
                             type="button"

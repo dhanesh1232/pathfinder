@@ -36,6 +36,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { AdminPageHeader } from "@/components/admin/page-header";
 import { ImageModal } from "@/components/image-modal";
+import { MediaRenderer } from "@/components/media-renderer";
 
 export default function OurWorkPage() {
   const [items, setItems] = useState<any[]>([]);
@@ -225,10 +226,11 @@ export default function OurWorkPage() {
                   <div className="flex items-center gap-6">
                     {formData.videoUrl ? (
                       <div className="relative group w-24 h-40 rounded-xl overflow-hidden border border-white/10 bg-[#060608] flex items-center justify-center">
-                        <video
+                        <MediaRenderer
                           src={formData.videoUrl}
-                          className="w-full h-full object-cover opacity-80"
-                          muted
+                          alt="Preview"
+                          className="w-full h-full opacity-80"
+                          hoverPlay={false}
                         />
                         <button
                           type="button"
@@ -353,17 +355,11 @@ export default function OurWorkPage() {
                 exit={{ opacity: 0, scale: 0.95 }}
                 className="group relative aspect-9/16 bg-zinc-900/20 border border-zinc-800/80 rounded-lg overflow-hidden hover:border-pathfinder-green/30 transition-all duration-500 shadow-none"
               >
-                <video
+                <MediaRenderer
                   src={item.videoUrl}
-                  className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700 ease-out"
-                  onMouseOver={(e) => {
-                    const video = e.currentTarget;
-                    video.play().catch(() => {});
-                  }}
-                  onMouseOut={(e) => e.currentTarget.pause()}
-                  muted
-                  loop
-                  playsInline
+                  alt={item.title}
+                  className="w-full h-full opacity-60 group-hover:scale-105 transition-transform duration-700 ease-out"
+                  showPlayIcon
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-5">
                   <div className="mb-4 opacity-0 group-hover:opacity-100 transition-opacity flex justify-center scale-90 group-hover:scale-100 duration-500">
