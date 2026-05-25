@@ -21,11 +21,6 @@ const BANNER_ITEMS = [
     src: "https://cdn.ecodrix.com/tenants/ERIX_CLNT_VSRJRW/automation-assets/Pathfinder_Video.mp4",
     alt: "Pathfinder Video",
   },
-  {
-    type: "image",
-    src: "/banner/mummy birthday.png",
-    alt: "Celebration Event Design",
-  },
 ];
 
 const SlideItem = ({
