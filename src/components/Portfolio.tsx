@@ -5,7 +5,6 @@ import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import LiquidHeading from "./ui/liquid-text";
 
 const ALL_PORTFOLIO_ITEMS = [
   {
@@ -89,58 +88,11 @@ const ALL_PORTFOLIO_ITEMS = [
   { src: "/portfolio one/vity.jpeg", alt: "Vity" },
 ];
 
-const TypingHeading = ({ className }: { className?: string }) => {
-  const container = useRef<HTMLHeadingElement>(null);
-  const text = "Selected Works";
-
-  useEffect(() => {
-    if (!container.current) return;
-
-    const ctx = gsap.context(() => {
-      const scrollerEl = document.getElementById("smooth-wrapper");
-      const scroller = scrollerEl || window;
-
-      // 1. Typing Animation (Triggered by Scroll) - Matches HowWeWorks style
-      gsap.fromTo(
-        ".typing-char",
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.05,
-          stagger: 0.04,
-          ease: "none",
-          scrollTrigger: {
-            trigger: container.current,
-            scroller: scroller,
-            start: "top 60%", // Start when section enters view
-            toggleActions: "play none none reverse",
-          },
-        },
-      );
-    }, container);
-
-    return () => ctx.revert();
-  }, []);
-
-  return (
-    <h2
-      ref={container}
-      className={`font-poppins font-black text-5xl md:text-6xl lg:text-8xl tracking-tighter uppercase ${className}`}
-    >
-      {text.split("").map((char, i) => (
-        <span
-          key={i}
-          className="typing-char inline-block text-white"
-          style={{ opacity: 0 }}
-        >
-          {char === " " ? "\u00A0" : char}
-        </span>
-      ))}
-    </h2>
-  );
-}; // End TypingHeading
-
-export default function Portfolio({ initialItems = [] }: { initialItems?: any[] }) {
+export default function Portfolio({
+  initialItems = [],
+}: {
+  initialItems?: any[];
+}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const headerTextRef = useRef<HTMLDivElement>(null);
   const [displayedItems, setDisplayedItems] = useState<any[]>([]);
@@ -301,13 +253,10 @@ export default function Portfolio({ initialItems = [] }: { initialItems?: any[] 
       <div className="max-w-7xl mx-auto">
         {/* Header (Floating) */}
         <div ref={headerTextRef} className="text-center mb-16">
-          <div className="w-full max-w-lg mx-auto h-max flex items-center justify-center pointer-events-none select-none">
-            <LiquidHeading
-              text="SELECTED WORKS"
-              videoSrc="https://cdn.pixabay.com/video/2024/05/25/213616_large.mp4"
-              size="120"
-              weight="700"
-            />
+          <div className="w-full h-max flex items-center justify-center">
+            <h2 className="font-poppins font-black text-2xl md:text-4xl lg:text-6xl tracking-tighter uppercase text-pathfinder-green">
+              Selected Works
+            </h2>
           </div>
           <p className="text-white/60 font-nohemi text-lg md:text-xl font-light max-w-2xl mx-auto">
             A curation of brands we've helped defined, designed, and elevated.
@@ -384,7 +333,9 @@ export default function Portfolio({ initialItems = [] }: { initialItems?: any[] 
           <div
             onClick={handleDownload}
             className={`group cursor-pointer bg-transparent border-none p-0 transition-all ${
-              isDownloading ? "opacity-70 cursor-wait fetching pointer-events-none" : ""
+              isDownloading
+                ? "opacity-70 cursor-wait fetching pointer-events-none"
+                : ""
             } ${isSuccess ? "cursor-default pointer-events-none" : ""}`}
           >
             <ShimmerButton>

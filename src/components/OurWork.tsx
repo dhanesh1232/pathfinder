@@ -2,7 +2,6 @@
 
 import { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import LiquidHeading from "./ui/liquid-text";
 import Link from "next/link";
 
 const WORK_ITEMS = [
@@ -100,7 +99,7 @@ const VideoCard = ({
       ref={containerRef}
       onMouseEnter={onHoverStart}
       onMouseLeave={onHoverEnd}
-      className="relative group flex-shrink-0 w-[280px] md:w-[320px] aspect-9/16 rounded-2xl overflow-hidden bg-zinc-900 border border-white/5 transition-all duration-500 hover:border-pathfinder-green/50 hover:z-20 cursor-pointer"
+      className="relative group shrink-0 w-[280px] md:w-[320px] aspect-9/16 rounded-2xl overflow-hidden bg-zinc-900 border border-white/5 transition-all duration-500 hover:border-pathfinder-green/50 hover:z-20 cursor-pointer"
     >
       <video
         ref={videoRef}
@@ -128,7 +127,11 @@ const VideoCard = ({
 const CARD_WIDTH_PX = 320 + 32; // card + gap (md breakpoint)
 const SPEED = 0.6; // px per frame
 
-export default function OurWork({ initialItems = [] }: { initialItems?: any[] }) {
+export default function OurWork({
+  initialItems = [],
+}: {
+  initialItems?: any[];
+}) {
   const trackRef = useRef<HTMLDivElement>(null);
 
   // Shared mutable state via refs — no re-renders
@@ -229,8 +232,13 @@ export default function OurWork({ initialItems = [] }: { initialItems?: any[] })
     isPaused.current = false;
   };
 
-  const pauseMarquee = () => { isPaused.current = true; };
-  const playMarquee = () => { isPaused.current = false; };
+  const pauseMarquee = () => {
+    isPaused.current = true;
+  };
+
+  const playMarquee = () => {
+    isPaused.current = false;
+  };
 
   return (
     <section className="relative w-full py-24 bg-black overflow-hidden">
@@ -241,13 +249,10 @@ export default function OurWork({ initialItems = [] }: { initialItems?: any[] })
         {/* Header */}
         <div className="px-6 lg:px-12 mb-16 flex flex-col lg:flex-row items-start justify-between gap-6">
           <div>
-            <div className="w-full h-max flex items-center justify-center pointer-events-none select-none">
-              <LiquidHeading
-                text="VISUAL IMPACT"
-                videoSrc="https://cdn.pixabay.com/video/2024/05/25/213616_large.mp4"
-                size="120"
-                weight="700"
-              />
+            <div className="w-full h-max flex items-start">
+              <h2 className="font-poppins font-black text-2xl md:text-4xl lg:text-6xl tracking-tighter uppercase text-pathfinder-green">
+                Visual Impact
+              </h2>
             </div>
             <div className="w-full h-px my-2 bg-linear-to-r from-transparent via-pathfinder-green to-transparent" />
             <p className="text-zinc-400 font-nohemi text-base lg:text-lg max-w-xl">
